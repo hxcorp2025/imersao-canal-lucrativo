@@ -8,1829 +8,1504 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --bg: #0B0B0F;
-    --bg-soft: #12121A;
-    --bg-card: #1A1A24;
-    --bg-card-hover: #22222E;
-    --ink: #FFFFFF;
-    --ink-soft: #E8E8EE;
-    --ink-muted: #9A9AA8;
-    --ink-dim: #5F5F6E;
-    --red: #E63946;
-    --red-soft: #FF5A6B;
-    --gold: #F5B841;
-    --green: #22C55E;
-    --line: #26262F;
-    --line-soft: #1F1F28;
-    --max: 1180px;
-    --radius: 12px;
-    --shadow-sm: 0 4px 16px rgba(0,0,0,0.4);
-    --shadow-md: 0 12px 40px rgba(0,0,0,0.5);
-    --shadow-red: 0 20px 60px -15px rgba(230, 57, 70, 0.55);
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+
+  body{
+    background:#0a0a0a;
+    color:rgba(255,255,255,.82);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+    position:relative;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--ink-soft);
-    font-family: 'Poppins', -apple-system, sans-serif;
-    font-size: 17px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-    overflow-x: hidden;
+  /* noise texture overlay */
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    pointer-events:none;
+    opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat:repeat;
+    background-size:200px 200px;
   }
 
-  h1, h2, h3, h4, h5 {
-    font-family: 'Poppins', sans-serif;
-    font-weight: 800;
-    line-height: 1.15;
-    color: var(--ink);
-    letter-spacing: -0.01em;
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+
+  /* typography system */
+  h1,h2,h3,h4,h5{
+    font-family:'Inter',sans-serif;
+    font-weight:800;
+    color:#fff;
+    line-height:1.08;
+    letter-spacing:-.03em;
   }
 
-  a { color: inherit; text-decoration: none; }
-  img { max-width: 100%; display: block; }
-
-  .container {
-    max-width: var(--max);
-    margin: 0 auto;
-    padding: 0 24px;
+  /* glass panels */
+  .glass{
+    background:rgba(255,255,255,.035);
+    backdrop-filter:blur(24px) saturate(1.3);
+    -webkit-backdrop-filter:blur(24px) saturate(1.3);
+    border:1px solid rgba(255,255,255,.07);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.05), 0 8px 32px rgba(0,0,0,.4);
+  }
+  .glass-warm{
+    background:rgba(255,255,255,.04);
+    backdrop-filter:blur(20px) saturate(1.2);
+    -webkit-backdrop-filter:blur(20px) saturate(1.2);
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 0 80px rgba(230,57,70,.12), inset 0 1px 0 rgba(255,255,255,.06);
   }
 
-  /* ============================================
-     ALERT BAR (Tarja superior)
-     ============================================ */
-  .alert-bar {
-    background: linear-gradient(90deg, #C1121F, #E63946, #C1121F);
-    color: #FFF;
-    text-align: center;
-    padding: 14px 20px;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    position: relative;
-    z-index: 100;
+  /* CTA button */
+  .cta{
+    display:inline-flex;
+    align-items:center;
+    gap:14px;
+    padding:22px 48px;
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    font-weight:800;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    color:#fff;
+    background:rgba(230,57,70,.15);
+    border:1px solid rgba(230,57,70,.5);
+    border-radius:14px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    box-shadow:0 0 60px rgba(230,57,70,.25), inset 0 0 30px rgba(230,57,70,.1), 0 4px 20px rgba(0,0,0,.4);
+    transition:all .35s cubic-bezier(.4,0,.2,1);
   }
-  .alert-bar .pulse {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    background: #FFF;
-    border-radius: 50%;
-    margin-right: 10px;
-    animation: pulse 1.5s ease-in-out infinite;
-    vertical-align: middle;
+  .cta::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(135deg,rgba(230,57,70,.3),rgba(255,45,59,.15),rgba(230,57,70,.3));
+    opacity:0;
+    transition:opacity .35s ease;
   }
-  .alert-bar strong { font-weight: 900; }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.8); }
-    50% { opacity: 0.7; transform: scale(1.2); box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+  .cta:hover{
+    transform:translateY(-3px);
+    box-shadow:0 0 90px rgba(230,57,70,.4), inset 0 0 40px rgba(230,57,70,.15), 0 12px 40px rgba(0,0,0,.5);
+    border-color:rgba(230,57,70,.7);
   }
-
-  /* ============================================
-     SECTION BASE
-     ============================================ */
-  section {
-    padding: 100px 0;
-    position: relative;
-  }
-  .section-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 20px;
-  }
-  .section-label::before {
-    content: '';
-    width: 30px;
-    height: 2px;
-    background: var(--red);
-  }
-  .section-title {
-    font-size: clamp(32px, 4.5vw, 52px);
-    margin-bottom: 24px;
-    max-width: 900px;
-  }
-  .section-title em {
-    color: var(--red-soft);
-    font-style: normal;
-  }
-  .section-sub {
-    font-size: 18px;
-    color: var(--ink-muted);
-    max-width: 720px;
-    line-height: 1.65;
-    margin-bottom: 50px;
-    font-weight: 400;
+  .cta:hover::before{opacity:1}
+  .cta span,.cta .arrow{position:relative;z-index:2}
+  .cta .arrow{font-size:20px;transition:transform .25s ease}
+  .cta:hover .arrow{transform:translateX(6px)}
+  .cta::after{
+    content:'';position:absolute;
+    top:0;left:0;right:0;bottom:0;
+    background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
+    background-size:200% 100%;
+    animation:shimmer 3s ease-in-out infinite;
+    pointer-events:none;
+    border-radius:inherit;
   }
 
-  /* ============================================
-     CTA BUTTON
-     ============================================ */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    background: linear-gradient(180deg, #E63946 0%, #C1121F 100%);
-    color: #FFF;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    padding: 22px 44px;
-    border: none;
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    box-shadow: var(--shadow-red);
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    position: relative;
-    overflow: hidden;
-  }
-  .btn::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.6s ease;
-  }
-  .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 25px 70px -15px rgba(230, 57, 70, 0.7);
-  }
-  .btn:hover::before { left: 100%; }
-  .btn .arrow { transition: transform 0.25s ease; font-size: 22px; }
-  .btn:hover .arrow { transform: translateX(6px); }
-
-  .btn-wrap { text-align: center; }
-  .btn-mini {
-    font-size: 12px;
-    color: var(--ink-muted);
-    margin-top: 14px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
+  .cta-note{
+    font-size:11px;
+    color:rgba(255,255,255,.4);
+    margin-top:16px;
+    font-weight:600;
+    letter-spacing:.06em;
   }
 
-  /* ============================================
-     HERO
-     ============================================ */
-  .hero {
-    padding: 60px 0 80px;
-    position: relative;
-    overflow: hidden;
-    background: radial-gradient(ellipse at top right, rgba(230, 57, 70, 0.12) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom left, rgba(245, 184, 65, 0.08) 0%, transparent 50%);
+  /* section tag */
+  .tag-label{
+    display:inline-block;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    color:#E63946;
+    padding:8px 16px;
+    border:1px solid rgba(230,57,70,.25);
+    border-radius:100px;
+    margin-bottom:28px;
+    background:rgba(230,57,70,.06);
   }
 
-  .hero-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 60px;
-    align-items: center;
+  .sec-heading{
+    font-size:clamp(30px,4.2vw,50px);
+    margin-bottom:24px;
+    max-width:880px;
+    letter-spacing:-.025em;
+    line-height:1.1;
+  }
+  .sec-heading em{
+    color:#E63946;
+    font-style:normal;
+  }
+  .sec-desc{
+    font-size:17px;
+    color:rgba(255,255,255,.5);
+    max-width:700px;
+    line-height:1.7;
+    margin-bottom:56px;
+    font-weight:400;
   }
 
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 18px;
-    background: rgba(230, 57, 70, 0.1);
-    border: 1px solid rgba(230, 57, 70, 0.3);
-    border-radius: 100px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 28px;
+  /* alert bar */
+  .alert-bar{
+    background:linear-gradient(90deg,#a11018,#E63946 50%,#a11018);
+    color:#fff;
+    text-align:center;
+    padding:13px 20px;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.04em;
+    position:relative;
+    z-index:100;
   }
-  .hero-badge .dot {
-    width: 8px;
-    height: 8px;
-    background: var(--red);
-    border-radius: 50%;
-    box-shadow: 0 0 12px var(--red);
-    animation: pulse 2s ease-in-out infinite;
+  .alert-bar .pulse{
+    display:inline-block;
+    width:8px;height:8px;
+    background:#fff;
+    border-radius:50%;
+    margin-right:10px;
+    vertical-align:middle;
+    animation:pulse 1.5s ease-in-out infinite;
   }
-
-  .hero h1 {
-    font-size: clamp(44px, 6.5vw, 84px);
-    line-height: 0.95;
-    margin-bottom: 24px;
-    font-weight: 900;
-    letter-spacing: -0.02em;
-  }
-  .hero h1 .pre {
-    display: block;
-    font-size: 0.28em;
-    font-weight: 500;
-    color: var(--ink-muted);
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    line-height: 1;
-  }
-  .hero h1 .main { display: block; }
-  .hero h1 .main em {
-    color: var(--red-soft);
-    font-style: normal;
-    background: linear-gradient(135deg, #E63946, #F5B841);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+  .alert-bar strong{font-weight:900}
+  @keyframes pulse{
+    0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 rgba(255,255,255,.7)}
+    50%{opacity:.6;transform:scale(1.3);box-shadow:0 0 0 8px rgba(255,255,255,0)}
   }
 
-  .hero-sub {
-    font-size: 19px;
-    line-height: 1.6;
-    color: var(--ink-soft);
-    max-width: 600px;
-    margin-bottom: 36px;
-    font-weight: 400;
+  /* hero */
+  .hero{
+    padding:80px 0 100px;
+    position:relative;
+    overflow:hidden;
+    min-height:90vh;
+    display:flex;
+    align-items:center;
   }
-  .hero-sub strong { color: var(--gold); font-weight: 700; }
-
-  .hero-bullets {
-    list-style: none;
-    margin-bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  .hero::before{
+    content:'';
+    position:absolute;
+    top:-20%;right:-10%;
+    width:900px;height:900px;
+    background:radial-gradient(circle,rgba(230,57,70,.1) 0%,transparent 65%);
+    pointer-events:none;
   }
-  .hero-bullets li {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    font-size: 15px;
-    color: var(--ink-soft);
-    line-height: 1.5;
-  }
-  .hero-bullets .chk {
-    flex-shrink: 0;
-    width: 26px;
-    height: 26px;
-    border-radius: 50%;
-    background: var(--green);
-    color: #0B0B0F;
-    display: grid;
-    place-items: center;
-    font-size: 14px;
-    font-weight: 900;
-    margin-top: 1px;
+  .hero::after{
+    content:'';
+    position:absolute;
+    bottom:-30%;left:-15%;
+    width:700px;height:700px;
+    background:radial-gradient(circle,rgba(230,57,70,.06) 0%,transparent 60%);
+    pointer-events:none;
   }
 
-  /* Hero info card */
-  .hero-card {
-    background: linear-gradient(180deg, #1A1A24 0%, #12121A 100%);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 40px 36px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-  }
-  .hero-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
-  }
-  .hero-card .lbl-small {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    margin-bottom: 6px;
-  }
-  .hero-card .big-date {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 80px;
-    font-weight: 900;
-    line-height: 0.9;
-    color: var(--ink);
-    margin-bottom: 4px;
-    letter-spacing: -0.03em;
-  }
-  .hero-card .month-date {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--gold);
-    margin-bottom: 28px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .hero-card .divider {
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0;
-  }
-  .info-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 14px;
-    font-size: 14px;
-  }
-  .info-row .lbl {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--ink-dim);
-  }
-  .info-row .val { color: var(--ink); font-weight: 600; }
-
-  .countdown-title {
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--ink-dim);
-    margin-bottom: 14px;
-    text-align: center;
-  }
-  .countdown {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-  }
-  .cd-unit {
-    text-align: center;
-    padding: 14px 4px;
-    background: rgba(230, 57, 70, 0.12);
-    border: 1px solid rgba(230, 57, 70, 0.3);
-    border-radius: 8px;
-  }
-  .cd-unit .num {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--red-soft);
-    line-height: 1;
-  }
-  .cd-unit .lbl {
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    margin-top: 6px;
-    display: block;
+  .hero-layout{
+    display:grid;
+    grid-template-columns:1.35fr 1fr;
+    gap:80px;
+    align-items:center;
+    position:relative;
   }
 
-  /* ============================================
-     SOCIAL PROOF STRIP
-     ============================================ */
-  .social-strip {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 36px 0;
-    text-align: center;
+  .hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:9px 18px;
+    background:rgba(230,57,70,.08);
+    border:1px solid rgba(230,57,70,.2);
+    border-radius:100px;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:rgba(230,57,70,.9);
+    margin-bottom:32px;
   }
-  .social-strip .lbl {
-    display: block;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 14px;
-  }
-  .social-strip .names {
-    font-size: 17px;
-    color: var(--ink-soft);
-    font-weight: 500;
-    line-height: 1.6;
-  }
-  .social-strip .names strong { color: var(--gold); font-weight: 700; }
-
-  /* ============================================
-     DOBRA 2 - DOR
-     ============================================ */
-  .pain-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 40px;
-  }
-  .pain-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 40px 32px;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-  .pain-card:hover {
-    border-color: var(--red);
-    transform: translateY(-6px);
-    background: var(--bg-card-hover);
-  }
-  .pain-card .num {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.2em;
-    color: var(--red-soft);
-    margin-bottom: 18px;
-  }
-  .pain-card .quote {
-    font-size: 21px;
-    font-weight: 700;
-    color: var(--gold);
-    line-height: 1.3;
-    margin-bottom: 20px;
-  }
-  .pain-card p {
-    color: var(--ink-muted);
-    font-size: 15px;
-    line-height: 1.7;
-    font-weight: 400;
+  .hero-badge .dot{
+    width:7px;height:7px;
+    background:#E63946;
+    border-radius:50%;
+    box-shadow:0 0 14px #E63946;
+    animation:pulse 2s ease-in-out infinite;
   }
 
-  .pain-fecho {
-    text-align: center;
-    margin-top: 70px;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
+  .hero h1{
+    font-size:clamp(46px,7vw,92px);
+    line-height:.92;
+    margin-bottom:28px;
+    font-weight:900;
+    letter-spacing:-.04em;
   }
-  .pain-fecho p {
-    font-size: 22px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    line-height: 1.5;
+  .hero h1 .pre{
+    display:block;
+    font-family:'Inter',sans-serif;
+    font-size:clamp(12px,1.4vw,16px);
+    font-weight:500;
+    color:rgba(255,255,255,.4);
+    letter-spacing:.35em;
+    text-transform:uppercase;
+    margin-bottom:18px;
+    line-height:1;
   }
-  .pain-fecho strong { color: var(--red-soft); font-weight: 800; }
-
-  /* ============================================
-     DOBRA 3 - VIRADA
-     ============================================ */
-  .virada {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-  .virada .section-title {
-    max-width: 760px;
-  }
-  .virada-sub {
-    font-size: 22px;
-    color: var(--ink-soft);
-    max-width: 760px;
-    margin-bottom: 50px;
-    font-weight: 500;
-    line-height: 1.5;
-  }
-  .virada-sub strong {
-    color: var(--red-soft);
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-  .virada-grid {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 60px;
-    align-items: start;
-  }
-  .virada-text p {
-    font-size: 17px;
-    line-height: 1.75;
-    color: var(--ink-soft);
-    margin-bottom: 20px;
-  }
-  .virada-quote {
-    background: linear-gradient(135deg, rgba(230,57,70,0.1), rgba(245,184,65,0.06));
-    border-left: 4px solid var(--red);
-    padding: 28px 32px;
-    margin: 32px 0;
-    border-radius: 0 var(--radius) var(--radius) 0;
-  }
-  .virada-quote p {
-    font-size: 24px;
-    font-weight: 700;
-    color: var(--ink);
-    line-height: 1.4;
-    margin: 0;
-  }
-  .virada-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 36px 32px;
-    position: sticky;
-    top: 32px;
-  }
-  .virada-stat { margin-bottom: 28px; }
-  .virada-stat:last-child { margin-bottom: 0; }
-  .virada-stat .lbl-stat {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--ink-dim);
-    margin-bottom: 8px;
-  }
-  .virada-stat .val-stat {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 56px;
-    font-weight: 900;
-    line-height: 1;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-  }
-  .virada-stat.hi .val-stat {
-    background: linear-gradient(135deg, #E63946, #F5B841);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .virada-stat .desc {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-top: 8px;
-    line-height: 1.5;
-  }
-  .virada-card .sep {
-    height: 1px;
-    background: var(--line);
-    margin: 28px 0;
+  .hero h1 .main{display:block}
+  .hero h1 .main em{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-weight:700;
+    color:#E63946;
   }
 
-  /* ============================================
-     DOBRA 4 - PROGRAMA DO DIA
-     ============================================ */
-  .programa-wrap { margin-top: 50px; }
-  .bloco {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    margin-bottom: 28px;
-    overflow: hidden;
-    position: relative;
+  .hero-sub{
+    font-size:18px;
+    line-height:1.7;
+    color:rgba(255,255,255,.7);
+    max-width:580px;
+    margin-bottom:40px;
+    font-weight:400;
   }
-  .bloco::before {
-    content: '';
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 5px;
-    background: var(--red);
-  }
-  .bloco.tarde::before { background: var(--gold); }
-  .bloco.almoco::before { background: var(--ink-dim); }
+  .hero-sub strong{color:#f5b841;font-weight:700}
 
-  .bloco-head {
-    padding: 36px 44px 28px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
+  .hero-bullets{
+    list-style:none;
+    margin-bottom:48px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
   }
-  .bloco.almoco .bloco-head { border-bottom: none; padding-bottom: 36px; }
-  .bloco-head .time-lbl {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 10px;
+  .hero-bullets li{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    font-size:15px;
+    color:rgba(255,255,255,.75);
+    line-height:1.55;
   }
-  .bloco.tarde .time-lbl { color: var(--gold); }
-  .bloco.almoco .time-lbl { color: var(--ink-dim); }
-  .bloco-head h3 {
-    font-size: 32px;
-    font-weight: 800;
-  }
-  .bloco.almoco h3 { font-size: 24px; color: var(--ink-muted); }
-  .bloco-tag {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-    padding: 8px 14px;
-    border: 1px solid var(--line);
-    border-radius: 100px;
+  .hero-bullets .chk{
+    flex-shrink:0;
+    width:24px;height:24px;
+    border-radius:50%;
+    background:#22C55E;
+    color:#0a0a0a;
+    display:grid;
+    place-items:center;
+    font-size:13px;
+    font-weight:900;
+    margin-top:2px;
   }
 
-  .bloco-body { padding: 36px 44px 44px; }
-  .bloco ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 22px;
+  /* hero info card */
+  .hero-card{
+    background:rgba(255,255,255,.03);
+    backdrop-filter:blur(30px) saturate(1.4);
+    -webkit-backdrop-filter:blur(30px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    padding:44px 40px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 0 80px rgba(230,57,70,.08), 0 24px 64px rgba(0,0,0,.5);
+    transform:rotate(.8deg);
+    animation:float 6s ease-in-out infinite;
   }
-  .bloco ul li {
-    padding-left: 44px;
-    position: relative;
-    font-size: 16px;
-    color: var(--ink);
-    line-height: 1.65;
+  .hero-card::before{
+    content:'';
+    position:absolute;
+    top:0;left:0;right:0;
+    height:3px;
+    background:linear-gradient(90deg,#E63946 0%,rgba(230,57,70,.2) 50%,#E63946 100%);
   }
-  .bloco ul li .n {
-    position: absolute;
-    left: 0;
-    top: 0;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    color: var(--red-soft);
-    letter-spacing: 0.05em;
+  .hero-card::after{
+    content:'';
+    position:absolute;
+    top:-50%;right:-50%;
+    width:200%;height:200%;
+    background:radial-gradient(circle at 30% 30%,rgba(230,57,70,.06),transparent 50%);
+    pointer-events:none;
   }
-  .bloco.tarde ul li .n { color: var(--gold); }
-  .bloco ul li strong {
-    color: var(--ink);
-    font-weight: 700;
-    display: block;
-    margin-bottom: 4px;
+  .hero-card>*{position:relative;z-index:2}
+
+  .hero-card .lbl-small{
+    font-size:9px;font-weight:700;
+    letter-spacing:.25em;text-transform:uppercase;
+    color:rgba(255,255,255,.35);margin-bottom:8px;
   }
-  .bloco ul li .desc {
-    color: var(--ink-muted);
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.6;
+  .hero-card .big-date{
+    font-family:'Inter',sans-serif;
+    font-size:88px;font-weight:900;
+    line-height:.85;color:#fff;
+    margin-bottom:6px;letter-spacing:-.04em;
+  }
+  .hero-card .month-date{
+    font-size:18px;font-weight:700;
+    color:#E63946;margin-bottom:32px;
+    text-transform:uppercase;letter-spacing:.08em;
+  }
+  .hero-card .divider{
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+    margin:24px 0;
+  }
+  .info-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:12px;
+    font-size:14px;
+  }
+  .info-row .lbl{
+    font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.15em;
+    color:rgba(255,255,255,.3);
+  }
+  .info-row .val{color:#fff;font-weight:600}
+
+  .countdown-title{
+    font-size:10px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.2em;
+    color:rgba(255,255,255,.3);
+    margin-bottom:14px;text-align:center;
+  }
+  .countdown{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:8px;
+  }
+  .cd-unit{
+    text-align:center;
+    padding:14px 4px;
+    background:rgba(230,57,70,.08);
+    border:1px solid rgba(230,57,70,.2);
+    border-radius:10px;
+  }
+  .cd-unit .num{
+    font-family:'Inter',sans-serif;
+    font-size:30px;font-weight:900;
+    color:#E63946;line-height:1;
+  }
+  .cd-unit .lbl{
+    font-size:8px;font-weight:700;
+    letter-spacing:.12em;
+    color:rgba(255,255,255,.4);
+    text-transform:uppercase;margin-top:6px;
+    display:block;
   }
 
-  .bloco.almoco .bloco-head p {
-    font-size: 15px;
-    color: var(--ink-muted);
-    margin-top: 10px;
-    max-width: 600px;
+  /* social proof strip */
+  .social-strip{
+    border-top:1px solid rgba(255,255,255,.05);
+    border-bottom:1px solid rgba(255,255,255,.05);
+    padding:40px 0;
+    text-align:center;
+    background:rgba(255,255,255,.015);
+  }
+  .social-strip .lbl{
+    display:block;
+    font-size:10px;font-weight:700;
+    letter-spacing:.25em;text-transform:uppercase;
+    color:#E63946;margin-bottom:14px;
+  }
+  .social-strip .names{
+    font-size:16px;
+    color:rgba(255,255,255,.6);
+    font-weight:400;
+    line-height:1.7;
+  }
+  .social-strip .names strong{color:#f5b841;font-weight:700}
+
+  /* dor / identification */
+  .sec-pain{padding:120px 0 100px}
+
+  .pain-layout{
+    display:grid;
+    grid-template-columns:1.1fr .9fr;
+    gap:28px;
+    margin-top:48px;
+  }
+  .pain-layout .pain-card:first-child{
+    grid-row:1/3;
+  }
+  .pain-card{
+    border-radius:18px;
+    padding:44px 36px;
+    position:relative;
+    transition:all .4s cubic-bezier(.4,0,.2,1);
+  }
+  .pain-card:hover{
+    border-color:rgba(230,57,70,.3);
+    transform:translateY(-4px) rotate(-.3deg);
+  }
+  .pain-card .num{
+    font-size:9px;font-weight:700;
+    letter-spacing:.25em;color:#E63946;
+    margin-bottom:20px;
+  }
+  .pain-card .quote{
+    font-family:'Playfair Display',serif;
+    font-size:22px;font-weight:700;
+    color:#f5b841;
+    line-height:1.35;margin-bottom:22px;
+    font-style:italic;
+  }
+  .pain-card p{
+    color:rgba(255,255,255,.5);
+    font-size:14.5px;line-height:1.75;
   }
 
-  .programa-fecho {
-    margin-top: 60px;
-    text-align: center;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
+  .pain-fecho{
+    text-align:center;
+    margin-top:80px;
+    max-width:780px;
+    margin-left:auto;margin-right:auto;
   }
-  .programa-fecho p {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    line-height: 1.5;
-    margin-bottom: 12px;
+  .pain-fecho p{
+    font-size:20px;font-weight:400;
+    color:rgba(255,255,255,.7);line-height:1.55;
   }
-  .programa-fecho strong { color: var(--gold); font-weight: 800; }
-  .programa-fecho .final {
-    font-size: 16px;
-    color: var(--red-soft);
-    font-weight: 700;
-    margin-top: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  .pain-fecho strong{color:#E63946;font-weight:700}
+
+  /* virada */
+  .sec-virada{
+    padding:130px 0 110px;
+    border-top:1px solid rgba(255,255,255,.04);
+    background:linear-gradient(180deg,rgba(255,255,255,.01),transparent 40%);
+    position:relative;
+  }
+  .sec-virada::before{
+    content:'';position:absolute;
+    top:20%;left:-200px;width:500px;height:500px;
+    background:radial-gradient(circle,rgba(230,57,70,.06),transparent 70%);
+    pointer-events:none;
   }
 
-  /* ============================================
-     DOBRA 5 - QUEM É JOÃO
-     ============================================ */
-  .quem {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+  .virada-sub{
+    font-size:20px;
+    color:rgba(255,255,255,.65);
+    max-width:740px;
+    margin-bottom:56px;font-weight:400;line-height:1.6;
   }
-  .quem-text p {
-    font-size: 17px;
-    line-height: 1.75;
-    color: var(--ink-soft);
-    margin-bottom: 22px;
+  .virada-sub strong{color:#E63946;font-weight:800;text-transform:uppercase}
+
+  .virada-grid{
+    display:grid;
+    grid-template-columns:1.3fr 1fr;
+    gap:72px;
+    align-items:start;
   }
-  .quem-text p strong { color: var(--gold); font-weight: 700; }
-  .quem-text .transicao {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 40px 0 16px;
+  .virada-text p{
+    font-size:16px;line-height:1.8;
+    color:rgba(255,255,255,.65);margin-bottom:20px;
+  }
+  .virada-quote{
+    background:rgba(230,57,70,.06);
+    border-left:3px solid #E63946;
+    padding:28px 32px;
+    margin:36px 0;
+    border-radius:0 16px 16px 0;
+  }
+  .virada-quote p{
+    font-family:'Playfair Display',serif;
+    font-size:24px;font-weight:700;
+    color:#fff;line-height:1.35;
+    margin:0;font-style:italic;
   }
 
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    margin: 50px 0;
+  .virada-card{
+    border-radius:20px;
+    padding:40px 36px;
+    position:sticky;top:40px;
+    transform:rotate(-.6deg);
   }
-  .stat-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 32px 24px;
-    text-align: center;
-    transition: all 0.3s ease;
+  .virada-stat{margin-bottom:32px}
+  .virada-stat:last-child{margin-bottom:0}
+  .virada-stat .lbl-stat{
+    font-size:9px;font-weight:700;
+    letter-spacing:.2em;text-transform:uppercase;
+    color:rgba(255,255,255,.3);margin-bottom:8px;
   }
-  .stat-card:hover {
-    border-color: var(--red);
-    transform: translateY(-4px);
+  .virada-stat .val-stat{
+    font-family:'Inter',sans-serif;
+    font-size:52px;font-weight:900;
+    line-height:1;color:#fff;letter-spacing:-.03em;
   }
-  .stat-card .val {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 44px;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 12px;
-    background: linear-gradient(135deg, #E63946, #F5B841);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: -0.02em;
+  .virada-stat.hi .val-stat{color:#E63946}
+  .virada-stat .desc{
+    font-size:13px;color:rgba(255,255,255,.4);
+    margin-top:6px;line-height:1.5;
   }
-  .stat-card .lbl {
-    font-size: 12px;
-    color: var(--ink-muted);
-    font-weight: 600;
-    line-height: 1.5;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  .virada-card .sep{
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+    margin:28px 0;
   }
 
-  .scale-box {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 36px 40px;
-    margin-top: 20px;
+  /* programa do dia */
+  .sec-programa{padding:100px 0 120px}
+
+  .programa-wrap{margin-top:56px}
+  .bloco{
+    border-radius:18px;
+    margin-bottom:24px;
+    overflow:hidden;
+    position:relative;
   }
-  .scale-box h4 {
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 24px;
+  .bloco::before{
+    content:'';position:absolute;
+    left:0;top:0;bottom:0;width:4px;
+    background:#E63946;border-radius:4px 0 0 4px;
   }
-  .scale-box ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .bloco.tarde::before{background:#f5b841}
+  .bloco.almoco::before{background:rgba(255,255,255,.15)}
+
+  .bloco-head{
+    padding:36px 44px 28px;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:16px;
   }
-  .scale-box ul li {
-    font-size: 15px;
-    color: var(--ink);
-    padding-left: 24px;
-    position: relative;
-    line-height: 1.5;
+  .bloco.almoco .bloco-head{border-bottom:none;padding-bottom:36px}
+  .bloco-head .time-lbl{
+    font-size:11px;font-weight:800;
+    letter-spacing:.15em;text-transform:uppercase;
+    color:#E63946;margin-bottom:10px;
   }
-  .scale-box ul li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: var(--red-soft);
-    font-weight: 700;
-  }
-  .scale-box .rodape {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    font-size: 14px;
-    color: var(--ink-muted);
-    font-style: italic;
+  .bloco.tarde .time-lbl{color:#f5b841}
+  .bloco.almoco .time-lbl{color:rgba(255,255,255,.35)}
+  .bloco-head h3{font-size:28px;font-weight:800}
+  .bloco.almoco h3{font-size:22px;color:rgba(255,255,255,.45)}
+  .bloco-tag{
+    font-size:10px;font-weight:700;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(255,255,255,.4);
+    padding:8px 16px;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:100px;
   }
 
-  .reconhecimentos {
-    margin-top: 40px;
-    padding: 32px 36px;
-    background: rgba(245, 184, 65, 0.06);
-    border: 1px solid rgba(245, 184, 65, 0.2);
-    border-radius: var(--radius);
+  .bloco-body{padding:32px 44px 44px}
+  .bloco ul{
+    list-style:none;
+    display:flex;flex-direction:column;gap:24px;
   }
-  .reconhecimentos h4 {
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
+  .bloco ul li{
+    padding-left:44px;position:relative;
+    font-size:15px;color:rgba(255,255,255,.85);
+    line-height:1.65;
   }
-  .reconhecimentos ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  .bloco ul li .n{
+    position:absolute;left:0;top:0;
+    font-family:'Inter',sans-serif;
+    font-size:12px;font-weight:800;
+    color:#E63946;letter-spacing:.05em;
   }
-  .reconhecimentos li {
-    font-size: 15px;
-    color: var(--ink);
-    padding-left: 22px;
-    position: relative;
+  .bloco.tarde ul li .n{color:#f5b841}
+  .bloco ul li strong{
+    color:#fff;font-weight:700;
+    display:block;margin-bottom:4px;
   }
-  .reconhecimentos li::before {
-    content: '★';
-    position: absolute;
-    left: 0;
-    color: var(--gold);
+  .bloco ul li .desc{
+    color:rgba(255,255,255,.4);
+    font-size:13.5px;font-weight:400;line-height:1.65;
   }
 
-  .quem-fecho {
-    margin-top: 50px;
-    padding: 36px 40px;
-    background: var(--bg-card);
-    border-left: 4px solid var(--red);
-    border-radius: 0 var(--radius) var(--radius) 0;
-  }
-  .quem-fecho p {
-    font-size: 18px;
-    line-height: 1.6;
-    color: var(--ink);
-    font-weight: 500;
-    margin-bottom: 16px;
-  }
-  .quem-fecho p:last-child { margin-bottom: 0; }
-  .quem-fecho strong { color: var(--gold); font-weight: 700; }
-
-  /* ============================================
-     DOBRA 6 - PROVA SOCIAL
-     ============================================ */
-  .cases-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 24px;
-    margin-top: 50px;
-  }
-  .case-card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 36px 32px;
-    transition: all 0.3s ease;
-    position: relative;
-  }
-  .case-card:hover {
-    border-color: var(--gold);
-    transform: translateY(-4px);
-  }
-  .case-card .star {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    color: var(--gold);
-    margin-bottom: 16px;
-    padding: 6px 12px;
-    background: rgba(245,184,65,0.1);
-    border: 1px solid rgba(245,184,65,0.3);
-    border-radius: 100px;
-    text-transform: uppercase;
-  }
-  .case-card h4 {
-    font-size: 26px;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .case-card .tag {
-    font-size: 12px;
-    color: var(--ink-dim);
-    margin-bottom: 20px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-  }
-  .case-card .quote {
-    font-size: 16px;
-    color: var(--ink-muted);
-    line-height: 1.65;
-    font-style: italic;
-    position: relative;
-    padding-left: 20px;
-  }
-  .case-card .quote::before {
-    content: '"';
-    position: absolute;
-    left: 0;
-    top: -10px;
-    font-size: 44px;
-    color: var(--red);
-    line-height: 1;
-    font-family: Georgia, serif;
-  }
-  .case-card .video-badge {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--red-soft);
-    padding: 6px 14px;
-    border: 1px solid var(--red);
-    border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .case-card .print-badge {
-    display: inline-block;
-    margin-top: 16px;
-    font-size: 11px;
-    font-weight: 800;
-    color: var(--gold);
-    padding: 6px 14px;
-    border: 1px solid var(--gold);
-    border-radius: 100px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  .bloco.almoco .bloco-head p{
+    font-size:14px;color:rgba(255,255,255,.4);
+    margin-top:10px;max-width:600px;
   }
 
-  .mural-prints {
-    margin-top: 60px;
-    padding: 40px;
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    text-align: center;
+  .programa-fecho{
+    margin-top:72px;text-align:center;
+    max-width:780px;margin-left:auto;margin-right:auto;
   }
-  .mural-prints h4 {
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 16px;
+  .programa-fecho p{
+    font-size:19px;font-weight:400;
+    color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:12px;
   }
-  .mural-prints p {
-    font-size: 15px;
-    color: var(--ink-muted);
-    font-style: italic;
+  .programa-fecho strong{color:#f5b841;font-weight:700}
+  .programa-fecho .final{
+    font-size:15px;color:#E63946;
+    font-weight:700;margin-top:24px;
+    text-transform:uppercase;letter-spacing:.12em;
   }
 
-  .cases-fecho {
-    text-align: center;
-    margin-top: 60px;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .cases-fecho p {
-    font-size: 19px;
-    font-weight: 500;
-    color: var(--ink-soft);
-    line-height: 1.6;
-    margin-bottom: 14px;
-  }
-  .cases-fecho strong { color: var(--gold); font-weight: 800; }
-  .cases-fecho .highlight { font-size: 20px; color: var(--ink); font-weight: 700; }
-
-  /* ============================================
-     DOBRA 7 - OFERTA
-     ============================================ */
-  .oferta {
-    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 100%);
-  }
-  .oferta-wrap {
-    max-width: 860px;
-    margin: 0 auto;
-    text-align: center;
-  }
-  .oferta h2 {
-    font-size: clamp(36px, 5vw, 56px);
-    margin-bottom: 24px;
-  }
-  .oferta h2 em {
-    color: var(--red-soft);
-    font-style: normal;
-  }
-  .oferta-sub {
-    font-size: 18px;
-    color: var(--ink-muted);
-    margin-bottom: 50px;
-    max-width: 680px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
+  /* quem e joao */
+  .sec-quem{
+    padding:120px 0;
+    border-top:1px solid rgba(255,255,255,.04);
+    background:linear-gradient(180deg,rgba(255,255,255,.012),transparent 50%);
   }
 
-  .entregaveis-box {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 44px 48px;
-    margin-bottom: 30px;
-    text-align: left;
+  .quem-text p{
+    font-size:16.5px;line-height:1.8;
+    color:rgba(255,255,255,.65);margin-bottom:20px;
   }
-  .entregavel {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 28px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--line);
-    align-items: center;
-  }
-  .entregavel:first-child { padding-top: 0; }
-  .entregavel:last-of-type { border-bottom: none; padding-bottom: 20px; }
-  .entregavel .head {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 8px;
-  }
-  .entregavel h4 {
-    font-size: 21px;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 6px;
-  }
-  .entregavel p {
-    font-size: 14px;
-    color: var(--ink-muted);
-    line-height: 1.55;
-  }
-  .entregavel .preco {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 20px;
-    color: var(--ink-dim);
-    text-decoration: line-through;
-    white-space: nowrap;
-    font-weight: 700;
-  }
-  .total-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 28px;
-    margin-top: 10px;
-    border-top: 3px solid var(--red);
-  }
-  .total-bar .lbl {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-muted);
-  }
-  .total-bar .val {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--ink);
+  .quem-text p strong{color:#f5b841;font-weight:700}
+  .quem-text .transicao{
+    font-size:20px;font-weight:600;
+    color:#fff;margin:44px 0 16px;
+    letter-spacing:-.01em;
   }
 
-  .preco-final {
-    background: linear-gradient(180deg, #1A1A24, #12121A);
-    border: 2px solid var(--red);
-    border-radius: var(--radius);
-    padding: 56px 40px;
-    position: relative;
-    overflow: hidden;
-    box-shadow: var(--shadow-red);
-  }
-  .preco-final::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top center, rgba(230,57,70,0.15), transparent 60%);
-    pointer-events: none;
-  }
-  .preco-final > * { position: relative; z-index: 2; }
-  .preco-final .nao-vai {
-    font-size: 19px;
-    color: var(--ink-muted);
-    margin-bottom: 12px;
-    font-weight: 500;
-  }
-  .preco-final .nao-vai s { opacity: 0.5; }
-  .preco-final .vai-pagar {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin: 32px 0 12px;
-  }
-  .preco-final .valor {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 140px;
-    font-weight: 900;
-    line-height: 0.9;
-    color: var(--ink);
-    margin-bottom: 12px;
-    letter-spacing: -0.04em;
-    background: linear-gradient(180deg, #FFF 0%, #E63946 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .preco-final .valor sup {
-    font-size: 44px;
-    top: -60px;
-    margin-right: 4px;
-    font-weight: 800;
-  }
-  .preco-final .cond {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-bottom: 36px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .preco-final .desconto {
-    display: block;
-    margin-top: 14px;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    color: var(--gold);
-    text-transform: uppercase;
-  }
-  .selos-compra {
-    display: flex;
-    justify-content: center;
-    gap: 28px;
-    margin-top: 32px;
-    flex-wrap: wrap;
-    font-size: 12px;
-    color: var(--ink-muted);
-    font-weight: 600;
-  }
-  .selos-compra span { display: flex; align-items: center; gap: 6px; }
-
-  .oferta-reforco {
-    margin-top: 40px;
-    font-size: 19px;
-    color: var(--ink-muted);
-    line-height: 1.65;
-    max-width: 720px;
-    margin-left: auto;
-    margin-right: auto;
-    font-weight: 500;
-  }
-  .oferta-reforco strong { color: var(--ink); font-weight: 700; }
-
-  .mini-faq {
-    margin-top: 50px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    text-align: left;
-  }
-  .mini-faq-item {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 24px 22px;
-  }
-  .mini-faq-item .q {
-    font-size: 14px;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .mini-faq-item .a {
-    font-size: 13px;
-    color: var(--ink-muted);
-    line-height: 1.6;
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;margin:56px 0;
   }
 
-  /* ============================================
-     DOBRA 8 - COMO FUNCIONA
-     ============================================ */
-  .timeline {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    margin-top: 50px;
+  .stat-card{
+    border-radius:16px;
+    padding:36px 24px;
+    text-align:center;
+    transition:all .4s cubic-bezier(.4,0,.2,1);
   }
-  .step {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 36px 28px;
-    position: relative;
-    transition: all 0.3s ease;
+  .stat-card:nth-child(2){transform:translateY(-8px)}
+  .stat-card:nth-child(5){transform:translateY(6px)}
+  .stat-card:hover{
+    border-color:rgba(230,57,70,.25);
+    transform:translateY(-6px);
   }
-  .step:hover {
-    border-color: var(--red);
-    transform: translateY(-4px);
+  .stat-card .val{
+    font-family:'Inter',sans-serif;
+    font-size:40px;font-weight:900;
+    line-height:1;margin-bottom:14px;
+    color:#E63946;letter-spacing:-.03em;
   }
-  .step .n {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 64px;
-    font-weight: 900;
-    line-height: 0.9;
-    background: linear-gradient(135deg, #E63946, #F5B841);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 20px;
-    letter-spacing: -0.03em;
-  }
-  .step h4 {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--ink);
-    margin-bottom: 14px;
-    line-height: 1.25;
-  }
-  .step p {
-    font-size: 14px;
-    color: var(--ink-muted);
-    line-height: 1.65;
-    margin-bottom: 16px;
-  }
-  .step .selo {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--green);
-    padding: 6px 12px;
-    background: rgba(34,197,94,0.1);
-    border: 1px solid rgba(34,197,94,0.3);
-    border-radius: 100px;
+  .stat-card .lbl{
+    font-size:11px;color:rgba(255,255,255,.4);
+    font-weight:600;line-height:1.5;
+    text-transform:uppercase;letter-spacing:.06em;
   }
 
-  /* ============================================
-     DOBRA 9 - GARANTIA
-     ============================================ */
-  .garantia {
-    background: var(--bg-soft);
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+  .scale-box{
+    border-radius:18px;
+    padding:40px 44px;margin-top:24px;
   }
-  .garantia h2 {
-    max-width: 900px;
+  .scale-box h4{
+    font-size:12px;font-weight:800;
+    letter-spacing:.2em;text-transform:uppercase;
+    color:#E63946;margin-bottom:28px;
   }
-  .garantia-grid {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 70px;
-    align-items: center;
-    margin-top: 50px;
+  .scale-box ul{
+    list-style:none;display:flex;
+    flex-direction:column;gap:14px;
   }
-  .selo-garantia {
-    width: 260px;
-    height: 260px;
-    border: 3px solid var(--gold);
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    text-align: center;
-    position: relative;
-    background: radial-gradient(circle, rgba(245,184,65,0.12), transparent 70%);
-    flex-shrink: 0;
+  .scale-box ul li{
+    font-size:15px;color:rgba(255,255,255,.85);
+    padding-left:24px;position:relative;line-height:1.55;
   }
-  .selo-garantia::before {
-    content: '';
-    position: absolute;
-    inset: 12px;
-    border: 1px solid rgba(245,184,65,0.4);
-    border-radius: 50%;
+  .scale-box ul li::before{
+    content:'\25B8';position:absolute;left:0;
+    color:#E63946;font-weight:700;
   }
-  .selo-garantia .small {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 4px;
-  }
-  .selo-garantia .big {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 88px;
-    font-weight: 900;
-    color: var(--ink);
-    line-height: 0.9;
-  }
-  .selo-garantia .dias {
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gold);
-    margin-top: 2px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .selo-garantia .risk {
-    font-size: 9px;
-    font-weight: 700;
-    color: var(--ink-muted);
-    margin-top: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+  .scale-box .rodape{
+    margin-top:20px;padding-top:20px;
+    border-top:1px solid rgba(255,255,255,.06);
+    font-size:13px;color:rgba(255,255,255,.35);
+    font-style:italic;
   }
 
-  .garantia-text p {
-    font-size: 17px;
-    line-height: 1.75;
-    color: var(--ink-soft);
-    margin-bottom: 18px;
+  .reconhecimentos{
+    margin-top:36px;padding:36px 40px;
+    background:rgba(245,184,65,.04);
+    border:1px solid rgba(245,184,65,.12);
+    border-radius:18px;
   }
-  .garantia-text .risk-title {
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
+  .reconhecimentos h4{
+    font-size:12px;font-weight:800;
+    letter-spacing:.2em;text-transform:uppercase;
+    color:#f5b841;margin-bottom:22px;
   }
-  .garantia-text .nao-list {
-    font-size: 17px;
-    line-height: 1.8;
-    color: var(--ink);
-    font-weight: 600;
+  .reconhecimentos ul{
+    list-style:none;display:flex;
+    flex-direction:column;gap:12px;
   }
-  .garantia-text .nao-list span { display: block; }
-
-  .garantia-assinatura {
-    margin-top: 36px;
-    padding: 28px 32px;
-    background: var(--bg-card);
-    border-left: 4px solid var(--gold);
-    border-radius: 0 var(--radius) var(--radius) 0;
+  .reconhecimentos li{
+    font-size:15px;color:rgba(255,255,255,.8);
+    padding-left:24px;position:relative;
   }
-  .garantia-assinatura p {
-    font-size: 16px;
-    color: var(--ink-muted);
-    line-height: 1.7;
-    font-style: italic;
-    margin-bottom: 12px;
-  }
-  .garantia-assinatura .assin {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--gold);
-    font-style: normal;
-    margin-top: 8px;
+  .reconhecimentos li::before{
+    content:'\2605';position:absolute;left:0;color:#f5b841;
   }
 
-  .garantia-reforco {
-    margin-top: 50px;
-    padding: 36px 40px;
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
+  .quem-fecho{
+    margin-top:56px;padding:40px 44px;
+    border-left:3px solid #E63946;
+    border-radius:0 18px 18px 0;
   }
-  .garantia-reforco ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+  .quem-fecho p{
+    font-size:17px;line-height:1.65;
+    color:rgba(255,255,255,.85);font-weight:400;margin-bottom:16px;
   }
-  .garantia-reforco li {
-    font-size: 16px;
-    color: var(--ink);
-    padding-left: 32px;
-    position: relative;
-    line-height: 1.5;
+  .quem-fecho p:last-child{margin-bottom:0}
+  .quem-fecho strong{color:#f5b841;font-weight:700}
+
+  /* prova social */
+  .sec-cases{padding:100px 0 120px}
+
+  .cases-grid{
+    display:grid;
+    grid-template-columns:1.15fr .85fr;
+    gap:20px;margin-top:56px;
   }
-  .garantia-reforco li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 22px;
-    height: 22px;
-    background: var(--green);
-    color: #0B0B0F;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-size: 13px;
-    font-weight: 900;
+  .cases-grid .case-card:nth-child(2){transform:translateY(24px)}
+  .cases-grid .case-card:nth-child(3){transform:translateY(-12px)}
+
+  .case-card{
+    border-radius:20px;
+    padding:40px 36px;
+    transition:all .4s cubic-bezier(.4,0,.2,1);
+    position:relative;
   }
-  .garantia-reforco .final-line {
-    margin-top: 24px;
-    padding-top: 20px;
-    border-top: 1px solid var(--line);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--gold);
-    text-align: center;
+  .case-card:hover{
+    border-color:rgba(245,184,65,.2);
+    transform:translateY(-4px) !important;
+  }
+  .case-card .star{
+    display:inline-block;
+    font-size:10px;font-weight:800;
+    letter-spacing:.12em;color:#f5b841;
+    margin-bottom:18px;padding:6px 14px;
+    background:rgba(245,184,65,.08);
+    border:1px solid rgba(245,184,65,.2);
+    border-radius:100px;text-transform:uppercase;
+  }
+  .case-card h4{
+    font-size:24px;font-weight:800;
+    color:#fff;margin-bottom:6px;
+  }
+  .case-card .tag{
+    font-size:11px;color:rgba(255,255,255,.3);
+    margin-bottom:20px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+  .case-card .quote{
+    font-size:15px;color:rgba(255,255,255,.5);
+    line-height:1.7;font-style:italic;
+    position:relative;padding-left:22px;
+  }
+  .case-card .quote::before{
+    content:'\201C';position:absolute;
+    left:0;top:-12px;font-size:48px;
+    color:rgba(230,57,70,.5);line-height:1;
+    font-family:'Playfair Display',Georgia,serif;
+  }
+  .case-card .video-badge{
+    display:inline-block;margin-top:18px;
+    font-size:10px;font-weight:800;
+    color:#E63946;padding:6px 14px;
+    border:1px solid rgba(230,57,70,.3);
+    border-radius:100px;text-transform:uppercase;
+    letter-spacing:.1em;
+  }
+  .case-card .print-badge{
+    display:inline-block;margin-top:18px;
+    font-size:10px;font-weight:800;
+    color:#f5b841;padding:6px 14px;
+    border:1px solid rgba(245,184,65,.3);
+    border-radius:100px;text-transform:uppercase;
+    letter-spacing:.1em;
   }
 
-  /* ============================================
-     DOBRA 10 - PRA QUEM É / NÃO É
-     ============================================ */
-  .quem-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 50px;
+  .mural-prints{
+    margin-top:56px;padding:44px;
+    border-radius:20px;text-align:center;
   }
-  .quem-col {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 44px 36px;
+  .mural-prints h4{
+    font-size:13px;font-weight:800;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:#f5b841;margin-bottom:16px;
   }
-  .quem-col.sim { border-top: 4px solid var(--green); }
-  .quem-col.nao { border-top: 4px solid var(--red); }
-  .quem-col h4 {
-    font-size: 22px;
-    font-weight: 800;
-    margin-bottom: 28px;
-  }
-  .quem-col.sim h4 { color: var(--green); }
-  .quem-col.nao h4 { color: var(--red-soft); }
-  .quem-col ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-  .quem-col li {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    font-size: 15px;
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-  .quem-col li::before {
-    flex-shrink: 0;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-size: 12px;
-    font-weight: 900;
-    margin-top: 1px;
-  }
-  .quem-col.sim li::before {
-    content: '✓';
-    background: var(--green);
-    color: #0B0B0F;
-  }
-  .quem-col.nao li::before {
-    content: '✕';
-    background: var(--red);
-    color: #FFF;
+  .mural-prints p{
+    font-size:14px;color:rgba(255,255,255,.35);
+    font-style:italic;
   }
 
-  .quem-fecho-decisao {
-    text-align: center;
-    margin-top: 60px;
-    max-width: 820px;
-    margin-left: auto;
-    margin-right: auto;
+  .cases-fecho{
+    text-align:center;margin-top:64px;
+    max-width:780px;margin-left:auto;margin-right:auto;
   }
-  .quem-fecho-decisao p {
-    font-size: 18px;
-    line-height: 1.65;
-    color: var(--ink-soft);
-    margin-bottom: 20px;
+  .cases-fecho p{
+    font-size:18px;font-weight:400;
+    color:rgba(255,255,255,.6);line-height:1.65;
+    margin-bottom:14px;
   }
-  .quem-fecho-decisao strong { color: var(--gold); font-weight: 700; }
-  .quem-fecho-decisao .cta-wrap { margin-top: 36px; }
-
-  /* ============================================
-     DOBRA 11 - FAQ
-     ============================================ */
-  .faq {
-    max-width: 860px;
-    margin: 50px auto 0;
-  }
-  .faq-item {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    margin-bottom: 16px;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-  .faq-item:hover { border-color: var(--ink-dim); }
-  .faq-item.open { border-color: var(--red); }
-  .faq-q {
-    padding: 26px 32px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 30px;
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ink);
-    transition: color 0.2s;
-    user-select: none;
-  }
-  .faq-q:hover { color: var(--red-soft); }
-  .faq-q .sign {
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: rgba(230,57,70,0.15);
-    color: var(--red-soft);
-    display: grid;
-    place-items: center;
-    font-size: 22px;
-    font-weight: 300;
-    transition: transform 0.3s ease;
-  }
-  .faq-item.open .faq-q .sign { transform: rotate(45deg); }
-  .faq-a {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease;
-  }
-  .faq-item.open .faq-a { max-height: 600px; }
-  .faq-a-inner {
-    padding: 0 32px 28px;
-  }
-  .faq-a-inner p {
-    color: var(--ink-muted);
-    font-size: 15px;
-    line-height: 1.75;
-    margin-bottom: 12px;
-  }
-  .faq-a-inner p:last-child { margin-bottom: 0; }
-  .faq-a-inner strong { color: var(--gold); font-weight: 700; }
-
-  /* ============================================
-     DOBRA 12 - URGÊNCIA FINAL
-     ============================================ */
-  .urgencia {
-    background: var(--bg);
-    position: relative;
-    overflow: hidden;
-    text-align: center;
-  }
-  .urgencia::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 1400px;
-    height: 1400px;
-    transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(230,57,70,0.1), transparent 60%);
-    pointer-events: none;
-  }
-  .urgencia-wrap {
-    max-width: 880px;
-    margin: 0 auto;
-    position: relative;
-  }
-  .urgencia h2 {
-    font-size: clamp(40px, 5.5vw, 68px);
-    margin-bottom: 40px;
-  }
-  .urgencia-text {
-    font-size: 18px;
-    line-height: 1.75;
-    color: var(--ink-muted);
-    margin-bottom: 40px;
-  }
-  .urgencia-text strong { color: var(--ink); font-weight: 700; }
-  .urgencia-sep {
-    width: 100%;
-    height: 1px;
-    background: var(--line);
-    margin: 24px 0;
+  .cases-fecho strong{color:#f5b841;font-weight:700}
+  .cases-fecho .highlight{
+    font-size:20px;color:#fff;font-weight:700;
   }
 
-  .urg-countdown {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 40px 32px;
-    margin-bottom: 40px;
+  /* oferta */
+  .sec-oferta{
+    padding:120px 0 130px;
+    background:linear-gradient(180deg,#0a0a0a,rgba(255,255,255,.012) 50%,#0a0a0a);
+    position:relative;
   }
-  .urg-countdown .title-cd {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--red-soft);
-    margin-bottom: 20px;
-  }
-  .urg-countdown .vagas {
-    font-size: 13px;
-    color: var(--ink-muted);
-    margin-top: 20px;
-    font-weight: 600;
-  }
-  .urg-countdown .vagas strong { color: var(--gold); }
-
-  .recap {
-    background: rgba(245,184,65,0.05);
-    border: 1px solid rgba(245,184,65,0.2);
-    border-radius: var(--radius);
-    padding: 32px 40px;
-    margin-bottom: 40px;
-    text-align: left;
-  }
-  .recap h4 {
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  .recap ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  .recap li {
-    font-size: 15px;
-    color: var(--ink);
-    padding-left: 28px;
-    position: relative;
-  }
-  .recap li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--green);
-    font-weight: 900;
-  }
-  .recap .valor-total {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(245,184,65,0.2);
-    text-align: center;
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .recap .valor-total strong { color: var(--gold); font-size: 20px; }
-
-  .urg-contato {
-    margin-top: 30px;
-    font-size: 15px;
-    color: var(--ink-muted);
-  }
-  .urg-contato strong { color: var(--gold); }
-
-  .assinatura {
-    margin-top: 50px;
-    padding-top: 36px;
-    border-top: 1px solid var(--line);
-  }
-  .assinatura p {
-    font-size: 16px;
-    color: var(--ink-muted);
-    margin-bottom: 8px;
-  }
-  .assinatura .nome {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 24px;
-    font-weight: 900;
-    color: var(--ink);
-    margin-top: 12px;
-    margin-bottom: 6px;
-  }
-  .assinatura .cargo {
-    font-size: 13px;
-    color: var(--ink-muted);
-    font-weight: 500;
+  .sec-oferta::before{
+    content:'';position:absolute;
+    top:50%;left:50%;transform:translate(-50%,-50%);
+    width:800px;height:800px;
+    background:radial-gradient(circle,rgba(230,57,70,.05),transparent 60%);
+    pointer-events:none;
   }
 
-  /* ============================================
-     FOOTER
-     ============================================ */
-  footer {
-    background: #050508;
-    border-top: 1px solid var(--line);
-    padding: 50px 0 32px;
-  }
-  .footer-grid {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-bottom: 32px;
-  }
-  .footer-brand {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 18px;
-    font-weight: 900;
-    color: var(--ink);
-  }
-  .footer-brand .sub {
-    display: block;
-    font-size: 11px;
-    color: var(--ink-dim);
-    font-weight: 500;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-  .footer-links {
-    display: flex;
-    gap: 30px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--ink-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .footer-disclaimer {
-    font-size: 12px;
-    color: var(--ink-dim);
-    line-height: 1.6;
-    padding-top: 28px;
-    border-top: 1px solid var(--line);
+  .oferta-wrap{
+    max-width:840px;margin:0 auto;text-align:center;
+    position:relative;
   }
 
-  /* WhatsApp float */
-  .wa-float {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    background: #25D366;
-    color: #0B0B0F;
-    width: 62px;
-    height: 62px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    font-size: 28px;
-    box-shadow: 0 8px 32px rgba(37,211,102,0.45);
-    z-index: 999;
-    transition: transform 0.25s ease;
+  .oferta-sub{
+    font-size:17px;color:rgba(255,255,255,.45);
+    margin-bottom:56px;max-width:660px;
+    margin-left:auto;margin-right:auto;line-height:1.65;
   }
-  .wa-float:hover { transform: scale(1.1); }
 
-  /* ============================================
-     RESPONSIVE
-     ============================================ */
-  @media (max-width: 980px) {
-    section { padding: 70px 0; }
-    .hero { padding: 40px 0 60px; }
-    .container { padding: 0 20px; }
+  .entregaveis-box{
+    border-radius:20px;
+    padding:48px 52px;margin-bottom:32px;
+    text-align:left;
+  }
+  .entregavel{
+    display:grid;grid-template-columns:1fr auto;
+    gap:28px;padding:26px 0;
+    border-bottom:1px solid rgba(255,255,255,.05);
+    align-items:center;
+  }
+  .entregavel:first-child{padding-top:0}
+  .entregavel:last-of-type{border-bottom:none;padding-bottom:20px}
+  .entregavel .head{
+    font-size:10px;font-weight:800;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:#E63946;margin-bottom:8px;
+  }
+  .entregavel h4{
+    font-size:20px;font-weight:800;
+    color:#fff;margin-bottom:6px;
+  }
+  .entregavel p{
+    font-size:14px;color:rgba(255,255,255,.4);
+    line-height:1.6;
+  }
+  .entregavel .preco{
+    font-family:'Inter',sans-serif;
+    font-size:18px;color:rgba(255,255,255,.25);
+    text-decoration:line-through;white-space:nowrap;
+    font-weight:700;
+  }
+  .total-bar{
+    display:flex;justify-content:space-between;
+    align-items:center;padding-top:28px;margin-top:10px;
+    border-top:2px solid #E63946;
+  }
+  .total-bar .lbl{
+    font-size:11px;font-weight:800;
+    letter-spacing:.12em;text-transform:uppercase;
+    color:rgba(255,255,255,.4);
+  }
+  .total-bar .val{
+    font-family:'Inter',sans-serif;
+    font-size:28px;font-weight:900;color:#fff;
+  }
 
-    .hero-grid, .virada-grid, .garantia-grid {
-      grid-template-columns: 1fr;
-      gap: 40px;
+  .preco-final{
+    border-radius:24px;
+    padding:64px 48px;position:relative;
+    overflow:hidden;
+    background:rgba(230,57,70,.06);
+    backdrop-filter:blur(30px) saturate(1.4);
+    -webkit-backdrop-filter:blur(30px) saturate(1.4);
+    border:1px solid rgba(230,57,70,.2);
+    box-shadow:0 0 120px rgba(230,57,70,.15), 0 32px 80px rgba(0,0,0,.5);
+  }
+  .preco-final::before{
+    content:'';position:absolute;inset:0;
+    background:radial-gradient(ellipse at top center,rgba(230,57,70,.12),transparent 60%);
+    pointer-events:none;
+  }
+  .preco-final>*{position:relative;z-index:2}
+  .preco-final .nao-vai{
+    font-size:18px;color:rgba(255,255,255,.5);
+    margin-bottom:12px;font-weight:400;
+  }
+  .preco-final .nao-vai s{opacity:.4}
+  .preco-final .vai-pagar{
+    font-size:11px;font-weight:800;
+    letter-spacing:.25em;text-transform:uppercase;
+    color:#E63946;margin:36px 0 14px;
+  }
+  .preco-final .valor{
+    font-family:'Inter',sans-serif;
+    font-size:clamp(100px,18vw,150px);
+    font-weight:900;line-height:.85;
+    color:#fff;margin-bottom:14px;
+    letter-spacing:-.06em;
+  }
+  .preco-final .valor sup{
+    font-size:.3em;top:-.6em;
+    margin-right:4px;font-weight:800;
+  }
+  .preco-final .cond{
+    font-size:13px;color:rgba(255,255,255,.4);
+    margin-bottom:40px;font-weight:600;
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+  .preco-final .desconto{
+    display:block;margin-top:16px;
+    font-size:12px;font-weight:800;
+    letter-spacing:.18em;color:#f5b841;
+    text-transform:uppercase;
+  }
+  .selos-compra{
+    display:flex;justify-content:center;
+    gap:28px;margin-top:28px;flex-wrap:wrap;
+    font-size:12px;color:rgba(255,255,255,.35);
+    font-weight:600;
+  }
+  .selos-compra span{display:flex;align-items:center;gap:6px}
+
+  .oferta-reforco{
+    margin-top:44px;font-size:18px;
+    color:rgba(255,255,255,.45);line-height:1.7;
+    max-width:700px;margin-left:auto;margin-right:auto;
+    font-weight:400;
+  }
+  .oferta-reforco strong{color:rgba(255,255,255,.85);font-weight:700}
+
+  .mini-faq{
+    margin-top:56px;
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:16px;text-align:left;
+  }
+  .mini-faq-item{
+    border-radius:16px;padding:26px 24px;
+  }
+  .mini-faq-item .q{
+    font-size:14px;font-weight:800;
+    color:#fff;margin-bottom:10px;
+  }
+  .mini-faq-item .a{
+    font-size:13px;color:rgba(255,255,255,.4);
+    line-height:1.65;
+  }
+
+  /* como funciona */
+  .sec-como{padding:100px 0 110px}
+
+  .timeline{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;margin-top:56px;
+  }
+  .step{
+    border-radius:18px;padding:40px 28px;
+    position:relative;
+    transition:all .4s cubic-bezier(.4,0,.2,1);
+  }
+  .step:nth-child(even){transform:translateY(16px)}
+  .step:hover{
+    border-color:rgba(230,57,70,.2);
+    transform:translateY(-4px);
+  }
+  .step .n{
+    font-family:'Inter',sans-serif;
+    font-size:56px;font-weight:900;
+    line-height:.85;color:rgba(230,57,70,.2);
+    margin-bottom:22px;letter-spacing:-.04em;
+  }
+  .step h4{
+    font-size:18px;font-weight:800;
+    color:#fff;margin-bottom:14px;line-height:1.3;
+  }
+  .step p{
+    font-size:13.5px;color:rgba(255,255,255,.4);
+    line-height:1.7;margin-bottom:18px;
+  }
+  .step .selo{
+    display:inline-block;font-size:10px;
+    font-weight:700;color:#22C55E;
+    padding:6px 12px;
+    background:rgba(34,197,94,.08);
+    border:1px solid rgba(34,197,94,.2);
+    border-radius:100px;
+  }
+
+  /* garantia */
+  .sec-garantia{
+    padding:120px 0;
+    border-top:1px solid rgba(255,255,255,.04);
+    background:linear-gradient(180deg,rgba(255,255,255,.012),transparent 40%);
+  }
+
+  .garantia-grid{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:80px;align-items:center;margin-top:56px;
+  }
+  .selo-garantia{
+    width:240px;height:240px;
+    border:2px solid rgba(245,184,65,.4);
+    border-radius:50%;display:grid;
+    place-items:center;text-align:center;
+    position:relative;flex-shrink:0;
+    background:radial-gradient(circle,rgba(245,184,65,.06),transparent 70%);
+  }
+  .selo-garantia::before{
+    content:'';position:absolute;
+    inset:14px;border:1px solid rgba(245,184,65,.2);
+    border-radius:50%;
+  }
+  .selo-garantia .small{
+    font-size:10px;font-weight:800;
+    letter-spacing:.25em;text-transform:uppercase;
+    color:#f5b841;margin-bottom:4px;
+  }
+  .selo-garantia .big{
+    font-family:'Inter',sans-serif;
+    font-size:80px;font-weight:900;
+    color:#fff;line-height:.85;
+  }
+  .selo-garantia .dias{
+    font-size:18px;font-weight:700;
+    color:#f5b841;margin-top:4px;
+    text-transform:uppercase;letter-spacing:.12em;
+  }
+  .selo-garantia .risk{
+    font-size:8px;font-weight:700;
+    color:rgba(255,255,255,.35);margin-top:10px;
+    letter-spacing:.15em;text-transform:uppercase;
+  }
+
+  .garantia-text p{
+    font-size:16px;line-height:1.8;
+    color:rgba(255,255,255,.65);margin-bottom:18px;
+  }
+  .garantia-text .risk-title{
+    font-size:13px;font-weight:800;
+    letter-spacing:.18em;text-transform:uppercase;
+    color:#f5b841;margin-bottom:22px;
+  }
+  .garantia-text .nao-list{
+    font-size:16px;line-height:1.9;
+    color:rgba(255,255,255,.85);font-weight:600;
+  }
+  .garantia-text .nao-list span{display:block}
+
+  .garantia-assinatura{
+    margin-top:40px;padding:32px 36px;
+    border-left:3px solid rgba(245,184,65,.4);
+    border-radius:0 16px 16px 0;
+  }
+  .garantia-assinatura p{
+    font-size:15px;color:rgba(255,255,255,.45);
+    line-height:1.75;font-style:italic;margin-bottom:12px;
+  }
+  .garantia-assinatura .assin{
+    font-family:'Inter',sans-serif;
+    font-size:17px;font-weight:800;
+    color:#f5b841;font-style:normal;margin-top:8px;
+  }
+
+  .garantia-reforco{
+    margin-top:56px;padding:40px 44px;
+    border-radius:20px;
+  }
+  .garantia-reforco ul{
+    list-style:none;display:flex;
+    flex-direction:column;gap:14px;
+  }
+  .garantia-reforco li{
+    font-size:15px;color:rgba(255,255,255,.85);
+    padding-left:36px;position:relative;line-height:1.55;
+  }
+  .garantia-reforco li::before{
+    content:'\2713';position:absolute;
+    left:0;top:0;width:22px;height:22px;
+    background:#22C55E;color:#0a0a0a;
+    border-radius:50%;display:grid;
+    place-items:center;font-size:12px;
+    font-weight:900;
+  }
+  .garantia-reforco .final-line{
+    margin-top:28px;padding-top:22px;
+    border-top:1px solid rgba(255,255,255,.06);
+    font-size:15px;font-weight:700;
+    color:#f5b841;text-align:center;
+  }
+
+  /* pra quem e / nao e */
+  .sec-pra-quem{padding:100px 0 120px}
+
+  .quem-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;margin-top:56px;
+  }
+  .quem-col{
+    border-radius:20px;
+    padding:48px 40px;
+  }
+  .quem-col.sim{border-top:3px solid #22C55E}
+  .quem-col.nao{border-top:3px solid #E63946}
+  .quem-col h4{
+    font-size:20px;font-weight:800;margin-bottom:32px;
+  }
+  .quem-col.sim h4{color:#22C55E}
+  .quem-col.nao h4{color:#E63946}
+  .quem-col ul{
+    list-style:none;display:flex;
+    flex-direction:column;gap:20px;
+  }
+  .quem-col li{
+    display:flex;gap:14px;align-items:flex-start;
+    font-size:14.5px;line-height:1.6;
+    color:rgba(255,255,255,.7);
+  }
+  .quem-col li::before{
+    flex-shrink:0;width:22px;height:22px;
+    border-radius:50%;display:grid;
+    place-items:center;font-size:12px;
+    font-weight:900;margin-top:1px;
+  }
+  .quem-col.sim li::before{
+    content:'\2713';background:#22C55E;color:#0a0a0a;
+  }
+  .quem-col.nao li::before{
+    content:'\2715';background:#E63946;color:#fff;
+  }
+
+  .quem-fecho-decisao{
+    text-align:center;margin-top:72px;
+    max-width:780px;margin-left:auto;margin-right:auto;
+  }
+  .quem-fecho-decisao p{
+    font-size:17px;line-height:1.7;
+    color:rgba(255,255,255,.6);margin-bottom:20px;
+  }
+  .quem-fecho-decisao strong{color:#f5b841;font-weight:700}
+  .quem-fecho-decisao .cta-wrap{margin-top:40px}
+
+  /* faq */
+  .sec-faq{padding:100px 0 120px}
+
+  .faq{max-width:840px;margin:56px auto 0}
+  .faq-item{
+    border-radius:16px;
+    margin-bottom:14px;overflow:hidden;
+    transition:all .3s ease;
+  }
+  .faq-item:hover{border-color:rgba(255,255,255,.12)}
+  .faq-item.open{border-color:rgba(230,57,70,.3)}
+  .faq-q{
+    padding:24px 32px;cursor:pointer;
+    display:flex;justify-content:space-between;
+    align-items:center;gap:28px;
+    font-size:16px;font-weight:700;
+    color:#fff;transition:color .2s;
+    user-select:none;
+  }
+  .faq-q:hover{color:#E63946}
+  .faq-q .sign{
+    flex-shrink:0;width:30px;height:30px;
+    border-radius:50%;
+    background:rgba(230,57,70,.1);
+    color:#E63946;display:grid;
+    place-items:center;font-size:20px;
+    font-weight:300;
+    transition:transform .3s ease;
+  }
+  .faq-item.open .faq-q .sign{transform:rotate(45deg)}
+  .faq-a{
+    max-height:0;overflow:hidden;
+    transition:max-height .4s ease;
+  }
+  .faq-item.open .faq-a{max-height:600px}
+  .faq-a-inner{padding:0 32px 28px}
+  .faq-a-inner p{
+    color:rgba(255,255,255,.45);
+    font-size:14.5px;line-height:1.8;margin-bottom:12px;
+  }
+  .faq-a-inner p:last-child{margin-bottom:0}
+  .faq-a-inner strong{color:#f5b841;font-weight:700}
+
+  /* urgencia final */
+  .sec-urgencia{
+    padding:120px 0 100px;
+    position:relative;overflow:hidden;
+    text-align:center;
+  }
+  .sec-urgencia::before{
+    content:'';position:absolute;
+    top:50%;left:50%;
+    width:1200px;height:1200px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle,rgba(230,57,70,.07),transparent 55%);
+    pointer-events:none;
+  }
+
+  .urgencia-wrap{
+    max-width:860px;margin:0 auto;
+    position:relative;
+  }
+  .urgencia-wrap h2{
+    font-size:clamp(38px,5.5vw,64px);
+    margin-bottom:44px;
+  }
+
+  .urgencia-text{
+    font-size:17px;line-height:1.8;
+    color:rgba(255,255,255,.45);margin-bottom:44px;
+  }
+  .urgencia-text strong{color:rgba(255,255,255,.85);font-weight:700}
+  .urgencia-sep{
+    width:100%;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);
+    margin:24px 0;
+  }
+
+  .urg-countdown{
+    border-radius:20px;
+    padding:44px 36px;margin-bottom:44px;
+  }
+  .urg-countdown .title-cd{
+    font-size:11px;font-weight:800;
+    letter-spacing:.25em;text-transform:uppercase;
+    color:#E63946;margin-bottom:20px;
+  }
+  .urg-countdown .vagas{
+    font-size:13px;color:rgba(255,255,255,.4);
+    margin-top:20px;font-weight:600;
+  }
+  .urg-countdown .vagas strong{color:#f5b841}
+
+  .recap{
+    background:rgba(245,184,65,.03);
+    border:1px solid rgba(245,184,65,.12);
+    border-radius:20px;padding:36px 44px;
+    margin-bottom:44px;text-align:left;
+  }
+  .recap h4{
+    font-size:11px;font-weight:800;
+    letter-spacing:.2em;text-transform:uppercase;
+    color:#f5b841;margin-bottom:22px;text-align:center;
+  }
+  .recap ul{
+    list-style:none;display:flex;
+    flex-direction:column;gap:12px;
+    max-width:500px;margin:0 auto;
+  }
+  .recap li{
+    font-size:15px;color:rgba(255,255,255,.85);
+    padding-left:28px;position:relative;
+  }
+  .recap li::before{
+    content:'\2713';position:absolute;left:0;
+    color:#22C55E;font-weight:900;
+  }
+  .recap .valor-total{
+    margin-top:22px;padding-top:22px;
+    border-top:1px solid rgba(245,184,65,.12);
+    text-align:center;font-size:16px;
+    font-weight:700;color:rgba(255,255,255,.85);
+  }
+  .recap .valor-total strong{color:#f5b841;font-size:20px}
+
+  .btn-wrap{text-align:center}
+  .btn-mini{
+    font-size:11px;color:rgba(255,255,255,.35);
+    margin-top:16px;font-weight:600;
+    letter-spacing:.05em;
+  }
+
+  .urg-contato{
+    margin-top:32px;font-size:14px;
+    color:rgba(255,255,255,.4);
+  }
+  .urg-contato strong{color:#f5b841}
+
+  .assinatura{
+    margin-top:56px;padding-top:40px;
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+  .assinatura p{
+    font-size:15px;color:rgba(255,255,255,.4);
+    margin-bottom:8px;
+  }
+  .assinatura .nome{
+    font-family:'Inter',sans-serif;
+    font-size:22px;font-weight:900;
+    color:#fff;margin-top:12px;margin-bottom:6px;
+    letter-spacing:-.02em;
+  }
+  .assinatura .cargo{
+    font-size:12px;color:rgba(255,255,255,.35);
+    font-weight:500;
+  }
+
+  /* footer */
+  footer{
+    background:#050505;
+    border-top:1px solid rgba(255,255,255,.04);
+    padding:48px 0 32px;
+  }
+  .footer-grid{
+    display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;
+    gap:24px;margin-bottom:32px;
+  }
+  .footer-brand{
+    font-family:'Inter',sans-serif;
+    font-size:17px;font-weight:900;color:#fff;
+    letter-spacing:-.01em;
+  }
+  .footer-brand .sub{
+    display:block;font-size:10px;
+    color:rgba(255,255,255,.25);
+    font-weight:500;letter-spacing:.18em;
+    text-transform:uppercase;margin-top:4px;
+  }
+  .footer-links{
+    display:flex;gap:30px;
+    font-size:11px;font-weight:600;
+    color:rgba(255,255,255,.35);
+    text-transform:uppercase;letter-spacing:.1em;
+  }
+  .footer-disclaimer{
+    font-size:11px;color:rgba(255,255,255,.2);
+    line-height:1.7;padding-top:28px;
+    border-top:1px solid rgba(255,255,255,.04);
+  }
+
+  /* whatsapp float */
+  .wa-float{
+    position:fixed;bottom:24px;right:24px;
+    background:#25D366;color:#0a0a0a;
+    width:58px;height:58px;border-radius:50%;
+    display:grid;place-items:center;
+    font-size:26px;
+    box-shadow:0 8px 32px rgba(37,211,102,.4);
+    z-index:999;transition:transform .25s ease;
+  }
+  .wa-float:hover{transform:scale(1.12)}
+
+  /* creative dividers */
+  .divider-wave{
+    height:80px;
+    position:relative;
+    overflow:hidden;
+  }
+  .divider-wave::before{
+    content:'';position:absolute;
+    left:-5%;right:-5%;top:50%;
+    height:1px;
+    background:linear-gradient(90deg,
+      transparent 0%,
+      rgba(230,57,70,.15) 20%,
+      rgba(230,57,70,.3) 50%,
+      rgba(230,57,70,.15) 80%,
+      transparent 100%
+    );
+  }
+  .divider-wave::after{
+    content:'';position:absolute;
+    left:50%;top:50%;
+    width:6px;height:6px;
+    background:#E63946;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 20px rgba(230,57,70,.5);
+  }
+
+  /* animations */
+  @keyframes float{
+    0%,100%{transform:translateY(0) rotate(.8deg)}
+    50%{transform:translateY(-8px) rotate(.8deg)}
+  }
+  @keyframes shimmer{
+    0%{background-position:-200% 0}
+    100%{background-position:200% 0}
+  }
+
+  /* responsive */
+  @media(max-width:980px){
+    .wrap{padding:0 20px}
+
+    .hero{padding:48px 0 60px;min-height:auto}
+    .hero-layout,.virada-grid,.garantia-grid{
+      grid-template-columns:1fr;gap:40px;
     }
-    .virada-card { position: static; }
-    .selo-garantia { margin: 0 auto; width: 220px; height: 220px; }
-    .selo-garantia .big { font-size: 72px; }
+    .hero-card{transform:rotate(0deg) !important;animation:none}
+    .virada-card{position:static;transform:rotate(0deg) !important}
 
-    .pain-grid, .cases-grid, .quem-grid, .timeline, .stats-grid, .mini-faq {
-      grid-template-columns: 1fr;
-      gap: 20px;
+    .hero h1{font-size:clamp(38px,10vw,52px)}
+    .hero-card .big-date{font-size:64px}
+
+    .pain-layout,.cases-grid,.quem-grid,.timeline,.stats-grid,.mini-faq{
+      grid-template-columns:1fr;gap:16px;
     }
+    .cases-grid .case-card:nth-child(2),
+    .cases-grid .case-card:nth-child(3){transform:none !important}
+    .step:nth-child(even){transform:none}
+    .stat-card:nth-child(2),.stat-card:nth-child(5){transform:none}
 
-    .hero h1 { font-size: 44px; }
-    .hero-card { padding: 32px 28px; }
-    .hero-card .big-date { font-size: 64px; }
+    .sec-heading{font-size:clamp(26px,6vw,34px)}
+    .selo-garantia{margin:0 auto;width:200px;height:200px}
+    .selo-garantia .big{font-size:64px}
 
-    .section-title { font-size: 32px; }
+    .bloco-head,.bloco-body{padding:24px 22px}
+    .bloco-head h3{font-size:22px}
 
-    .bloco-head, .bloco-body { padding: 28px 24px; }
-    .bloco-head h3 { font-size: 24px; }
+    .entregaveis-box{padding:28px 22px}
+    .entregavel{grid-template-columns:1fr;gap:8px}
+    .preco-final{padding:44px 24px}
+    .preco-final .valor{font-size:90px}
 
-    .entregaveis-box { padding: 32px 24px; }
-    .entregavel { grid-template-columns: 1fr; gap: 8px; }
-    .entregavel .preco { font-size: 18px; }
-    .preco-final { padding: 40px 24px; }
-    .preco-final .valor { font-size: 100px; }
-    .preco-final .valor sup { font-size: 32px; top: -42px; }
+    .cta{font-size:14px;padding:20px 32px}
+    .faq-q{font-size:15px;padding:20px 22px}
+    .faq-a-inner{padding:0 22px 22px}
 
-    .btn { font-size: 16px; padding: 20px 32px; }
-    .faq-q { font-size: 16px; padding: 22px 24px; }
-    .faq-a-inner { padding: 0 24px 24px; }
+    .sec-pain,.sec-virada,.sec-quem,.sec-oferta,.sec-garantia{padding:80px 0}
 
-    .quem-fecho-decisao p { font-size: 16px; }
+    .divider-wave{height:48px}
+  }
 
-    .scale-box, .reconhecimentos { padding: 28px 24px; }
+  @media(max-width:600px){
+    .hero h1{font-size:36px}
+    .hero-sub{font-size:16px}
+    .urgencia-wrap h2{font-size:28px}
+    .quem-grid{gap:16px}
+    .quem-col{padding:32px 24px}
+    .mini-faq{gap:12px}
+    .mini-faq-item{padding:20px 18px}
   }
 </style>
 </head>
 <body>
 
-<!-- ============================================ -->
 <!-- ALERT BAR -->
-<!-- ============================================ -->
 <div class="alert-bar">
   <span class="pulse"></span>
   <strong>ATENÇÃO — ÚLTIMAS VAGAS:</strong> Inscrições encerram em poucos dias ou ao atingirmos o limite de vagas no Zoom · <strong>(58% JÁ CONFIRMADOS)</strong>
 </div>
 
-<!-- ============================================ -->
-<!-- DOBRA 1 — HERO -->
-<!-- ============================================ -->
+<!-- HERO -->
 <section class="hero">
-  <div class="container">
-    <div class="hero-grid">
+  <div class="wrap">
+    <div class="hero-layout">
       <div class="hero-left">
         <div class="hero-badge">
           <span class="dot"></span>
@@ -1861,11 +1536,11 @@
           </li>
         </ul>
 
-        <a href="#oferta" class="btn">
-          Quero minha vaga por R$47
+        <a href="#oferta" class="cta">
+          <span>Quero minha vaga por R$47</span>
           <span class="arrow">→</span>
         </a>
-        <div class="btn-mini">🔒 PAGAMENTO SEGURO · PIX OU CARTÃO · VAGA GARANTIDA NO ATO · LOTE LIMITADO</div>
+        <div class="cta-note">🔒 PAGAMENTO SEGURO · PIX OU CARTÃO · VAGA GARANTIDA NO ATO · LOTE LIMITADO</div>
       </div>
 
       <div class="hero-card">
@@ -1894,11 +1569,9 @@
   </div>
 </section>
 
-<!-- ============================================ -->
 <!-- SOCIAL PROOF STRIP -->
-<!-- ============================================ -->
 <div class="social-strip">
-  <div class="container">
+  <div class="wrap">
     <span class="lbl">+10.000 Alunos em 10 Países Diferentes</span>
     <p class="names">
       Mentor de pessoas iniciando, até de grandes players como <strong>Pablo Marçal</strong> · <strong>Brasil Paralelo</strong> · <strong>Leandro Ladeira</strong> · <strong>Elainne Ourives</strong> · <strong>El Professor da Oratória</strong> e muito mais...
@@ -1906,23 +1579,21 @@
   </div>
 </div>
 
-<!-- ============================================ -->
-<!-- DOBRA 2 — DOR / IDENTIFICAÇÃO -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Identificação</div>
-    <h2 class="section-title">A IMERSÃO CANAL LUCRATIVO foi feita pra <em>3 tipos de pessoa</em>. Veja se você é uma delas:</h2>
+<!-- DOR / IDENTIFICAÇÃO -->
+<section class="sec-pain">
+  <div class="wrap">
+    <div class="tag-label">Identificação</div>
+    <h2 class="sec-heading">A IMERSÃO CANAL LUCRATIVO foi feita pra <em>3 tipos de pessoa</em>. Veja se você é uma delas:</h2>
 
-    <div class="pain-grid">
-      <div class="pain-card">
+    <div class="pain-layout">
+      <div class="pain-card glass">
         <div class="num">─ PERFIL 01 ─</div>
         <p class="quote">"Eu sei que o YouTube pode mudar minha vida. Eu só não sei por onde começar."</p>
         <p>Você já tentou começar umas 2, 3 vezes. Criou o canal, não soube o que postar, deletou. Gravou um vídeo, achou ruim, apagou. Comprou cursinho, assistiu 20%, parou. No fundo você sabe que o YouTube é o caminho certo — você vê gente fazendo dinheiro, virando autoridade, mudando de vida — mas toda vez que você senta pra começar pra valer, você trava.</p>
         <p style="margin-top:14px">E aí mais um mês passa. Mais um ano. A sensação de "eu deveria estar fazendo isso" só cresce.</p>
       </div>
 
-      <div class="pain-card">
+      <div class="pain-card glass">
         <div class="num">─ PERFIL 02 ─</div>
         <p class="quote">"Eu já tentei de tudo e meu canal simplesmente não sai do lugar."</p>
         <p>Você já tentou mudar o nicho. Já tentou postar mais. Já tentou postar menos. Já viu um monte de vídeo no YouTube ensinando YouTube. Já seguiu dica de guru, já mudou thumbnail, já mudou horário. E nada funciona como você esperava.</p>
@@ -1930,7 +1601,7 @@
         <p style="margin-top:14px"><strong>Spoiler: eles sabem 1 coisa. E o problema nunca foi você.</strong></p>
       </div>
 
-      <div class="pain-card">
+      <div class="pain-card glass-warm">
         <div class="num">─ PERFIL 03 ─</div>
         <p class="quote">"Eu tô cansado de depender de tráfego pago pra ter cliente. Eu preciso de autoridade real."</p>
         <p>Todo mês é a mesma coisa: você liga os anúncios, o custo por lead sobe, a conversão cai, o Meta muda o algoritmo, e você tá refém de uma plataforma que pode te matar do dia pra noite. Você sabe que se parar de investir hoje, o faturamento despenca amanhã.</p>
@@ -1941,18 +1612,18 @@
 
     <div class="pain-fecho">
       <p>Se você se reconheceu em qualquer uma dessas histórias, respira fundo. Essa imersão foi <strong>desenhada exatamente pra você</strong>.</p>
-      <p style="margin-top:20px; font-size:19px;">E não é sobre "tentar de novo". É sobre finalmente fazer do jeito certo — com um método que já transformou milhares de canais, em um único sábado.</p>
+      <p style="margin-top:20px; font-size:18px;">E não é sobre "tentar de novo". É sobre finalmente fazer do jeito certo — com um método que já transformou milhares de canais, em um único sábado.</p>
     </div>
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 3 — VIRADA DE CHAVE -->
-<!-- ============================================ -->
-<section class="virada">
-  <div class="container">
-    <div class="section-label">A Virada</div>
-    <h2 class="section-title">O problema nunca foi você. <em>Foi a FALTA de um método.</em></h2>
+<div class="divider-wave"></div>
+
+<!-- VIRADA DE CHAVE -->
+<section class="sec-virada">
+  <div class="wrap">
+    <div class="tag-label">A Virada</div>
+    <h2 class="sec-heading">O problema nunca foi você. <em>Foi a FALTA de um método.</em></h2>
     <p class="virada-sub">Eu levei 10 meses pra conseguir os meus primeiros 250 inscritos no meu canal. <strong>DEZ MESES.</strong> Gravando quase todo dia, me matando de trabalhar, acreditando que "consistência" era o segredo. Não era.</p>
 
     <div class="virada-grid">
@@ -1973,7 +1644,7 @@
         <p>E é esse mesmo método — o passo a passo completo, do zero à monetização — que eu vou entregar na sua mão no <strong>sábado 25 de abril, ao vivo, comigo junto, você executando.</strong></p>
       </div>
 
-      <div class="virada-card">
+      <div class="virada-card glass-warm">
         <div class="virada-stat">
           <div class="lbl-stat">Antes do Método</div>
           <div class="val-stat">250</div>
@@ -2002,21 +1673,20 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 4 — PROGRAMA DO DIA -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Programação Completa da Imersão Canal Lucrativo</div>
-    <h2 class="section-title">Um sábado inteiro. Comigo, ao vivo. <em>Aqui está tudo que vai acontecer no dia 25 de abril:</em></h2>
-    <p class="section-sub">
-      <strong style="color:var(--gold)">De manhã:</strong> O mapa completo — vou te ensinar como o YouTube REALMENTE funciona e o que separa quem cresce e faz muito dinheiro de quem continua postando no escuro.<br><br>
-      <strong style="color:var(--gold)">De tarde (pós pausa para almoço):</strong> Você vai aprender TUDO QUE PRECISA para seu canal do YouTube CRESCER. Será uma tarde de mão na massa — eu vou criar, configurar e postar num canal DO ZERO na sua frente, revelando ferramentas de IA e tecnologias que vão ensinar o que você precisa fazer na prática.
+<div class="divider-wave"></div>
+
+<!-- PROGRAMA DO DIA -->
+<section class="sec-programa">
+  <div class="wrap">
+    <div class="tag-label">Programação Completa da Imersão Canal Lucrativo</div>
+    <h2 class="sec-heading">Um sábado inteiro. Comigo, ao vivo. <em>Aqui está tudo que vai acontecer no dia 25 de abril:</em></h2>
+    <p class="sec-desc">
+      <strong style="color:#f5b841">De manhã:</strong> O mapa completo — vou te ensinar como o YouTube REALMENTE funciona e o que separa quem cresce e faz muito dinheiro de quem continua postando no escuro.<br><br>
+      <strong style="color:#f5b841">De tarde (pós pausa para almoço):</strong> Você vai aprender TUDO QUE PRECISA para seu canal do YouTube CRESCER. Será uma tarde de mão na massa — eu vou criar, configurar e postar num canal DO ZERO na sua frente, revelando ferramentas de IA e tecnologias que vão ensinar o que você precisa fazer na prática.
     </p>
 
     <div class="programa-wrap">
-      <!-- BLOCO MANHÃ -->
-      <div class="bloco">
+      <div class="bloco glass">
         <div class="bloco-head">
           <div>
             <div class="time-lbl">☀ Manhã · 10h às 12h</div>
@@ -2026,52 +1696,19 @@
         </div>
         <div class="bloco-body">
           <ul>
-            <li>
-              <span class="n">01</span>
-              <strong>Como o YouTube REALMENTE funciona em 2026</strong>
-              <span class="desc">E por que 9 em cada 10 canais morrem antes dos primeiros 1.000 inscritos (não é "conteúdo ruim", é outra coisa)</span>
-            </li>
-            <li>
-              <span class="n">02</span>
-              <strong>A estratégia exata por trás dos 400 mil views/dia e +R$100 mil/mês em 1 único canal meu</strong>
-              <span class="desc">Vou abrir o YouTube Studio ao vivo e mostrar os prints reais — AdSense, painel, métricas, tudo aberto</span>
-            </li>
-            <li>
-              <span class="n">03</span>
-              <strong>Como saber se o YouTube é pra você — e qual nicho combina com quem você é</strong>
-              <span class="desc">Sem chute, sem "escolhe o que você gosta" genérico. Tem um método pra encontrar seu nicho lucrativo</span>
-            </li>
-            <li>
-              <span class="n">04</span>
-              <strong>Os pilares de um Canal Lucrativo</strong>
-              <span class="desc">O que separa quem fatura todo mês de quem continua postando no escuro (falta 1 pilar, geralmente o mesmo)</span>
-            </li>
-            <li>
-              <span class="n">05</span>
-              <strong>Como monetizar DESDE o primeiro vídeo</strong>
-              <span class="desc">Sim — antes mesmo de atingir os critérios oficiais do YouTube. Tem +10 formas de monetizar e ninguém te conta nenhuma delas</span>
-            </li>
-            <li>
-              <span class="n">06</span>
-              <strong>O mapa completo: as formas reais de fazer dinheiro com YouTube</strong>
-              <span class="desc">AdSense é só 1 delas. Tem outras (e é onde tá o dinheiro grande de quem fatura R$50k, R$100k, R$500k/mês)</span>
-            </li>
-            <li>
-              <span class="n">07</span>
-              <strong>Os erros fatais que estão travando seu canal hoje</strong>
-              <span class="desc">E como corrigir todos em 1 único dia, sem precisar recomeçar nada</span>
-            </li>
-            <li>
-              <span class="n">08</span>
-              <strong>O case Pablo Marçal: de 3 milhões para 9 milhões de views em 28 dias</strong>
-              <span class="desc">Vou abrir o processo completo — o que eu fiz, como eu fiz, e como você pode replicar no seu canal</span>
-            </li>
+            <li><span class="n">01</span><strong>Como o YouTube REALMENTE funciona em 2026</strong><span class="desc">E por que 9 em cada 10 canais morrem antes dos primeiros 1.000 inscritos (não é "conteúdo ruim", é outra coisa)</span></li>
+            <li><span class="n">02</span><strong>A estratégia exata por trás dos 400 mil views/dia e +R$100 mil/mês em 1 único canal meu</strong><span class="desc">Vou abrir o YouTube Studio ao vivo e mostrar os prints reais — AdSense, painel, métricas, tudo aberto</span></li>
+            <li><span class="n">03</span><strong>Como saber se o YouTube é pra você — e qual nicho combina com quem você é</strong><span class="desc">Sem chute, sem "escolhe o que você gosta" genérico. Tem um método pra encontrar seu nicho lucrativo</span></li>
+            <li><span class="n">04</span><strong>Os pilares de um Canal Lucrativo</strong><span class="desc">O que separa quem fatura todo mês de quem continua postando no escuro (falta 1 pilar, geralmente o mesmo)</span></li>
+            <li><span class="n">05</span><strong>Como monetizar DESDE o primeiro vídeo</strong><span class="desc">Sim — antes mesmo de atingir os critérios oficiais do YouTube. Tem +10 formas de monetizar e ninguém te conta nenhuma delas</span></li>
+            <li><span class="n">06</span><strong>O mapa completo: as formas reais de fazer dinheiro com YouTube</strong><span class="desc">AdSense é só 1 delas. Tem outras (e é onde tá o dinheiro grande de quem fatura R$50k, R$100k, R$500k/mês)</span></li>
+            <li><span class="n">07</span><strong>Os erros fatais que estão travando seu canal hoje</strong><span class="desc">E como corrigir todos em 1 único dia, sem precisar recomeçar nada</span></li>
+            <li><span class="n">08</span><strong>O case Pablo Marçal: de 3 milhões para 9 milhões de views em 28 dias</strong><span class="desc">Vou abrir o processo completo — o que eu fiz, como eu fiz, e como você pode replicar no seu canal</span></li>
           </ul>
         </div>
       </div>
 
-      <!-- BLOCO ALMOÇO -->
-      <div class="bloco almoco">
+      <div class="bloco almoco glass">
         <div class="bloco-head">
           <div>
             <div class="time-lbl">🍽 12h às 14h</div>
@@ -2081,8 +1718,7 @@
         </div>
       </div>
 
-      <!-- BLOCO TARDE -->
-      <div class="bloco tarde">
+      <div class="bloco tarde glass">
         <div class="bloco-head">
           <div>
             <div class="time-lbl">🔥 Tarde · 14h às 18h</div>
@@ -2092,46 +1728,14 @@
         </div>
         <div class="bloco-body">
           <ul>
-            <li>
-              <span class="n">01</span>
-              <strong>Eu vou CRIAR um canal do absoluto zero na sua frente</strong>
-              <span class="desc">Do Gmail à toda configuração necessária. Zero teoria, tudo prática. Você abre seu YouTube Studio e faz tudo junto comigo</span>
-            </li>
-            <li>
-              <span class="n">02</span>
-              <strong>A configuração secreta que 99% dos canais erram</strong>
-              <span class="desc">E que o YouTube usa pra decidir se vai entregar ou não seu vídeo. Sem isso, você pode gravar 1.000 vídeos que ninguém assiste</span>
-            </li>
-            <li>
-              <span class="n">03</span>
-              <strong>Como buscar ideias de vídeos que JÁ deram certo</strong>
-              <span class="desc">Sem chutar, sem inventar, sem "inspiração que não vem". Vou usar o próprio Google como aliado e mostrar como pegar ideias validadas que já fizeram milhões de views</span>
-            </li>
-            <li>
-              <span class="n">04</span>
-              <strong>Como postar um vídeo na prática: Título, descrição, tags e thumbnail</strong>
-              <span class="desc">Vou mostrar como fazer na prática ou como usar uma ferramenta PODEROSA que vai fazer tudo para você em 15 segundos</span>
-            </li>
-            <li>
-              <span class="n">05</span>
-              <strong>O processo completo de postagem que 99% erra</strong>
-              <span class="desc">Tem passos que você precisa seguir toda vez que publica um vídeo. Pular qualquer um deles faz você perder até 70% do alcance. Vou abrir todos</span>
-            </li>
-            <li>
-              <span class="n">06</span>
-              <strong>Como criar Shorts ao vivo — o formato que mais viraliza em 2026</strong>
-              <span class="desc">Vou gravar um Shorts do meu canal principal ao vivo, na sua frente, e te mostrar a estrutura exata que faz Shorts ultrapassarem 1 milhão de views</span>
-            </li>
-            <li>
-              <span class="n">07</span>
-              <strong>O "atalho invisível": como transformar views em clientes reais pro seu negócio</strong>
-              <span class="desc">Pra quem já tem empresa e quer usar YouTube como canal de aquisição. Esse bloco vale o preço do ingresso sozinho pra empresário</span>
-            </li>
-            <li>
-              <span class="n">08</span>
-              <strong>Seu plano de ação dos próximos 30 dias</strong>
-              <span class="desc">Você não vai sair daqui com "motivação". Vai sair com um cronograma claro: o que postar, quando postar, como medir. Tudo por escrito</span>
-            </li>
+            <li><span class="n">01</span><strong>Eu vou CRIAR um canal do absoluto zero na sua frente</strong><span class="desc">Do Gmail à toda configuração necessária. Zero teoria, tudo prática. Você abre seu YouTube Studio e faz tudo junto comigo</span></li>
+            <li><span class="n">02</span><strong>A configuração secreta que 99% dos canais erram</strong><span class="desc">E que o YouTube usa pra decidir se vai entregar ou não seu vídeo. Sem isso, você pode gravar 1.000 vídeos que ninguém assiste</span></li>
+            <li><span class="n">03</span><strong>Como buscar ideias de vídeos que JÁ deram certo</strong><span class="desc">Sem chutar, sem inventar, sem "inspiração que não vem". Vou usar o próprio Google como aliado e mostrar como pegar ideias validadas que já fizeram milhões de views</span></li>
+            <li><span class="n">04</span><strong>Como postar um vídeo na prática: Título, descrição, tags e thumbnail</strong><span class="desc">Vou mostrar como fazer na prática ou como usar uma ferramenta PODEROSA que vai fazer tudo para você em 15 segundos</span></li>
+            <li><span class="n">05</span><strong>O processo completo de postagem que 99% erra</strong><span class="desc">Tem passos que você precisa seguir toda vez que publica um vídeo. Pular qualquer um deles faz você perder até 70% do alcance. Vou abrir todos</span></li>
+            <li><span class="n">06</span><strong>Como criar Shorts ao vivo — o formato que mais viraliza em 2026</strong><span class="desc">Vou gravar um Shorts do meu canal principal ao vivo, na sua frente, e te mostrar a estrutura exata que faz Shorts ultrapassarem 1 milhão de views</span></li>
+            <li><span class="n">07</span><strong>O "atalho invisível": como transformar views em clientes reais pro seu negócio</strong><span class="desc">Pra quem já tem empresa e quer usar YouTube como canal de aquisição. Esse bloco vale o preço do ingresso sozinho pra empresário</span></li>
+            <li><span class="n">08</span><strong>Seu plano de ação dos próximos 30 dias</strong><span class="desc">Você não vai sair daqui com "motivação". Vai sair com um cronograma claro: o que postar, quando postar, como medir. Tudo por escrito</span></li>
           </ul>
         </div>
       </div>
@@ -2145,13 +1749,13 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 5 — QUEM É JOÃO ADOLFO -->
-<!-- ============================================ -->
-<section class="quem">
-  <div class="container">
-    <div class="section-label">Quem Vai Te Ensinar</div>
-    <h2 class="section-title">Quem é João Adolfo — e <em>por que vale a pena</em> passar um sábado inteiro com ele</h2>
+<div class="divider-wave"></div>
+
+<!-- QUEM É JOÃO ADOLFO -->
+<section class="sec-quem">
+  <div class="wrap">
+    <div class="tag-label">Quem Vai Te Ensinar</div>
+    <h2 class="sec-heading">Quem é João Adolfo — e <em>por que vale a pena</em> passar um sábado inteiro com ele</h2>
 
     <div class="quem-text">
       <p>Há 6 anos, eu tava varrendo o chão de uma oficina no interior do Rio Grande do Sul. Empresa quebrada, dívida de empréstimos, um filho que a gente tinha acabado de perder, e zero perspectiva de futuro.</p>
@@ -2159,37 +1763,19 @@
       <p>Foi aí que eu descobri o YouTube. E foi o YouTube que mudou literalmente tudo — <strong>minha vida, minha empresa, minha família</strong>.</p>
 
       <div class="transicao">Hoje, 5 anos depois daquele dia, eu sou reconhecido como um dos maiores especialistas em YouTube da América Latina.</div>
-      <p style="font-style:italic; color:var(--ink-muted);">Não porque eu me considero isso — mas porque os números, os alunos e os cases falam por si.</p>
+      <p style="font-style:italic; color:rgba(255,255,255,.4);">Não porque eu me considero isso — mas porque os números, os alunos e os cases falam por si.</p>
     </div>
 
     <div class="stats-grid">
-      <div class="stat-card">
-        <div class="val">21</div>
-        <div class="lbl">Canais Próprios<br>no YouTube</div>
-      </div>
-      <div class="stat-card">
-        <div class="val">+30M</div>
-        <div class="lbl">Inscritos no<br>Ecossistema</div>
-      </div>
-      <div class="stat-card">
-        <div class="val">+6 BI</div>
-        <div class="lbl">Visualizações<br>Geradas</div>
-      </div>
-      <div class="stat-card">
-        <div class="val">+400 MIL</div>
-        <div class="lbl">Views por Dia<br>em 1 Canal Só</div>
-      </div>
-      <div class="stat-card">
-        <div class="val">+R$100k</div>
-        <div class="lbl">Receita Mensal<br>em 1 Canal Só</div>
-      </div>
-      <div class="stat-card">
-        <div class="val">+10.000</div>
-        <div class="lbl">Alunos Ativos<br>em 10 Países</div>
-      </div>
+      <div class="stat-card glass"><div class="val">21</div><div class="lbl">Canais Próprios<br>no YouTube</div></div>
+      <div class="stat-card glass"><div class="val">+30M</div><div class="lbl">Inscritos no<br>Ecossistema</div></div>
+      <div class="stat-card glass"><div class="val">+6 BI</div><div class="lbl">Visualizações<br>Geradas</div></div>
+      <div class="stat-card glass"><div class="val">+400 MIL</div><div class="lbl">Views por Dia<br>em 1 Canal Só</div></div>
+      <div class="stat-card glass"><div class="val">+R$100k</div><div class="lbl">Receita Mensal<br>em 1 Canal Só</div></div>
+      <div class="stat-card glass"><div class="val">+10.000</div><div class="lbl">Alunos Ativos<br>em 10 Países</div></div>
     </div>
 
-    <div class="scale-box">
+    <div class="scale-box glass">
       <h4>Já ajudei a escalar canais de:</h4>
       <ul>
         <li><strong>Pablo Marçal</strong> — de 3M pra 9M de views em 28 dias</li>
@@ -2212,24 +1798,22 @@
       </ul>
     </div>
 
-    <div class="quem-fecho">
+    <div class="quem-fecho glass">
       <p>Eu não ensino teoria que eu li em livro. Eu ensino exatamente <strong>o que eu faço todo santo dia</strong> nos meus 21 canais — e o que já fiz funcionar pra milhares de alunos ao redor do mundo.</p>
       <p>E é esse conhecimento, cru e sem filtro, que eu vou entregar na sua mão no dia <strong>25 de abril</strong>.</p>
     </div>
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 6 — PROVA SOCIAL -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Prova Social</div>
-    <h2 class="section-title">Não confie só em mim. Confie nos resultados de quem <em>já aplicou esse método</em> (que você vai aprender):</h2>
-    <p class="section-sub">Advogados, médicos, pastores, aposentados, empresários, criadores que começaram do zero absoluto. O método funciona porque é baseado em como o YouTube REALMENTE funciona — não em sorte, não em talento, não em "tempo disponível".</p>
+<!-- PROVA SOCIAL -->
+<section class="sec-cases">
+  <div class="wrap">
+    <div class="tag-label">Prova Social</div>
+    <h2 class="sec-heading">Não confie só em mim. Confie nos resultados de quem <em>já aplicou esse método</em> (que você vai aprender):</h2>
+    <p class="sec-desc">Advogados, médicos, pastores, aposentados, empresários, criadores que começaram do zero absoluto. O método funciona porque é baseado em como o YouTube REALMENTE funciona — não em sorte, não em talento, não em "tempo disponível".</p>
 
     <div class="cases-grid">
-      <div class="case-card">
+      <div class="case-card glass-warm">
         <span class="star">★ 3M → 9M VIEWS EM 28 DIAS</span>
         <h4>Pablo Marçal</h4>
         <div class="tag">Empreendedor · Mentor</div>
@@ -2237,7 +1821,7 @@
         <div><span class="video-badge">▶ Vídeo Depoimento</span></div>
       </div>
 
-      <div class="case-card">
+      <div class="case-card glass">
         <span class="star">★ 1,5 MILHÃO DE INSCRITOS</span>
         <h4>Elainne Ourives</h4>
         <div class="tag">Autora · Lei da Atração</div>
@@ -2245,7 +1829,7 @@
         <div><span class="video-badge">▶ Vídeo Depoimento</span></div>
       </div>
 
-      <div class="case-card">
+      <div class="case-card glass">
         <span class="star">★ 1 MILHÃO DE INSCRITOS</span>
         <h4>Leandro Ladeira</h4>
         <div class="tag">Mentor de Copywriting</div>
@@ -2253,7 +1837,7 @@
         <div><span class="video-badge">▶ Vídeo Depoimento</span></div>
       </div>
 
-      <div class="case-card">
+      <div class="case-card glass">
         <span class="star">★ 40 MIL INSCRITOS</span>
         <h4>Dra Tatiana Sampaio</h4>
         <div class="tag">Advogada · Previdenciária</div>
@@ -2262,7 +1846,7 @@
       </div>
     </div>
 
-    <div class="mural-prints">
+    <div class="mural-prints glass">
       <h4>+ Centenas de Depoimentos em Prints</h4>
       <p>(Mural de prints dos alunos será exibido aqui)</p>
     </div>
@@ -2275,17 +1859,17 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 7 — OFERTA -->
-<!-- ============================================ -->
-<section class="oferta" id="oferta">
-  <div class="container">
+<div class="divider-wave"></div>
+
+<!-- OFERTA -->
+<section class="sec-oferta" id="oferta">
+  <div class="wrap">
     <div class="oferta-wrap">
-      <div class="section-label" style="justify-content:center; display:flex;">A Oferta</div>
-      <h2>Tudo que você leva participando da <em>IMERSÃO CANAL LUCRATIVO</em>:</h2>
+      <div style="text-align:center"><div class="tag-label">A Oferta</div></div>
+      <h2 class="sec-heading" style="text-align:center;margin-left:auto;margin-right:auto">Tudo que você leva participando da <em>IMERSÃO CANAL LUCRATIVO</em>:</h2>
       <p class="oferta-sub">Essa imersão foi precificada pra ser acessível pra qualquer pessoa que está decidida a mudar sua história no YouTube. Veja tudo que você leva por menos do que um jantar de sexta:</p>
 
-      <div class="entregaveis-box">
+      <div class="entregaveis-box glass">
         <div class="entregavel">
           <div>
             <div class="head">Item 01 · Principal</div>
@@ -2330,8 +1914,8 @@
         <div class="vai-pagar">Hoje seu investimento é de apenas</div>
         <div class="valor"><sup>R$</sup>47</div>
         <div class="cond">À vista no Pix ou parcelado no cartão</div>
-        <a href="#" class="btn">
-          Quero minha vaga agora
+        <a href="#" class="cta">
+          <span>Quero minha vaga agora</span>
           <span class="arrow">→</span>
         </a>
         <span class="desconto">✨ 95% de desconto válido somente hoje</span>
@@ -2345,15 +1929,15 @@
       <p class="oferta-reforco">R$ 47 é menos do que você gasta num jantar de sexta-feira. É o custo de 1 pizza. De 2 tanques cheios numa entrega. De 1 corrida de Uber pro aeroporto.<br><br><strong>E pode ser o dia que muda sua relação com o YouTube — e com dinheiro — pelos próximos 10 anos.</strong></p>
 
       <div class="mini-faq">
-        <div class="mini-faq-item">
+        <div class="mini-faq-item glass">
           <div class="q">❓ Posso parcelar?</div>
           <div class="a">Sim. Parcelamento no cartão de crédito em até 12x.</div>
         </div>
-        <div class="mini-faq-item">
+        <div class="mini-faq-item glass">
           <div class="q">❓ O pagamento é seguro?</div>
           <div class="a">100% seguro. Processado pela Greenn, uma das maiores plataformas de pagamento do Brasil. Dados criptografados.</div>
         </div>
-        <div class="mini-faq-item">
+        <div class="mini-faq-item glass">
           <div class="q">❓ Quando recebo o acesso?</div>
           <div class="a">Na hora. Assim que o pagamento for confirmado, você recebe o e-mail com o link do grupo exclusivo imediatamente.</div>
         </div>
@@ -2362,35 +1946,33 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 8 — COMO FUNCIONA -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Como Vai Funcionar</div>
-    <h2 class="section-title">Do clique à imersão: <em>sua jornada em 4 passos simples</em></h2>
-    <p class="section-sub">Zero burocracia. Zero complicação. Do momento que você garante sua vaga até o sábado 25/04 às 10h da manhã, aqui está exatamente o que vai acontecer:</p>
+<!-- COMO FUNCIONA -->
+<section class="sec-como">
+  <div class="wrap">
+    <div class="tag-label">Como Vai Funcionar</div>
+    <h2 class="sec-heading">Do clique à imersão: <em>sua jornada em 4 passos simples</em></h2>
+    <p class="sec-desc">Zero burocracia. Zero complicação. Do momento que você garante sua vaga até o sábado 25/04 às 10h da manhã, aqui está exatamente o que vai acontecer:</p>
 
     <div class="timeline">
-      <div class="step">
+      <div class="step glass">
         <div class="n">01</div>
         <h4>Você garante sua vaga</h4>
         <p>Clica no botão, finaliza o pagamento via Pix ou cartão de crédito, e pronto: sua vaga tá garantida na hora. Você recebe um e-mail de confirmação imediato com todas as instruções (link de acesso ao grupo + bônus).</p>
         <span class="selo">⏱ Imediato</span>
       </div>
-      <div class="step">
+      <div class="step glass">
         <div class="n">02</div>
         <h4>Você entra no grupo exclusivo</h4>
         <p>No e-mail de confirmação vai estar o link do grupo oficial de WhatsApp da imersão. Só entra quem comprou — é um ambiente 100% fechado, com pessoas sérias e comprometidas com o resultado.</p>
         <span class="selo">💬 Acesso imediato</span>
       </div>
-      <div class="step">
+      <div class="step glass">
         <div class="n">03</div>
         <h4>Você recebe link do Zoom + materiais</h4>
         <p>Dentro do grupo você recebe: o link do Zoom da imersão, os 2 ebooks bônus (24 Ideias e Checklist de Postagem), e todo o material complementar antes do dia 25/04.</p>
         <span class="selo">📦 No tempo certo</span>
       </div>
-      <div class="step">
+      <div class="step glass">
         <div class="n">04</div>
         <h4>Dia 25/04, 10h — você aparece e joga</h4>
         <p>Sábado, 10h em ponto, a imersão começa ao vivo no Zoom. Papel, caneta (ou notebook aberto), café na mesa — e 8 horas comigo, do seu lado, transformando sua relação com o YouTube.</p>
@@ -2400,13 +1982,13 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 9 — GARANTIA -->
-<!-- ============================================ -->
-<section class="garantia">
-  <div class="container">
-    <div class="section-label">Garantia Incondicional</div>
-    <h2 class="section-title">Você tem meu compromisso por escrito: se você assistir a imersão, colocar em prática e sentir que não agregou em nada <em>(IMPOSSÍVEL)</em>, eu devolvo cada centavo.</h2>
+<div class="divider-wave"></div>
+
+<!-- GARANTIA -->
+<section class="sec-garantia">
+  <div class="wrap">
+    <div class="tag-label">Garantia Incondicional</div>
+    <h2 class="sec-heading">Você tem meu compromisso por escrito: se você assistir a imersão, colocar em prática e sentir que não agregou em nada <em>(IMPOSSÍVEL)</em>, eu devolvo cada centavo.</h2>
 
     <div class="garantia-grid">
       <div class="selo-garantia">
@@ -2428,17 +2010,17 @@
           <span>✕ Sem "me dá só mais uma chance".</span>
           <span>✕ Sem "preenche esse questionário de 20 perguntas".</span>
         </div>
-        <p style="margin-top:16px"><strong style="color:var(--gold)">Eu simplesmente devolvo 100% do seu dinheiro. Cada centavo. Na hora.</strong></p>
+        <p style="margin-top:16px"><strong style="color:#f5b841">Eu simplesmente devolvo 100% do seu dinheiro. Cada centavo. Na hora.</strong></p>
       </div>
     </div>
 
-    <div class="garantia-assinatura">
+    <div class="garantia-assinatura glass">
       <p>Por que eu posso fazer isso com tanta tranquilidade?</p>
       <p>Porque eu sei exatamente o que vai acontecer no dia 25/04. Eu conheço o conteúdo. Eu conheço o método. Eu conheço o impacto. E eu sei que depois de 8 horas comigo ao vivo, a última coisa que vai passar na sua cabeça é "pedir reembolso".</p>
       <div class="assin">— João Adolfo</div>
     </div>
 
-    <div class="garantia-reforco">
+    <div class="garantia-reforco glass">
       <ul>
         <li>Você assiste a imersão inteira</li>
         <li>Você fica com os bônus</li>
@@ -2450,17 +2032,15 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 10 — PRA QUEM É / NÃO É -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Auto Qualificação</div>
-    <h2 class="section-title">A Imersão Canal Lucrativo <em>é pra você?</em></h2>
-    <p class="section-sub">Eu prefiro ser honesto e direto: essa imersão não é pra todo mundo. Leia as duas listas abaixo e veja em qual lado você se encaixa.</p>
+<!-- PRA QUEM É / NÃO É -->
+<section class="sec-pra-quem">
+  <div class="wrap">
+    <div class="tag-label">Auto Qualificação</div>
+    <h2 class="sec-heading">A Imersão Canal Lucrativo <em>é pra você?</em></h2>
+    <p class="sec-desc">Eu prefiro ser honesto e direto: essa imersão não é pra todo mundo. Leia as duas listas abaixo e veja em qual lado você se encaixa.</p>
 
     <div class="quem-grid">
-      <div class="quem-col sim">
+      <div class="quem-col sim glass">
         <h4>✓ É pra você se...</h4>
         <ul>
           <li>Você ainda não tem canal no YouTube, mas sabe que precisa começar — e quer fazer do jeito certo desde o primeiro dia</li>
@@ -2473,7 +2053,7 @@
         </ul>
       </div>
 
-      <div class="quem-col nao">
+      <div class="quem-col nao glass">
         <h4>✕ NÃO é pra você se...</h4>
         <ul>
           <li>Você quer fórmula mágica de "ficar rico em 5 dias" sem trabalhar nem 1 minuto</li>
@@ -2491,8 +2071,8 @@
       <p>Se você leu a lista da esquerda e marcou sim pra pelo menos <strong>3 itens</strong>, sua vaga na imersão já devia estar garantida. Não tem como esse dia não ser transformador pra você.</p>
       <p>O único obstáculo entre você e o próximo nível no YouTube é uma decisão de <strong>R$47</strong> — e ela precisa ser tomada antes do dia <strong>24/04 às 23h59</strong>.</p>
       <div class="cta-wrap">
-        <a href="#oferta" class="btn">
-          Quero garantir minha vaga agora
+        <a href="#oferta" class="cta">
+          <span>Quero garantir minha vaga agora</span>
           <span class="arrow">→</span>
         </a>
       </div>
@@ -2500,17 +2080,15 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 11 — FAQ -->
-<!-- ============================================ -->
-<section>
-  <div class="container">
-    <div class="section-label">Dúvidas Frequentes</div>
-    <h2 class="section-title">Antes de decidir, você provavelmente <em>tem essas perguntas:</em></h2>
-    <p class="section-sub">Eu separei as dúvidas que mais aparecem quando eu anuncio uma imersão dessa. Se a sua não estiver aqui, chama no WhatsApp no final da página que eu respondo.</p>
+<!-- FAQ -->
+<section class="sec-faq">
+  <div class="wrap">
+    <div class="tag-label">Dúvidas Frequentes</div>
+    <h2 class="sec-heading">Antes de decidir, você provavelmente <em>tem essas perguntas:</em></h2>
+    <p class="sec-desc">Eu separei as dúvidas que mais aparecem quando eu anuncio uma imersão dessa. Se a sua não estiver aqui, chama no WhatsApp no final da página que eu respondo.</p>
 
     <div class="faq">
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>Eu não tenho NENHUMA experiência com YouTube. Ainda assim vale a pena?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Sim — e eu diria que vale ainda mais pra você.</p>
@@ -2519,7 +2097,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>E se eu já tiver canal? Ainda serve pra mim?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Serve — e provavelmente serve ainda mais.</p>
@@ -2528,7 +2106,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>Preciso ter equipamento profissional? Câmera cara, microfone de estúdio, iluminação?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p><strong>Não. Zero. Nada disso.</strong></p>
@@ -2537,7 +2115,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>A imersão vai ser gravada? Posso assistir depois?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p><strong>Não. Essa é uma experiência 100% AO VIVO.</strong></p>
@@ -2546,7 +2124,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>E se eu precisar sair um pouco durante a imersão? Tem intervalo?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Sim, tem.</p>
@@ -2555,7 +2133,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>Como vou receber o link do Zoom e os materiais da imersão?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Tudo via WhatsApp, no privado e no grupo exclusivo.</p>
@@ -2564,7 +2142,7 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>E se eu não gostar da imersão? Posso pedir reembolso?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Sim, em até 30 dias após o evento.</p>
@@ -2573,14 +2151,14 @@
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>Posso parcelar o ingresso?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Sim. R$47 pode ser parcelado em até 12x no cartão de crédito. Ou pago à vista via Pix, que é liberado na hora — e nesse caso sua vaga tá garantida em segundos.</p>
         </div></div>
       </div>
 
-      <div class="faq-item">
+      <div class="faq-item glass">
         <div class="faq-q"><span>Tem alguma dúvida que não está aqui?</span><span class="sign">+</span></div>
         <div class="faq-a"><div class="faq-a-inner">
           <p>Chama a gente no WhatsApp. Nosso time responde direto:</p>
@@ -2592,14 +2170,14 @@
   </div>
 </section>
 
-<!-- ============================================ -->
-<!-- DOBRA 12 — URGÊNCIA FINAL -->
-<!-- ============================================ -->
-<section class="urgencia">
-  <div class="container">
+<div class="divider-wave"></div>
+
+<!-- URGÊNCIA FINAL -->
+<section class="sec-urgencia">
+  <div class="wrap">
     <div class="urgencia-wrap">
-      <div class="section-label" style="justify-content:center; display:flex;">Última Chamada</div>
-      <h2>Você tem uma decisão <em>pra tomar agora.</em></h2>
+      <div style="text-align:center"><div class="tag-label">Última Chamada</div></div>
+      <h2 style="text-align:center">Você tem uma decisão <em>pra tomar agora.</em></h2>
 
       <div class="urgencia-text">
         <p><strong>Daqui a 30 dias, o sábado 25 de abril vai ter passado.</strong></p>
@@ -2608,10 +2186,10 @@
         <p>Do lado de quem leu essa página inteira, sentiu que era exatamente isso que tava precisando, mas decidiu "deixar pra próxima" — e daqui a 30 dias vai estar exatamente no mesmo lugar que tá hoje. Com as mesmas dúvidas. Postando no escuro. Ou nem postando.</p>
         <p style="margin-top:20px">Ou do lado de quem parou de esperar o momento perfeito, investiu <strong>R$47 no próprio futuro</strong>, passou 1 sábado comigo aprendendo o método completo — e daqui a 30 dias já tá colhendo os primeiros resultados. Canal configurado. Vídeos rankeando. Primeiros views começando a chegar.</p>
         <div class="urgencia-sep"></div>
-        <p style="font-size:20px; color:var(--ink); font-weight:700; margin-top:20px">A decisão é sua.<br>Mas o tempo não espera por ninguém.</p>
+        <p style="font-size:20px; color:#fff; font-weight:700; margin-top:20px">A decisão é sua.<br>Mas o tempo não espera por ninguém.</p>
       </div>
 
-      <div class="urg-countdown">
+      <div class="urg-countdown glass-warm">
         <div class="title-cd">Inscrições encerram em:</div>
         <div class="countdown">
           <div class="cd-unit"><div class="num" data-cd="d">16</div><span class="lbl">Dias</span></div>
@@ -2635,8 +2213,8 @@
       </div>
 
       <div class="btn-wrap">
-        <a href="#" class="btn" style="font-size:20px; padding:26px 52px;">
-          Quero minha vaga na imersão por R$47
+        <a href="#" class="cta" style="font-size:18px; padding:26px 56px;">
+          <span>Quero minha vaga na imersão por R$47</span>
           <span class="arrow">→</span>
         </a>
         <div class="btn-mini">Pagamento seguro · Pix ou cartão · Vaga liberada em menos de 2 minutos</div>
@@ -2656,11 +2234,9 @@
   </div>
 </section>
 
-<!-- ============================================ -->
 <!-- FOOTER -->
-<!-- ============================================ -->
 <footer>
-  <div class="container">
+  <div class="wrap">
     <div class="footer-grid">
       <div class="footer-brand">
         JOÃO ADOLFO
