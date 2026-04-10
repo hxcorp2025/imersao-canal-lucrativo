@@ -29,6 +29,14 @@
 <!-- Fontes otimizadas — só pesos realmente usados -->
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Oswald:wght@600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
 
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-5N6MTPZB');</script>
+<!-- End Google Tag Manager -->
+
 <script src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js" async></script>
 
 <style>
@@ -882,6 +890,66 @@ body.no-scroll{overflow:hidden}
 }
 
 /* ═══════════════════════════════════════════
+   FLOATING TIMER BAR
+   ═══════════════════════════════════════════ */
+.timer-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:9998;
+  background:rgba(8,8,12,.96);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-top:1px solid rgba(255,255,255,.08);
+  padding:12px 24px;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  transform:translateY(100%);
+  transition:transform .4s ease;
+}
+.timer-bar.visible{transform:translateY(0)}
+
+.timer-bar .timer-label{
+  font-family:var(--font-label);
+  font-size:11px;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+}
+.timer-bar .timer-digits{
+  font-family:var(--font-mono);
+  font-size:22px;font-weight:700;
+  color:var(--white);letter-spacing:.06em;
+}
+.timer-bar .timer-digits span{
+  color:var(--red);
+}
+.timer-bar .timer-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 24px;
+  font-family:var(--font-label);
+  font-size:12px;font-weight:700;
+  letter-spacing:.04em;text-transform:uppercase;
+  color:var(--white);
+  background:linear-gradient(135deg,#16A34A,#22C55E,#15803D);
+  border:none;border-radius:10px;cursor:pointer;
+  transition:all .2s ease;
+}
+.timer-bar .timer-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(34,197,94,.3)}
+
+.checkout-timer{
+  text-align:center;
+  font-size:12px;color:rgba(255,255,255,.4);
+  padding-top:4px;
+}
+.checkout-timer .timer-digits{
+  font-family:var(--font-mono);
+  font-size:18px;font-weight:700;
+  color:var(--red);
+  letter-spacing:.04em;
+}
+
+@media(max-width:768px){
+  .timer-bar{flex-wrap:wrap;gap:8px;padding:10px 16px}
+  .timer-bar .timer-digits{font-size:18px}
+  .timer-bar .timer-cta{padding:8px 16px;font-size:11px}
+}
+
+/* ═══════════════════════════════════════════
    WHATSAPP FLOAT
    ═══════════════════════════════════════════ */
 .whatsapp-float{
@@ -931,6 +999,9 @@ body.no-scroll{overflow:hidden}
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5N6MTPZB" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- ═══════════════════════════════════════════
      SECTION 1 — HERO
@@ -1217,16 +1288,20 @@ body.no-scroll{overflow:hidden}
       <div class="accordion-item glass active">
         <div class="glass-shimmer"></div>
         <button class="accordion-header">
-          &#9728;&#65039; Manhã · O Mapa Completo
+          &#9728;&#65039; Manhã · 10h às 12h · O Jogo do YouTube Revelado
           <span class="icon">+</span>
         </button>
         <div class="accordion-body">
-          <p>Nas primeiras 4 horas, eu vou abrir o mapa completo do sistema que me levou de 250 a 2.5 milhões de inscritos.</p>
+          <p>Teoria, mapa mental e estratégia. Vou abrir o mapa completo do sistema.</p>
           <ul>
-            <li>O Pilar Invisível: o que é, como funciona e por que o YouTube esconde isso de você</li>
-            <li>Os 3 filtros que o YouTube aplica antes de entregar qualquer vídeo</li>
-            <li>Como criar um canal que o algoritmo quer recomendar (não apenas tolerar)</li>
-            <li>O framework de posicionamento que separa canais que crescem de canais que morrem</li>
+            <li>Como o YouTube REALMENTE funciona em 2026 (e por que 9 em cada 10 canais morrem antes dos 1.000 inscritos)</li>
+            <li>A estratégia exata por trás dos 400 mil views/dia e +R$100 mil/mês em 1 canal. Vou abrir o YouTube Studio ao vivo</li>
+            <li>Como saber se o YouTube é pra você e qual nicho combina com quem você é</li>
+            <li>Os pilares de um Canal Lucrativo. O que separa quem fatura todo mês de quem posta no escuro</li>
+            <li>Como monetizar DESDE o primeiro vídeo. Tem +10 formas e ninguém te conta nenhuma</li>
+            <li>O mapa completo: as formas reais de fazer dinheiro com YouTube (AdSense é só 1 delas)</li>
+            <li>Os erros fatais que estão travando seu canal hoje e como corrigir todos em 1 dia</li>
+            <li>O case Pablo Marçal: de 3 milhões para 9 milhões de views em 28 dias. Processo completo</li>
           </ul>
         </div>
       </div>
@@ -1234,37 +1309,39 @@ body.no-scroll{overflow:hidden}
       <div class="accordion-item glass">
         <div class="glass-shimmer"></div>
         <button class="accordion-header">
-          &#128293; Tarde · Mão na Massa (4h práticas)
+          &#127860; 12h às 14h · Pausa para Almoço
           <span class="icon">+</span>
         </button>
         <div class="accordion-body">
-          <p>Aqui a gente para de falar e começa a fazer. Você vai sair com tudo pronto.</p>
-          <ul>
-            <li>Montagem do seu calendário estratégico de 30 dias</li>
-            <li>Criação de títulos e thumbnails usando o método SMY</li>
-            <li>Análise ao vivo de canais dos participantes</li>
-            <li>Script de vídeo otimizado pro algoritmo, feito na hora</li>
-          </ul>
+          <p>2 horas pra você descansar, almoçar e voltar pra parte mais esperada do dia: a prática ao vivo.</p>
         </div>
       </div>
 
       <div class="accordion-item glass">
         <div class="glass-shimmer"></div>
         <button class="accordion-header">
-          &#127919; Encerramento · Seu Plano de Ação
+          &#128293; Tarde · 14h às 18h · Mão na Massa (4h Práticas)
           <span class="icon">+</span>
         </button>
         <div class="accordion-body">
-          <p>Antes de encerrar, eu vou garantir que você saia com clareza total.</p>
+          <p>100% prático. Minha tela ao vivo. Você executa comigo.</p>
           <ul>
-            <li>Seu plano personalizado de ação para os próximos 30 dias</li>
-            <li>Checklist do sistema completo para consultar depois</li>
-            <li>Sessão de perguntas e respostas ao vivo</li>
-            <li>Bônus surpresa para quem ficou até o final</li>
+            <li>Eu vou CRIAR um canal do absoluto zero na sua frente. Do Gmail à configuração completa. Você faz junto</li>
+            <li>A configuração secreta que 99% dos canais erram e que o YouTube usa pra decidir se entrega seu vídeo</li>
+            <li>Como buscar ideias de vídeos que JÁ deram certo, sem chutar, sem inventar</li>
+            <li>Como postar um vídeo na prática: título, descrição, tags e thumbnail (ou usar uma ferramenta que faz tudo em 15 segundos)</li>
+            <li>O processo completo de postagem que 99% erra. Pular qualquer passo faz perder até 70% do alcance</li>
+            <li>Como criar Shorts ao vivo. Vou gravar um Short do meu canal principal na sua frente</li>
+            <li>O "atalho invisível": como transformar views em clientes reais pro seu negócio</li>
+            <li>Seu plano de ação dos próximos 30 dias. O que postar, quando postar, como medir. Tudo por escrito</li>
           </ul>
         </div>
       </div>
 
+    </div>
+
+    <div style="text-align:center;margin-top:32px" class="reveal">
+      <p style="font-size:16px;color:rgba(255,255,255,.55);max-width:640px;margin:0 auto">Você não vai sair com "motivação". Vai sair com um canal <strong style="color:var(--white)">CONFIGURADO</strong>, um vídeo <strong style="color:var(--white)">POSTADO</strong>, e um plano <strong style="color:var(--white)">CLARO</strong> pros próximos 30 dias.</p>
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
@@ -1591,6 +1668,15 @@ body.no-scroll{overflow:hidden}
 </footer>
 
 <!-- ═══════════════════════════════════════════
+     FLOATING TIMER BAR
+     ═══════════════════════════════════════════ -->
+<div class="timer-bar" id="timerBar">
+  <span class="timer-label">Tempo até próximo lote</span>
+  <span class="timer-digits" id="timerBarDigits">03:00:00</span>
+  <button class="timer-cta" data-open-checkout>&#128722; GARANTIR MINHA VAGA</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
      PRÉ-CHECKOUT POPUP
      ═══════════════════════════════════════════ -->
 <div class="checkout-overlay" id="checkoutPopup">
@@ -1615,6 +1701,9 @@ body.no-scroll{overflow:hidden}
       </div>
       <button class="checkout-submit checkout-submit--green" id="ckSubmit">&#128722; FINALIZAR MINHA COMPRA</button>
       <p class="checkout-secure">&#128274; Pagamento seguro · Pix ou cartão · Acesso imediato</p>
+      <div class="checkout-timer">
+        Próximo lote em <span class="timer-digits" id="timerPopupDigits">03:00:00</span>
+      </div>
     </div>
   </div>
 </div>
@@ -1800,6 +1889,52 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() { window.location.href = checkoutUrl; }, 3000);
       });
   });
+
+  // ══════════════════════════════════════════
+  // COUNTDOWN TIMER (3h, persiste em localStorage)
+  // ══════════════════════════════════════════
+  var TIMER_KEY = 'icl_timer_end';
+  var stored = localStorage.getItem(TIMER_KEY);
+  var endTime;
+  if (stored && parseInt(stored) > Date.now()) {
+    endTime = parseInt(stored);
+  } else {
+    endTime = Date.now() + (3 * 60 * 60 * 1000);
+    localStorage.setItem(TIMER_KEY, endTime);
+  }
+
+  function formatTime(ms) {
+    if (ms <= 0) return '00:00:00';
+    var s = Math.floor(ms / 1000);
+    var h = Math.floor(s / 3600); s %= 3600;
+    var m = Math.floor(s / 60); s %= 60;
+    return (h < 10 ? '0' : '') + h + ':' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+  }
+
+  var barDigits = document.getElementById('timerBarDigits');
+  var popDigits = document.getElementById('timerPopupDigits');
+
+  setInterval(function() {
+    var remaining = endTime - Date.now();
+    var str = formatTime(remaining);
+    if (barDigits) barDigits.textContent = str;
+    if (popDigits) popDigits.textContent = str;
+  }, 1000);
+
+  // Mostrar timer bar quando seção oferta entra na viewport
+  var timerBar = document.getElementById('timerBar');
+  var ofertaSection = document.getElementById('oferta');
+  if (timerBar && ofertaSection) {
+    var timerObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          timerBar.classList.add('visible');
+          timerObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.1 });
+    timerObserver.observe(ofertaSection);
+  }
 
 });
 </script>
