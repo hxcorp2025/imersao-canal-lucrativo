@@ -44,7 +44,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
    RESET & BASE
    ═══════════════════════════════════════════ */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
 
 :root{
   --black-deep:#08080C;
@@ -532,7 +532,7 @@ h2{font-size:clamp(32px,4.5vw,54px);margin-bottom:24px}
   padding:0 28px;
 }
 .accordion-item.active .accordion-body{
-  max-height:600px;
+  max-height:1200px;
   padding:0 28px 28px;
 }
 .accordion-body p{
@@ -608,9 +608,9 @@ vturb-smartplayer{border-radius:20px}
   text-align:center;
 }
 .offer-item{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 0;
+  padding:14px 0;
   border-bottom:1px solid rgba(255,255,255,.06);
+  text-align:left;
 }
 .offer-item:last-child{border-bottom:none}
 .offer-item .name{
@@ -730,7 +730,7 @@ vturb-smartplayer{border-radius:20px}
    FOOTER
    ═══════════════════════════════════════════ */
 footer{
-  padding:60px 0 40px;
+  padding:60px 0 80px;
   text-align:center;
   border-top:1px solid rgba(255,255,255,.06);
 }
@@ -972,7 +972,6 @@ body.no-scroll{overflow:hidden}
   .carousel-track img{width:240px}
   .mirror-quote{padding:28px 20px;font-size:clamp(20px,5vw,28px)}
   .epiphany-quote{padding:32px 20px;font-size:clamp(22px,5vw,34px)}
-  .offer-item{flex-direction:column;gap:8px;text-align:center}
 }
 @media(max-width:480px){
   .hero-logo{max-width:200px}
@@ -1042,7 +1041,7 @@ body.no-scroll{overflow:hidden}
     <h2 class="reveal">NÃO É SOBRE GRAVAR MAIS VÍDEOS. É SOBRE TER PERMISSÃO PRA SER VISTO PELO YOUTUBE.</h2>
 
     <div class="pain-text reveal">
-      <p>Você já sentiu isso?</p>
+      <p>Seja honesto com você mesmo.</p>
       <p>Grava um vídeo, posta com esperança, olha as métricas no dia seguinte: 4 views. 9 views. 12 views. O mesmo ciclo. Mês após mês.</p>
       <p>Você muda o nicho. Muda a thumbnail. Posta mais. Posta menos. Segue dica de guru. Compra cursinho. Assiste 20%. Para.</p>
       <p>E aí vem aquele pensamento:</p>
@@ -1053,6 +1052,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <p class="spoiler reveal">Spoiler: eles sabem <strong>1 coisa</strong>. E o problema nunca foi você.</p>
+
+    <p class="spoiler reveal" style="margin-top:24px;font-size:16px;color:rgba(255,255,255,.4)">Essa "1 coisa" tem nome. Tem método. E já mudou a vida de milhares de pessoas. Veja algumas delas:</p>
 
   </div>
 </section>
@@ -1341,7 +1342,7 @@ body.no-scroll{overflow:hidden}
 <!-- ═══════════════════════════════════════════
      SECTION 7 — VÍDEO DA IMERSÃO PRESENCIAL
      ═══════════════════════════════════════════ -->
-<section class="surface" id="video-imersao">
+<section class="surface" id="video-imersao" style="scroll-margin-top:40px">
   <div class="container" style="text-align:center">
 
     <div class="reveal">
@@ -1451,7 +1452,8 @@ body.no-scroll{overflow:hidden}
 
       <div class="price-block">
         <span class="price-from">Valor total: R$ 938</span>
-        <div class="price-to">Hoje: <small>R$</small>47</div>
+        <div style="font-family:var(--font-label);font-size:14px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Hoje:</div>
+        <div class="price-to"><small>R$</small>47</div>
       </div>
 
       <a href="#" class="cta cta--full" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
