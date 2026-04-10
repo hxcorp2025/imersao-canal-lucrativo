@@ -546,33 +546,9 @@ h2{font-size:clamp(32px,4.5vw,54px);margin-bottom:24px}
 }
 
 /* ═══════════════════════════════════════════
-   VIDEO IMPACTO
+   VIDEO IMERSÃO
    ═══════════════════════════════════════════ */
-.video-placeholder{
-  max-width:600px;margin:0 auto;
-  aspect-ratio:16/9;
-  border-radius:20px;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:16px;cursor:pointer;
-}
-.video-placeholder .play-icon{
-  width:72px;height:72px;
-  border-radius:50%;
-  background:rgba(255,0,0,.15);
-  border:2px solid rgba(255,0,0,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:28px;color:var(--white);
-  transition:all .3s ease;
-}
-.video-placeholder:hover .play-icon{
-  background:rgba(255,0,0,.25);
-  box-shadow:0 0 40px rgba(255,0,0,.2);
-}
-.video-placeholder span{
-  font-size:13px;color:rgba(255,255,255,.4);
-  font-weight:500;
-}
+vturb-smartplayer{border-radius:20px}
 
 /* ═══════════════════════════════════════════
    BIO
@@ -1172,18 +1148,26 @@ footer .disclaimer{
 <hr class="divider">
 
 <!-- ═══════════════════════════════════════════
-     SECTION 7 — VÍDEO DE IMPACTO
+     SECTION 7 — VÍDEO DA IMERSÃO PRESENCIAL
      ═══════════════════════════════════════════ -->
 <section class="surface">
   <div class="container" style="text-align:center">
 
-    <h2 class="reveal">SINTA A ENERGIA</h2>
-    <p class="sub-text reveal" style="margin-left:auto;margin-right:auto">60 segundos de quem já viveu essa experiência.</p>
+    <div class="reveal">
+      <span class="label">Assista e sinta</span>
+    </div>
 
-    <div class="video-placeholder glass reveal">
-      <div class="glass-shimmer"></div>
-      <div class="play-icon">&#9654;</div>
-      <span>Vídeo em breve</span>
+    <h2 class="reveal">ISSO ACONTECE QUANDO VOCÊ ENTRA PRA IMERSÃO</h2>
+    <p class="sub-text reveal" style="margin-left:auto;margin-right:auto">Cortes reais da Imersão SMY presencial em São Paulo. Trilha, depoimentos e a energia de quem viveu a transformação. No dia 25 de abril, essa experiência chega até você — ao vivo e online.</p>
+
+    <div class="reveal" style="max-width:720px;margin:0 auto;border-radius:20px;overflow:hidden;border:1px solid rgba(255,0,0,.15);box-shadow:0 0 60px rgba(255,0,0,.08)">
+      <vturb-smartplayer id="vid-68d60fb13f4c3c40d35ea728" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
+      <script>var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/68d60fb13f4c3c40d35ea728/v4/player.js",s.async=!0,document.head.appendChild(s);</script>
+    </div>
+
+    <div class="reveal" style="margin-top:40px">
+      <a href="#oferta" class="cta">QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
+      <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
   </div>
