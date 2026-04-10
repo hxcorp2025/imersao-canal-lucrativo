@@ -604,44 +604,77 @@ vturb-smartplayer{border-radius:20px}
 #oferta{scroll-margin-top:40px}
 
 .offer-card{
-  padding:48px 40px;border-radius:24px;
+  padding:56px 48px;border-radius:24px;
   text-align:center;
+  max-width:580px;margin:40px auto 0;
+}
+
+.offer-list{
+  display:flex;flex-direction:column;gap:0;
+  margin:0 auto;max-width:400px;
 }
 .offer-item{
-  padding:14px 0;
+  display:flex;align-items:center;gap:14px;
+  padding:16px 0;
   border-bottom:1px solid rgba(255,255,255,.06);
-  text-align:left;
 }
 .offer-item:last-child{border-bottom:none}
-.offer-item .name{
-  font-size:16px;color:rgba(255,255,255,.7);
-  text-align:left;
+.offer-item .check{
+  width:28px;height:28px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.25);
+  border-radius:8px;
+  color:var(--green);font-size:14px;font-weight:700;
 }
-.offer-item .price-old{
-  font-family:var(--font-mono);
-  font-size:14px;
-  color:rgba(255,255,255,.3);
-  text-decoration:line-through;
+.offer-item .name{
+  font-size:16px;color:rgba(255,255,255,.75);
+  text-align:left;font-weight:500;
+}
+
+.price-divider{
+  width:60px;height:2px;
+  background:linear-gradient(90deg,transparent,rgba(255,0,0,.3),transparent);
+  margin:32px auto;
 }
 
 .price-block{
-  margin:40px 0 32px;text-align:center;
+  margin:0 0 36px;text-align:center;
 }
 .price-from{
   font-family:var(--font-mono);
-  font-size:18px;color:rgba(255,255,255,.35);
+  font-size:16px;color:rgba(255,255,255,.3);
   text-decoration:line-through;
-  display:block;margin-bottom:8px;
+  display:block;margin-bottom:12px;
+}
+.price-label{
+  font-family:var(--font-label);
+  font-size:13px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+  margin-bottom:8px;
 }
 .price-to{
   font-family:var(--font-mono);
-  font-size:clamp(56px,8vw,80px);
+  font-size:clamp(64px,10vw,96px);
   font-weight:700;color:var(--white);
   line-height:1;
+  text-shadow:0 0 60px rgba(255,255,255,.08);
 }
 .price-to small{
-  font-size:clamp(24px,3vw,32px);
+  font-size:clamp(28px,4vw,38px);
   vertical-align:super;color:var(--green);
+  font-weight:700;
+}
+.price-parcela{
+  font-size:13px;color:rgba(255,255,255,.35);
+  margin-top:10px;font-weight:500;
+}
+
+@media(max-width:480px){
+  .offer-card{padding:36px 24px}
+  .offer-list{max-width:100%}
+  .offer-item .name{font-size:14px}
 }
 
 /* ═══════════════════════════════════════════
@@ -1432,28 +1465,38 @@ body.no-scroll{overflow:hidden}
 
     <h2 class="reveal">LEMBRE-SE DO QUE VOCÊ LEVA POR R$ 47:</h2>
 
-    <div class="offer-card glass--red reveal" style="border-radius:24px;padding:48px 40px;margin-top:40px">
+    <div class="offer-card glass--red reveal">
 
-      <div class="offer-item">
-        <span class="name">&#10003; 8 HORAS AO VIVO com João Adolfo</span>
+      <div class="offer-list">
+        <div class="offer-item">
+          <span class="check">&#10003;</span>
+          <span class="name">8 HORAS AO VIVO com João Adolfo</span>
+        </div>
+        <div class="offer-item">
+          <span class="check">&#10003;</span>
+          <span class="name">Ebook 24 Ideias de Vídeos Virais</span>
+        </div>
+        <div class="offer-item">
+          <span class="check">&#10003;</span>
+          <span class="name">Ebook Checklist de Postagem</span>
+        </div>
+        <div class="offer-item">
+          <span class="check">&#10003;</span>
+          <span class="name">Grupo exclusivo de WhatsApp</span>
+        </div>
+        <div class="offer-item">
+          <span class="check">&#10003;</span>
+          <span class="name">Garantia incondicional de 30 dias</span>
+        </div>
       </div>
-      <div class="offer-item">
-        <span class="name">&#10003; Ebook 24 Ideias de Vídeos Virais</span>
-      </div>
-      <div class="offer-item">
-        <span class="name">&#10003; Ebook Checklist de Postagem</span>
-      </div>
-      <div class="offer-item">
-        <span class="name">&#10003; Grupo exclusivo de WhatsApp</span>
-      </div>
-      <div class="offer-item">
-        <span class="name">&#10003; Garantia incondicional de 30 dias</span>
-      </div>
+
+      <div class="price-divider"></div>
 
       <div class="price-block">
         <span class="price-from">Valor total: R$ 938</span>
-        <div style="font-family:var(--font-label);font-size:14px;color:rgba(255,255,255,.4);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px">Hoje:</div>
+        <div class="price-label">Hoje:</div>
         <div class="price-to"><small>R$</small>47</div>
+        <p class="price-parcela">À vista no Pix ou parcelado no cartão</p>
       </div>
 
       <a href="#" class="cta cta--full" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
