@@ -834,18 +834,6 @@ body.no-scroll{overflow:hidden}
 .checkout-field input::placeholder{color:rgba(255,255,255,.25)}
 .checkout-field input:focus{border-color:rgba(255,0,0,.4)}
 
-.checkout-phone-row{display:flex;gap:10px;align-items:stretch}
-.checkout-ddi{
-  display:flex;align-items:center;gap:6px;
-  padding:14px 14px;
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:14px;
-  font-size:14px;color:rgba(255,255,255,.5);
-  white-space:nowrap;flex-shrink:0;
-}
-.checkout-phone-row input{flex:1;min-width:0}
-
 .checkout-submit{
   display:block;width:100%;
   padding:18px 24px;
@@ -872,6 +860,14 @@ body.no-scroll{overflow:hidden}
   pointer-events:none;border-radius:inherit;
 }
 .checkout-submit:disabled{opacity:.7;cursor:wait}
+
+.checkout-submit--green{
+  background:linear-gradient(135deg,#16A34A,#22C55E,#15803D);
+  box-shadow:0 0 40px rgba(34,197,94,.25),0 4px 16px rgba(0,0,0,.3);
+}
+.checkout-submit--green:hover{
+  box-shadow:0 0 60px rgba(34,197,94,.35),0 8px 24px rgba(0,0,0,.4);
+}
 
 .checkout-secure{
   text-align:center;
@@ -958,7 +954,7 @@ body.no-scroll{overflow:hidden}
     <p class="hero-sub reveal reveal-d2">Esqueça "postar com consistência", comprar câmera nova ou estudar algoritmo. Você já tem capacidade pra crescer no YouTube. Só falta <strong>UMA coisa</strong>. E em 8 horas ao vivo, no sábado 25 de abril, eu vou mostrar exatamente o que é.</p>
 
     <div class="reveal reveal-d3">
-      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#video-imersao" class="cta">LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1127,7 +1123,7 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center" class="reveal">
-      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1272,7 +1268,7 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
-      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1284,7 +1280,7 @@ body.no-scroll{overflow:hidden}
 <!-- ═══════════════════════════════════════════
      SECTION 7 — VÍDEO DA IMERSÃO PRESENCIAL
      ═══════════════════════════════════════════ -->
-<section class="surface">
+<section class="surface" id="video-imersao">
   <div class="container" style="text-align:center">
 
     <div class="reveal">
@@ -1300,7 +1296,7 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div class="reveal" style="margin-top:40px">
-      <a href="#" class="cta" data-open-checkout>QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
+      <a href="#oferta" class="cta">QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1372,30 +1368,29 @@ body.no-scroll{overflow:hidden}
 <section id="oferta">
   <div class="container" style="text-align:center">
 
-    <h2 class="reveal">TUDO QUE VOCÊ LEVA POR MENOS QUE UMA PIZZA</h2>
+    <h2 class="reveal">LEMBRE-SE DO QUE VOCÊ LEVA POR R$ 47:</h2>
 
     <div class="offer-card glass--red reveal" style="border-radius:24px;padding:48px 40px;margin-top:40px">
 
       <div class="offer-item">
-        <span class="name">&#10003; Imersão completa ao vivo (8h)</span>
-        <span class="price-old">R$ 497</span>
+        <span class="name">&#10003; 8 HORAS AO VIVO com João Adolfo</span>
       </div>
       <div class="offer-item">
-        <span class="name">&#10003; Gravação liberada por 30 dias</span>
-        <span class="price-old">R$ 197</span>
+        <span class="name">&#10003; Ebook 24 Ideias de Vídeos Virais</span>
       </div>
       <div class="offer-item">
-        <span class="name">&#10003; Material de apoio + checklist do sistema</span>
-        <span class="price-old">R$ 147</span>
+        <span class="name">&#10003; Ebook Checklist de Postagem</span>
       </div>
       <div class="offer-item">
-        <span class="name">&#10003; Comunidade exclusiva de alunos</span>
-        <span class="price-old">R$ 97</span>
+        <span class="name">&#10003; Grupo exclusivo de WhatsApp</span>
+      </div>
+      <div class="offer-item">
+        <span class="name">&#10003; Garantia incondicional de 30 dias</span>
       </div>
 
       <div class="price-block">
-        <span class="price-from">De R$ 938</span>
-        <div class="price-to"><small>R$</small>47</div>
+        <span class="price-from">Valor total: R$ 938</span>
+        <div class="price-to">Hoje: <small>R$</small>47</div>
       </div>
 
       <a href="#" class="cta cta--full" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
@@ -1615,13 +1610,10 @@ body.no-scroll{overflow:hidden}
         <input type="email" id="ckEmail" placeholder="email@exemplo.com" autocomplete="email">
       </div>
       <div class="checkout-field">
-        <label>WhatsApp</label>
-        <div class="checkout-phone-row">
-          <div class="checkout-ddi">&#127463;&#127479; +55</div>
-          <input type="tel" id="ckPhone" placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
-        </div>
+        <label>WhatsApp com DDD</label>
+        <input type="tel" id="ckPhone" placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
       </div>
-      <button class="checkout-submit" id="ckSubmit">LIBERAR MEU ACESSO AGORA</button>
+      <button class="checkout-submit checkout-submit--green" id="ckSubmit">&#128722; FINALIZAR MINHA COMPRA</button>
       <p class="checkout-secure">&#128274; Pagamento seguro · Pix ou cartão · Acesso imediato</p>
     </div>
   </div>
