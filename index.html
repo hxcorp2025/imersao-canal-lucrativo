@@ -752,6 +752,140 @@ footer .disclaimer{
 }
 
 /* ═══════════════════════════════════════════
+   PRÉ-CHECKOUT POPUP
+   ═══════════════════════════════════════════ */
+.checkout-overlay{
+  display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(8,8,12,.92);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  justify-content:center;align-items:center;
+  padding:16px;overflow-y:auto;
+}
+.checkout-overlay.active{display:flex}
+body.no-scroll{overflow:hidden}
+
+.checkout-modal{
+  background:rgba(255,255,255,.035);
+  backdrop-filter:blur(24px) saturate(1.3);
+  -webkit-backdrop-filter:blur(24px) saturate(1.3);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+  width:100%;max-width:420px;
+  box-shadow:0 24px 80px rgba(0,0,0,.6),0 0 60px rgba(255,0,0,.06);
+  animation:popUp .3s ease-out;
+  position:relative;overflow:hidden;
+}
+.checkout-modal::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 50%);
+  pointer-events:none;border-radius:inherit;
+}
+@keyframes popUp{
+  from{opacity:0;transform:translateY(24px) scale(.97)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.checkout-badge{
+  background:linear-gradient(135deg,#e60000,#ff1a1a,#cc0000);
+  padding:16px 24px;text-align:center;
+  font-family:var(--font-heading);
+  font-size:clamp(18px,3vw,22px);
+  color:var(--white);letter-spacing:.04em;
+  line-height:1.2;
+}
+.checkout-badge small{
+  display:block;font-family:var(--font-body);
+  font-size:12px;font-weight:500;
+  color:rgba(255,255,255,.7);
+  letter-spacing:.02em;margin-top:6px;
+}
+
+.checkout-close{
+  position:absolute;top:56px;right:16px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  color:rgba(255,255,255,.5);
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
+  transition:all .2s ease;z-index:2;
+}
+.checkout-close:hover{background:rgba(255,255,255,.12);color:var(--white)}
+
+.checkout-body{padding:24px 28px 28px;display:flex;flex-direction:column;gap:16px}
+
+.checkout-field{display:flex;flex-direction:column;gap:6px}
+.checkout-field label{
+  font-family:var(--font-label);
+  font-size:10px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+}
+.checkout-field input{
+  padding:14px 16px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  color:var(--white);
+  font-family:var(--font-body);
+  font-size:15px;
+  outline:none;
+  transition:border-color .2s ease;
+}
+.checkout-field input::placeholder{color:rgba(255,255,255,.25)}
+.checkout-field input:focus{border-color:rgba(255,0,0,.4)}
+
+.checkout-phone-row{display:flex;gap:10px;align-items:stretch}
+.checkout-ddi{
+  display:flex;align-items:center;gap:6px;
+  padding:14px 14px;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:14px;
+  font-size:14px;color:rgba(255,255,255,.5);
+  white-space:nowrap;flex-shrink:0;
+}
+.checkout-phone-row input{flex:1;min-width:0}
+
+.checkout-submit{
+  display:block;width:100%;
+  padding:18px 24px;
+  font-family:var(--font-label);
+  font-size:15px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+  color:var(--white);
+  background:linear-gradient(135deg,#e60000,#ff1a1a,#cc0000);
+  border:none;border-radius:14px;cursor:pointer;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 40px rgba(255,0,0,.25),0 4px 16px rgba(0,0,0,.3);
+  transition:all .3s ease;
+  margin-top:4px;
+}
+.checkout-submit:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 60px rgba(255,0,0,.35),0 8px 24px rgba(0,0,0,.4);
+}
+.checkout-submit::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.15) 50%,transparent 70%);
+  background-size:200% 100%;
+  animation:shimmer 2.5s ease-in-out infinite;
+  pointer-events:none;border-radius:inherit;
+}
+.checkout-submit:disabled{opacity:.7;cursor:wait}
+
+.checkout-secure{
+  text-align:center;
+  font-size:11px;color:rgba(255,255,255,.3);
+  font-weight:500;letter-spacing:.02em;
+}
+
+@media(max-width:480px){
+  .checkout-modal{border-radius:18px}
+  .checkout-body{padding:20px 20px 24px}
+  .checkout-badge{padding:14px 20px}
+}
+
+/* ═══════════════════════════════════════════
    WHATSAPP FLOAT
    ═══════════════════════════════════════════ */
 .whatsapp-float{
@@ -824,7 +958,7 @@ footer .disclaimer{
     <p class="hero-sub reveal reveal-d2">Esqueça "postar com consistência", comprar câmera nova ou estudar algoritmo. Você já tem capacidade pra crescer no YouTube. Só falta <strong>UMA coisa</strong>. E em 8 horas ao vivo, no sábado 25 de abril, eu vou mostrar exatamente o que é.</p>
 
     <div class="reveal reveal-d3">
-      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -993,7 +1127,7 @@ footer .disclaimer{
     </div>
 
     <div style="text-align:center" class="reveal">
-      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1138,7 +1272,7 @@ footer .disclaimer{
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
-      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1166,7 +1300,7 @@ footer .disclaimer{
     </div>
 
     <div class="reveal" style="margin-top:40px">
-      <a href="#oferta" class="cta">QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1264,7 +1398,7 @@ footer .disclaimer{
         <div class="price-to"><small>R$</small>47</div>
       </div>
 
-      <a href="https://pay.hotmart.com/exemplo" class="cta cta--full">LIBERAR MEU ACESSO AGORA &rarr;</a>
+      <a href="#" class="cta cta--full" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
 
     </div>
@@ -1369,7 +1503,7 @@ footer .disclaimer{
     </div>
 
     <div class="reveal">
-      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1437,7 +1571,7 @@ footer .disclaimer{
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
-      <a href="#oferta" class="cta">LIBERAR MEU ACESSO &rarr;</a>
+      <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
 
@@ -1462,6 +1596,38 @@ footer .disclaimer{
 </footer>
 
 <!-- ═══════════════════════════════════════════
+     PRÉ-CHECKOUT POPUP
+     ═══════════════════════════════════════════ -->
+<div class="checkout-overlay" id="checkoutPopup">
+  <div class="checkout-modal">
+    <div class="checkout-badge">
+      FALTA POUCO PRA LIBERAR SEU ACESSO
+      <small>Imersão Canal Lucrativo · Sábado 25 de Abril · R$47</small>
+    </div>
+    <button class="checkout-close" id="checkoutClose">&times;</button>
+    <div class="checkout-body">
+      <div class="checkout-field">
+        <label>Seu nome</label>
+        <input type="text" id="ckName" placeholder="Como você se chama?" autocomplete="name">
+      </div>
+      <div class="checkout-field">
+        <label>Seu melhor e-mail</label>
+        <input type="email" id="ckEmail" placeholder="email@exemplo.com" autocomplete="email">
+      </div>
+      <div class="checkout-field">
+        <label>WhatsApp</label>
+        <div class="checkout-phone-row">
+          <div class="checkout-ddi">&#127463;&#127479; +55</div>
+          <input type="tel" id="ckPhone" placeholder="(00) 00000-0000" maxlength="15" autocomplete="tel">
+        </div>
+      </div>
+      <button class="checkout-submit" id="ckSubmit">LIBERAR MEU ACESSO AGORA</button>
+      <p class="checkout-secure">&#128274; Pagamento seguro · Pix ou cartão · Acesso imediato</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
      WHATSAPP FLOAT
      ═══════════════════════════════════════════ -->
 <a href="https://wa.me/555493618118" target="_blank" rel="noopener" class="whatsapp-float" aria-label="WhatsApp">
@@ -1472,61 +1638,175 @@ footer .disclaimer{
      JAVASCRIPT
      ═══════════════════════════════════════════ -->
 <script>
-// Scroll reveal with IntersectionObserver
 document.addEventListener('DOMContentLoaded', function() {
 
-  // Reveal on scroll
-  const observer = new IntersectionObserver(function(entries) {
+  // ── Scroll reveal ──
+  var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
+      if (entry.isIntersecting) entry.target.classList.add('visible');
     });
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
 
-  document.querySelectorAll('.reveal').forEach(function(el) {
-    observer.observe(el);
-  });
-
-  // Accordion toggle
+  // ── Accordion ──
   document.querySelectorAll('.accordion-header').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var item = this.parentElement;
       var wasActive = item.classList.contains('active');
-      // Close all siblings
-      item.parentElement.querySelectorAll('.accordion-item').forEach(function(sibling) {
-        sibling.classList.remove('active');
-      });
-      if (!wasActive) {
-        item.classList.add('active');
-      }
+      item.parentElement.querySelectorAll('.accordion-item').forEach(function(s) { s.classList.remove('active'); });
+      if (!wasActive) item.classList.add('active');
     });
   });
 
-  // FAQ toggle
+  // ── FAQ ──
   document.querySelectorAll('.faq-q').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var item = this.parentElement;
       var wasActive = item.classList.contains('active');
-      // Close all
-      document.querySelectorAll('.faq-item').forEach(function(f) {
-        f.classList.remove('active');
-      });
-      if (!wasActive) {
-        item.classList.add('active');
-      }
+      document.querySelectorAll('.faq-item').forEach(function(f) { f.classList.remove('active'); });
+      if (!wasActive) item.classList.add('active');
     });
   });
 
-  // Smooth scroll for anchor links
+  // ── Smooth scroll (ignora data-open-checkout) ──
   document.querySelectorAll('a[href^="#"]').forEach(function(a) {
     a.addEventListener('click', function(e) {
+      if (this.hasAttribute('data-open-checkout')) return;
       var target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
+  });
+
+  // ══════════════════════════════════════════
+  // PRÉ-CHECKOUT POPUP
+  // ══════════════════════════════════════════
+  var CHECKOUT_URL = 'https://payfast.greenn.com.br/2n3x7wv/offer/naCaTf';
+  var WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-LANCAMENTOPAGO-OPERACAO';
+  var DDI = '+55';
+
+  var overlay = document.getElementById('checkoutPopup');
+  var closeBtn = document.getElementById('checkoutClose');
+  var submitBtn = document.getElementById('ckSubmit');
+  var phoneInput = document.getElementById('ckPhone');
+
+  // Abrir popup
+  document.querySelectorAll('[data-open-checkout]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      overlay.classList.add('active');
+      document.body.classList.add('no-scroll');
+    });
+  });
+
+  // Fechar popup
+  function closePopup() {
+    overlay.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+  }
+  closeBtn.addEventListener('click', closePopup);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closePopup();
+  });
+
+  // Máscara telefone BR
+  phoneInput.addEventListener('input', function() {
+    var v = this.value.replace(/\D/g, '');
+    v = v.replace(/^(\d{2})(\d)/, '($1) $2');
+    v = v.replace(/(\d{5})(\d)/, '$1-$2');
+    this.value = v;
+  });
+
+  // UTMs + cookies
+  function getUtms() {
+    var p = new URLSearchParams(window.location.search);
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid'];
+    var r = {};
+    keys.forEach(function(k) { r[k] = p.get(k) || null; });
+    r.fbp = getCookie('_fbp') || null;
+    r.fbc = getCookie('_fbc') || null;
+    return r;
+  }
+  function getCookie(n) {
+    var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)'));
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
+  // Montar URL do checkout com params
+  function buildCheckoutUrl(nome, email, telefone) {
+    var params = [];
+    if (nome) params.push('fn=' + encodeURIComponent(nome));
+    if (email) params.push('em=' + encodeURIComponent(email));
+    if (telefone) {
+      var cleanDdi = DDI.replace(/\D/g, '');
+      var cleanPh = telefone.replace(/\D/g, '');
+      params.push('ph=' + cleanDdi + cleanPh);
+    }
+    var t = getUtms();
+    if (t.utm_source) params.push('utm_source=' + encodeURIComponent(t.utm_source));
+    if (t.utm_medium) params.push('utm_medium=' + encodeURIComponent(t.utm_medium));
+    if (t.utm_campaign) params.push('utm_campaign=' + encodeURIComponent(t.utm_campaign));
+    if (t.utm_term) params.push('utm_term=' + encodeURIComponent(t.utm_term));
+    if (t.utm_content) params.push('utm_content=' + encodeURIComponent(t.utm_content));
+    if (t.fbclid) params.push('fbclid=' + encodeURIComponent(t.fbclid));
+    var sep = CHECKOUT_URL.indexOf('?') > -1 ? '&' : '?';
+    return params.length ? CHECKOUT_URL + sep + params.join('&') : CHECKOUT_URL;
+  }
+
+  // Submit
+  submitBtn.addEventListener('click', function() {
+    var nome = document.getElementById('ckName').value.trim();
+    var email = document.getElementById('ckEmail').value.trim();
+    var telefone = phoneInput.value.trim();
+
+    if (!nome || !email) {
+      alert('Preencha seu nome e e-mail para continuar.');
+      return;
+    }
+
+    var origText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Redirecionando...';
+
+    var checkoutUrl = buildCheckoutUrl(nome, email, telefone);
+    var tr = getUtms();
+
+    var payload = {
+      nome: nome,
+      email: email,
+      ddi: DDI,
+      telefone: telefone || null,
+      utm_source: tr.utm_source,
+      utm_medium: tr.utm_medium,
+      utm_campaign: tr.utm_campaign,
+      utm_term: tr.utm_term,
+      utm_content: tr.utm_content,
+      fbclid: tr.fbclid,
+      fbp: tr.fbp,
+      fbc: tr.fbc,
+      ip: null,
+      user_agent: navigator.userAgent || null,
+      origem: window.location.href,
+      data: new Date().toISOString()
+    };
+
+    // Pega IP, envia webhook, redireciona
+    fetch('https://api.ipify.org?format=json')
+      .then(function(r) { return r.json(); })
+      .then(function(d) { payload.ip = d.ip || null; })
+      .catch(function() {})
+      .finally(function() {
+        fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .catch(function() {})
+        .finally(function() {
+          window.location.href = checkoutUrl;
+        });
+        // Safety net: redireciona em 3s mesmo se fetch travar
+        setTimeout(function() { window.location.href = checkoutUrl; }, 3000);
+      });
   });
 
 });
