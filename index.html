@@ -222,6 +222,28 @@ h2{font-size:clamp(32px,4.5vw,54px);margin-bottom:24px}
   text-align:center;
 }
 
+/* price badge acima do CTA */
+.price-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-bottom:14px;
+  padding:8px 16px;
+  background:rgba(0,230,118,.06);
+  border:1px solid rgba(0,230,118,.15);
+  border-radius:100px;
+}
+.price-badge .old{
+  font-family:var(--font-mono);font-size:13px;
+  color:rgba(255,255,255,.35);text-decoration:line-through;
+}
+.price-badge .sep{
+  font-family:var(--font-label);font-size:10px;
+  letter-spacing:.15em;color:rgba(255,255,255,.4);
+}
+.price-badge .new{
+  font-family:var(--font-mono);font-size:20px;font-weight:700;
+  color:var(--green);
+}
+
 /* ═══════════════════════════════════════════
    DIVIDERS
    ═══════════════════════════════════════════ */
@@ -1141,6 +1163,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center;margin-top:32px" class="reveal">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1243,6 +1267,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center" class="reveal">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO AGORA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1381,6 +1407,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1409,6 +1437,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div class="reveal" style="margin-top:40px">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>QUERO VIVER ESSA EXPERIÊNCIA &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1569,6 +1599,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div class="reveal">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1637,6 +1669,8 @@ body.no-scroll{overflow:hidden}
     </div>
 
     <div style="text-align:center;margin-top:48px" class="reveal">
+      <div class="price-badge"><span class="old">R$ 938</span><span class="sep">POR APENAS</span><span class="new">R$47</span></div>
+      <br>
       <a href="#" class="cta" data-open-checkout>LIBERAR MEU ACESSO &rarr;</a>
       <p class="cta-note">&#128274; Pagamento seguro &middot; Pix ou cartão &middot; Acesso imediato</p>
     </div>
@@ -1663,7 +1697,7 @@ body.no-scroll{overflow:hidden}
 <div class="timer-bar" id="timerBar">
   <span class="timer-label">Tempo até próximo lote</span>
   <span class="timer-digits" id="timerBarDigits">03:00:00</span>
-  <button class="timer-cta" data-open-checkout>&#128722; GARANTIR MINHA VAGA</button>
+  <button class="timer-cta" data-open-checkout>&#128722; GARANTIR POR R$47</button>
 </div>
 
 <!-- ═══════════════════════════════════════════
@@ -1742,25 +1776,45 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   // ══════════════════════════════════════════
-  // PRÉ-CHECKOUT POPUP
+  // CHECKOUT DIRETO (sem popup — teste 17/04)
   // ══════════════════════════════════════════
   var CHECKOUT_URL = 'https://payfast.greenn.com.br/2n3x7wv?b_id_1=136395&b_offer_1=HqpQOR&b_id_2=136399&b_offer_2=viW9a9&b_id_3=hf9zjg2&b_offer_3=EVBImO';
-  var WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-LANCAMENTOPAGO-OPERACAO';
-  var DDI = '+55';
 
+  function getUtms() {
+    var p = new URLSearchParams(window.location.search);
+    var keys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid'];
+    var r = {};
+    keys.forEach(function(k) { r[k] = p.get(k) || null; });
+    return r;
+  }
+
+  function buildCheckoutUrlDirect() {
+    var t = getUtms();
+    var params = [];
+    if (t.utm_source) params.push('utm_source=' + encodeURIComponent(t.utm_source));
+    if (t.utm_medium) params.push('utm_medium=' + encodeURIComponent(t.utm_medium));
+    if (t.utm_campaign) params.push('utm_campaign=' + encodeURIComponent(t.utm_campaign));
+    if (t.utm_term) params.push('utm_term=' + encodeURIComponent(t.utm_term));
+    if (t.utm_content) params.push('utm_content=' + encodeURIComponent(t.utm_content));
+    if (t.fbclid) params.push('fbclid=' + encodeURIComponent(t.fbclid));
+    return params.length ? CHECKOUT_URL + '&' + params.join('&') : CHECKOUT_URL;
+  }
+
+  // Clicar no CTA = redirect direto pro checkout
+  document.querySelectorAll('[data-open-checkout]').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      window.location.href = buildCheckoutUrlDirect();
+    });
+  });
+
+  // Manter variáveis pro resto do código funcionar (timer etc)
   var overlay = document.getElementById('checkoutPopup');
   var closeBtn = document.getElementById('checkoutClose');
   var submitBtn = document.getElementById('ckSubmit');
   var phoneInput = document.getElementById('ckPhone');
-
-  // Abrir popup
-  document.querySelectorAll('[data-open-checkout]').forEach(function(el) {
-    el.addEventListener('click', function(e) {
-      e.preventDefault();
-      overlay.classList.add('active');
-      document.body.classList.add('no-scroll');
-    });
-  });
+  var WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-LANCAMENTOPAGO-OPERACAO';
+  var DDI = '+55';
 
   // Fechar popup
   function closePopup() {
