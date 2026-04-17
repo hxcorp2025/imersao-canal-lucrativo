@@ -1820,7 +1820,11 @@ document.addEventListener('DOMContentLoaded', function() {
         origem: window.location.href,
         data: new Date().toISOString()
       };
-      // sendBeacon não bloqueia — ideal pra disparo antes de redirect
+      // Pixel client-side (via GTM) — dispara imediato, independente do webhook
+      if (typeof fbq === 'function') {
+        try { fbq('track', 'InitiateCheckout', { value: 47, currency: 'BRL', content_name: 'Canal Lucrativo - Lancamento Pago' }); } catch(e){}
+      }
+      // Server-side CAPI via webhook
       if (navigator.sendBeacon) {
         navigator.sendBeacon(WEBHOOK_URL, new Blob([JSON.stringify(payload)], { type: 'application/json' }));
       } else {
@@ -1829,12 +1833,22 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch(e) {}
   }
 
-  // Clicar no CTA = dispara CAPI + redirect pro checkout
+  // Overlay de redirecionamento pra dar tempo do evento sair
+  function showRedirectOverlay() {
+    var o = document.createElement('div');
+    o.style.cssText = 'position:fixed;inset:0;background:rgba(8,8,12,.92);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:var(--font-label),system-ui;color:#fff;font-size:14px;letter-spacing:.15em;text-transform:uppercase';
+    o.innerHTML = '<div style="width:40px;height:40px;border:3px solid rgba(255,255,255,.15);border-top-color:#ff1a1a;border-radius:50%;animation:spin .8s linear infinite"></div><div>Redirecionando...</div><style>@keyframes spin{to{transform:rotate(360deg)}}</style>';
+    document.body.appendChild(o);
+  }
+
+  // Clicar no CTA = dispara CAPI + overlay + redirect (com delay pro evento sair)
   document.querySelectorAll('[data-open-checkout]').forEach(function(el) {
     el.addEventListener('click', function(e) {
       e.preventDefault();
       fireInitiateCheckout();
-      window.location.href = buildCheckoutUrlDirect();
+      showRedirectOverlay();
+      var url = buildCheckoutUrlDirect();
+      setTimeout(function() { window.location.href = url; }, 450);
     });
   });
 
