@@ -254,42 +254,20 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .hero-grid{
   display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);
-  gap:56px;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);
+  grid-template-areas:
+    "top vsl"
+    "bot vsl";
+  column-gap:48px;
+  row-gap:0;
   align-items:center;
 }
-.hero-logo{max-width:200px;margin-bottom:32px}
-.hero h1{margin-bottom:24px;line-height:.95}
-.hero h1 .red{color:var(--red)}
-.hero-sub{
-  font-size:17px;line-height:1.65;
-  color:var(--text);
-  margin-bottom:32px;
-  max-width:540px;
+.hero-top{
+  grid-area:top;
 }
-.hero-sub strong{color:var(--white);font-weight:600}
-
-.hero-bullets{
-  list-style:none;padding:0;margin:0 0 36px;
-  display:flex;flex-direction:column;gap:14px;
-}
-.hero-bullets li{
-  display:flex;align-items:flex-start;gap:12px;
-  font-size:15px;color:var(--text);
-  line-height:1.5;
-}
-.hero-bullets li::before{
-  content:'';flex-shrink:0;
-  width:18px;height:18px;margin-top:2px;
-  border-radius:50%;
-  background:var(--red-soft);
-  border:1.5px solid var(--red);
-  background-image:linear-gradient(135deg,transparent 45%,var(--red) 50%,var(--red) 60%,transparent 65%);
-  background-size:7px 7px;background-position:center;background-repeat:no-repeat;
-}
-.hero-bullets li strong{color:var(--white);font-weight:600}
-
 .hero-vsl{
+  grid-area:vsl;
+  align-self:center;
   border-radius:18px;
   overflow:hidden;
   background:rgba(255,255,255,.02);
@@ -297,12 +275,58 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 80px rgba(255,0,0,.08);
 }
 .hero-vsl vturb-smartplayer{display:block;width:100%}
+.hero-bottom{
+  grid-area:bot;
+  margin-top:28px;
+}
+.hero-logo{max-width:200px;margin-bottom:24px}
+.hero h1{margin-bottom:0;line-height:.95}
+.hero h1 .red{color:var(--red)}
+.hero-sub{
+  font-size:17px;line-height:1.65;
+  color:var(--text);
+  margin:24px 0 28px;
+  max-width:560px;
+}
+.hero-sub strong{color:var(--white);font-weight:600}
+
+.hero-bullets{
+  list-style:none;padding:0;margin:0 0 32px;
+  display:flex;flex-direction:column;gap:12px;
+  text-align:left;
+}
+.hero-bullets li{
+  position:relative;
+  padding-left:32px;
+  font-size:15px;color:var(--text);
+  line-height:1.55;
+  text-align:left;
+}
+.hero-bullets li::before{
+  content:'';
+  position:absolute;
+  left:0;top:5px;
+  width:20px;height:20px;
+  border-radius:50%;
+  background:var(--red-soft);
+  border:1.5px solid var(--red);
+}
+.hero-bullets li::after{
+  content:'';
+  position:absolute;
+  left:6.5px;top:9px;
+  width:6px;height:9px;
+  border:solid var(--red);
+  border-width:0 1.5px 1.5px 0;
+  transform:rotate(45deg);
+}
+.hero-bullets li strong{color:var(--white);font-weight:600}
 
 .hero-meta{
-  display:flex;flex-wrap:wrap;gap:18px;
+  display:flex;flex-wrap:wrap;gap:14px;
   font-size:13px;color:var(--text-dim);
   font-weight:500;
-  margin-top:18px;
+  margin-top:16px;
   align-items:center;
 }
 .hero-meta .dot-sep{
@@ -1299,15 +1323,28 @@ body.no-scroll{overflow:hidden}
 
 /* RESPONSIVE */
 @media(max-width:980px){
-  .hero-grid{grid-template-columns:1fr;gap:36px;text-align:center}
-  .hero-logo{margin:0 auto 28px}
-  .hero-sub{margin-left:auto;margin-right:auto}
-  .hero-bullets{max-width:480px;margin-left:auto;margin-right:auto}
+  .hero{padding:48px 0 56px}
+  .hero-grid{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "top"
+      "vsl"
+      "bot";
+    column-gap:0;
+    row-gap:22px;
+  }
+  .hero-top{text-align:center}
+  .hero-logo{margin:0 auto 18px;max-width:170px}
+  .hero h1{text-align:center}
+  .eyebrow{margin-bottom:16px}
+  .hero-vsl{margin:0}
+  .hero-bottom{text-align:center;margin-top:0}
+  .hero-sub{margin:8px auto 24px;max-width:560px}
+  .hero-bullets{max-width:420px;margin-left:auto;margin-right:auto}
   .hero-meta{justify-content:center}
 }
 @media(max-width:768px){
   section{padding:72px 0}
-  .hero{padding:64px 0 60px}
   .empresarios-grid,.versus-grid,.depoimentos-grid,.alunos-grid,.caminhos-grid{grid-template-columns:1fr;gap:14px}
   .famosos-grid,.codigos-grid,.timeline-grid,.why-grid,.case-stages,.bio-metrics{grid-template-columns:repeat(2,1fr);gap:12px}
   .video-grid{grid-template-columns:1fr;gap:16px}
@@ -1315,12 +1352,20 @@ body.no-scroll{overflow:hidden}
   .bio-wrapper{padding:32px 24px}
   .bio-name{font-size:36px}
   .garantia-box{padding:40px 24px}
-  .cta{width:100%;padding:20px 28px;font-size:14px}
+  .cta{width:100%;padding:18px 22px;font-size:14px;letter-spacing:.03em}
   .case-card{padding:32px 22px}
   .empresario-card{padding:28px 22px}
 }
 @media(max-width:480px){
-  .hero-logo{max-width:160px}
+  .hero{padding:28px 0 44px}
+  .hero-logo{max-width:140px;margin-bottom:14px}
+  .eyebrow{font-size:10px;padding:6px 14px;letter-spacing:.14em}
+  .hero h1{font-size:34px;line-height:1}
+  .hero-sub{font-size:15px;margin:4px auto 18px}
+  .hero-bullets li{font-size:14px;padding-left:28px}
+  .hero-bullets li::before{width:18px;height:18px;top:3px}
+  .hero-bullets li::after{left:6px;top:7px}
+  .hero-meta{font-size:12px;gap:10px}
   .famosos-grid,.timeline-grid,.why-grid,.bio-metrics{grid-template-columns:1fr;gap:10px}
   .codigos-grid,.case-stages{grid-template-columns:1fr;gap:12px}
   .urgency-bar{font-size:10px;letter-spacing:.1em}
@@ -1343,10 +1388,18 @@ body.no-scroll{overflow:hidden}
 <section class="hero">
   <div class="container">
     <div class="hero-grid">
-      <div class="hero-content">
+      <div class="hero-top">
         <img src="https://joaoadolfooficial.com/wp-content/uploads/2025/07/IMERSAO-BRANCA.svg" alt="Imersão Canal Lucrativo" class="hero-logo reveal" fetchpriority="high" decoding="async">
-        <div class="eyebrow reveal reveal-d1">Pra empresários e profissionais cansados de tráfego pago</div>
+        <div class="eyebrow reveal reveal-d1">Pra empresários cansados de tráfego pago</div>
         <h1 class="reveal reveal-d2">Existe uma forma do YouTube te pagar <span class="red">R$100 mil por mês de um canal só.</span></h1>
+      </div>
+      <div class="hero-vsl reveal reveal-d2">
+        <vturb-smartplayer id="vid-6a013c447ded961d3693995f" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
+        <script type="text/javascript">
+          (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6a013c447ded961d3693995f/v4/player.js";s.async=!0;document.head.appendChild(s);})();
+        </script>
+      </div>
+      <div class="hero-bottom">
         <p class="hero-sub reveal reveal-d3">E praticamente nenhum guru ensina. 1 sábado ao vivo no Zoom com João Adolfo, dia 30/05.</p>
         <ul class="hero-bullets reveal reveal-d3">
           <li><strong>Cliente que chega no WhatsApp já querendo comprar</strong>, sem gastar 1 real em tráfego pago</li>
@@ -1355,18 +1408,12 @@ body.no-scroll{overflow:hidden}
         </ul>
         <a href="#" class="cta reveal reveal-d3" data-open-checkout>QUERO MINHA VAGA POR R$47 &rarr;</a>
         <div class="hero-meta reveal reveal-d3">
-          <span>Sábado 30/05 · 10h-17h</span>
+          <span>Sábado 30/05 · 10h às 17h</span>
           <span class="dot-sep"></span>
           <span>Sem replay</span>
           <span class="dot-sep"></span>
           <span>Menos do que um almoço</span>
         </div>
-      </div>
-      <div class="hero-vsl reveal reveal-d2">
-        <vturb-smartplayer id="vid-6a013c447ded961d3693995f" style="display:block;margin:0 auto;width:100%"></vturb-smartplayer>
-        <script type="text/javascript">
-          (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6a013c447ded961d3693995f/v4/player.js";s.async=!0;document.head.appendChild(s);})();
-        </script>
       </div>
     </div>
   </div>
