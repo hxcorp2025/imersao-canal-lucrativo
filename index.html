@@ -7,13 +7,13 @@
 <meta name="description" content="Em 7 horas neste sábado 30/05, o método que João Adolfo usa pra rodar 21 canais ativos com 30M+ inscritos. Para empresários e profissionais cansados de tráfego pago.">
 
 <!-- OG / Twitter -->
-<meta property="og:title" content="Imersão Canal Lucrativo · 30/05 — R$47">
+<meta property="og:title" content="Imersão Canal Lucrativo · 30/05 · R$47">
 <meta property="og:description" content="O sistema que faz o YouTube pagar R$100 mil por mês de UM canal só. Sábado 30 de maio. Sem replay.">
 <meta property="og:image" content="https://joaoadolfooficial.com/wp-content/uploads/2025/07/IMERSAO-BRANCA.svg">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://hxcorp2025.github.io/imersao-canal-lucrativo/">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Imersão Canal Lucrativo · 30/05 — R$47">
+<meta name="twitter:title" content="Imersão Canal Lucrativo · 30/05 · R$47">
 <meta name="twitter:description" content="O sistema que faz o YouTube pagar R$100 mil por mês de UM canal só. Sábado 30 de maio.">
 
 <!-- DNS prefetch -->
@@ -29,7 +29,7 @@
 <!-- Preload hero logo -->
 <link rel="preload" href="https://joaoadolfooficial.com/wp-content/uploads/2025/07/IMERSAO-BRANCA.svg" as="image">
 
-<!-- Fontes — Bricolage Grotesque (display) + Geist (body) -->
+<!-- Fontes: Bricolage Grotesque (display) + Geist (body) -->
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 
 <!-- Google Tag Manager -->
@@ -74,11 +74,10 @@ html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
   --ink:#0A0A0A;
   --ink-2:#141414;
   --ink-3:#1F1F1F;
-  --yellow:#FFD60A;
-  --yellow-soft:rgba(255,214,10,.12);
-  --yellow-line:rgba(255,214,10,.25);
+  --red:#FF0000;
+  --red-soft:rgba(255,0,0,.08);
+  --red-line:rgba(255,0,0,.2);
   --white:#FFFFFF;
-  --green:#22C55E;
   --line:rgba(255,255,255,.08);
   --text:rgba(255,255,255,.72);
   --text-dim:rgba(255,255,255,.45);
@@ -103,12 +102,12 @@ body{
 /* atmospheric glows */
 body::before{
   content:'';position:fixed;top:-20%;left:-10%;width:800px;height:800px;
-  background:radial-gradient(circle,rgba(255,214,10,.05) 0%,transparent 65%);
+  background:radial-gradient(circle,rgba(255,0,0,.05) 0%,transparent 65%);
   pointer-events:none;z-index:0;
 }
 body::after{
   content:'';position:fixed;bottom:-15%;right:-10%;width:700px;height:700px;
-  background:radial-gradient(circle,rgba(255,214,10,.035) 0%,transparent 60%);
+  background:radial-gradient(circle,rgba(255,0,0,.035) 0%,transparent 60%);
   pointer-events:none;z-index:0;
 }
 body>*{position:relative;z-index:1}
@@ -140,12 +139,12 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   font-family:var(--font-body);
   font-size:11px;font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;
-  color:var(--yellow);
+  color:var(--red);
   padding:8px 16px;
-  border:1px solid var(--yellow-line);
+  border:1px solid var(--red-line);
   border-radius:100px;
   margin-bottom:24px;
-  background:var(--yellow-soft);
+  background:var(--red-soft);
 }
 
 .lead{
@@ -164,12 +163,6 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   position:relative;overflow:hidden;
 }
 
-.glass--yellow{
-  background:rgba(255,214,10,.025);
-  border:1px solid var(--yellow-line);
-  box-shadow:0 0 40px rgba(255,214,10,.04),inset 0 1px 0 rgba(255,255,255,.04);
-}
-
 /* CTA */
 .cta{
   display:inline-flex;align-items:center;justify-content:center;gap:12px;
@@ -177,16 +170,16 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   font-family:var(--font-body);
   font-size:15px;font-weight:700;
   letter-spacing:.04em;text-transform:uppercase;
-  color:var(--ink);
-  background:linear-gradient(135deg,#FFE05C,#FFD60A,#E6B800);
+  color:var(--white);
+  background:linear-gradient(135deg,#FF3A3A,#FF0000,#CC0000);
   border:none;border-radius:14px;cursor:pointer;
   position:relative;overflow:hidden;
-  box-shadow:0 0 50px rgba(255,214,10,.28),0 4px 20px rgba(0,0,0,.4);
+  box-shadow:0 0 50px rgba(255,0,0,.32),0 4px 20px rgba(0,0,0,.4);
   transition:all .35s cubic-bezier(.4,0,.2,1);
 }
 .cta:hover{
   transform:translateY(-3px);
-  box-shadow:0 0 80px rgba(255,214,10,.4),0 12px 40px rgba(0,0,0,.5);
+  box-shadow:0 0 80px rgba(255,0,0,.45),0 12px 40px rgba(0,0,0,.55);
 }
 .cta::after{
   content:'';position:absolute;inset:0;
@@ -196,14 +189,6 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   pointer-events:none;border-radius:inherit;
 }
 .cta--full{width:100%;justify-content:center}
-.cta--green{
-  color:var(--white);
-  background:linear-gradient(135deg,#16A34A,#22C55E,#15803D);
-  box-shadow:0 0 50px rgba(34,197,94,.28),0 4px 20px rgba(0,0,0,.4);
-}
-.cta--green:hover{
-  box-shadow:0 0 80px rgba(34,197,94,.4),0 12px 40px rgba(0,0,0,.5);
-}
 @keyframes shimmer{
   0%{background-position:200% 0}
   100%{background-position:-200% 0}
@@ -232,8 +217,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 
 /* URGENCY BANNER */
 .urgency-bar{
-  background:linear-gradient(90deg,rgba(255,214,10,.08),rgba(255,214,10,.18),rgba(255,214,10,.08));
-  border-bottom:1px solid var(--yellow-line);
+  background:linear-gradient(90deg,rgba(255,0,0,.08),rgba(255,0,0,.18),rgba(255,0,0,.08));
+  border-bottom:1px solid var(--red-line);
   padding:11px 16px;
   text-align:center;
   font-family:var(--font-body);
@@ -245,9 +230,9 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .urgency-bar .dot{
   display:inline-block;width:8px;height:8px;
-  background:#FF3B30;border-radius:50%;
+  background:var(--red);border-radius:50%;
   margin-right:10px;vertical-align:middle;
-  box-shadow:0 0 10px #FF3B30;
+  box-shadow:0 0 12px var(--red);
   animation:pulse 1.5s ease-in-out infinite;
 }
 @keyframes pulse{
@@ -264,7 +249,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   content:'';position:absolute;
   top:-20%;left:50%;transform:translateX(-50%);
   width:1000px;height:900px;
-  background:radial-gradient(circle,rgba(255,214,10,.07) 0%,transparent 60%);
+  background:radial-gradient(circle,rgba(255,0,0,.07) 0%,transparent 60%);
   pointer-events:none;
 }
 .hero-grid{
@@ -275,7 +260,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .hero-logo{max-width:200px;margin-bottom:32px}
 .hero h1{margin-bottom:24px;line-height:.95}
-.hero h1 .yellow{color:var(--yellow)}
+.hero h1 .red{color:var(--red)}
 .hero-sub{
   font-size:17px;line-height:1.65;
   color:var(--text);
@@ -297,9 +282,9 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   content:'';flex-shrink:0;
   width:18px;height:18px;margin-top:2px;
   border-radius:50%;
-  background:var(--yellow-soft);
-  border:1.5px solid var(--yellow);
-  background-image:linear-gradient(135deg,transparent 45%,var(--yellow) 50%,var(--yellow) 60%,transparent 65%);
+  background:var(--red-soft);
+  border:1.5px solid var(--red);
+  background-image:linear-gradient(135deg,transparent 45%,var(--red) 50%,var(--red) 60%,transparent 65%);
   background-size:7px 7px;background-position:center;background-repeat:no-repeat;
 }
 .hero-bullets li strong{color:var(--white);font-weight:600}
@@ -309,7 +294,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   overflow:hidden;
   background:rgba(255,255,255,.02);
   border:1px solid var(--line);
-  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 80px rgba(255,214,10,.08);
+  box-shadow:0 24px 60px rgba(0,0,0,.5),0 0 80px rgba(255,0,0,.08);
 }
 .hero-vsl vturb-smartplayer{display:block;width:100%}
 
@@ -335,12 +320,12 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   border-radius:20px;
 }
 .empresario-card.bad{
-  background:rgba(255,59,48,.04);
-  border:1px solid rgba(255,59,48,.18);
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.08);
 }
 .empresario-card.good{
-  background:rgba(34,197,94,.04);
-  border:1px solid rgba(34,197,94,.2);
+  background:var(--red-soft);
+  border:1px solid var(--red-line);
 }
 .empresario-tag{
   display:inline-block;
@@ -350,8 +335,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   padding:6px 12px;border-radius:6px;
   margin-bottom:18px;
 }
-.empresario-card.bad .empresario-tag{color:#FF6B5C;background:rgba(255,59,48,.12)}
-.empresario-card.good .empresario-tag{color:#34D399;background:rgba(34,197,94,.12)}
+.empresario-card.bad .empresario-tag{color:rgba(255,255,255,.5);background:rgba(255,255,255,.06)}
+.empresario-card.good .empresario-tag{color:var(--red);background:rgba(255,0,0,.1)}
 .empresario-card h3{
   font-size:24px;margin-bottom:12px;
 }
@@ -367,8 +352,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   line-height:1;margin:14px 0;
   letter-spacing:-.04em;
 }
-.empresario-card.bad .big-num{color:#FF6B5C}
-.empresario-card.good .big-num{color:#34D399}
+.empresario-card.bad .big-num{color:rgba(255,255,255,.55)}
+.empresario-card.good .big-num{color:var(--red)}
 .empresarios-conclusion{
   text-align:center;
   margin-top:40px;
@@ -396,13 +381,13 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .prova-close strong{color:var(--white);font-weight:600}
 
-/* DOR — MOEDA DE OURO */
+/* DOR: MOEDA DE OURO */
 .moeda-hero{
   text-align:center;
   padding:64px 32px;
-  background:linear-gradient(180deg,rgba(255,214,10,.02),transparent);
-  border-top:1px solid var(--yellow-line);
-  border-bottom:1px solid var(--yellow-line);
+  background:linear-gradient(180deg,rgba(255,0,0,.02),transparent);
+  border-top:1px solid var(--red-line);
+  border-bottom:1px solid var(--red-line);
   border-radius:24px;
   margin:32px 0;
 }
@@ -411,7 +396,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   letter-spacing:-.03em;
   margin-bottom:24px;
 }
-.moeda-hero h2 .yellow{color:var(--yellow)}
+.moeda-hero h2 .red{color:var(--red)}
 .moeda-text{
   max-width:680px;margin:0 auto 32px;
   font-size:17px;line-height:1.7;
@@ -429,16 +414,16 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   text-align:center;
 }
 .versus-col.lose{
-  background:rgba(255,59,48,.03);
-  border:1px solid rgba(255,59,48,.14);
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.08);
 }
 .versus-col.win{
-  background:rgba(255,214,10,.04);
-  border:1px solid var(--yellow-line);
+  background:var(--red-soft);
+  border:1px solid var(--red-line);
 }
 .versus-col h3{font-size:32px;margin-bottom:8px;letter-spacing:-.02em}
-.versus-col.lose h3{color:#FF6B5C}
-.versus-col.win h3{color:var(--yellow)}
+.versus-col.lose h3{color:rgba(255,255,255,.55)}
+.versus-col.win h3{color:var(--red)}
 .versus-col .versus-meta{
   font-size:11px;font-weight:600;letter-spacing:.16em;
   text-transform:uppercase;color:var(--text-dim);
@@ -453,8 +438,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   font-size:64px;font-weight:800;
   margin:18px 0;line-height:1;letter-spacing:-.04em;
 }
-.versus-col.lose .big-payment{color:#FF6B5C}
-.versus-col.win .big-payment{color:var(--yellow)}
+.versus-col.lose .big-payment{color:rgba(255,255,255,.5)}
+.versus-col.win .big-payment{color:var(--red)}
 .versus-col .payment-label{
   font-size:11px;letter-spacing:.16em;text-transform:uppercase;
   font-weight:600;color:var(--text-dim);
@@ -493,7 +478,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .famoso-card .famoso-fortune{
   font-family:var(--font-mono);
   font-size:22px;font-weight:700;
-  color:var(--yellow);
+  color:var(--red);
   margin:10px 0 6px;
   letter-spacing:-.02em;
 }
@@ -522,13 +507,13 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   padding:36px 28px;
   border-radius:20px;
   position:relative;
-  background:rgba(255,214,10,.025);
-  border:1px solid var(--yellow-line);
+  background:rgba(255,0,0,.025);
+  border:1px solid var(--red-line);
 }
 .codigo-num{
   font-family:var(--font-display);
   font-size:80px;font-weight:800;
-  color:var(--yellow);
+  color:var(--red);
   line-height:.9;
   letter-spacing:-.06em;
   opacity:.4;
@@ -547,10 +532,10 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .codigo-proof{
   display:block;
   font-family:var(--font-mono);
-  font-size:13px;color:var(--yellow);
+  font-size:13px;color:var(--red);
   font-weight:700;letter-spacing:.02em;
   margin-top:14px;padding-top:14px;
-  border-top:1px solid var(--yellow-line);
+  border-top:1px solid var(--red-line);
 }
 
 /* BIO */
@@ -562,7 +547,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .bio-eyebrow{
   font-size:12px;font-weight:600;
   letter-spacing:.18em;text-transform:uppercase;
-  color:var(--yellow);
+  color:var(--red);
   margin-bottom:14px;
 }
 .bio-name{
@@ -580,7 +565,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   margin-bottom:24px;
   max-width:640px;
 }
-.bio-tagline em{color:var(--yellow);font-style:normal;font-weight:600}
+.bio-tagline em{color:var(--red);font-style:normal;font-weight:600}
 .bio-text{
   font-size:15px;line-height:1.75;
   color:var(--text);
@@ -642,7 +627,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .dep-card .dep-tag{
   font-family:var(--font-mono);
   font-size:12px;font-weight:700;
-  color:var(--yellow);letter-spacing:-.01em;
+  color:var(--red);letter-spacing:-.01em;
 }
 .dep-card .dep-role{
   font-size:11px;letter-spacing:.16em;text-transform:uppercase;
@@ -663,8 +648,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .aluno-card{
   padding:24px 22px;
   border-radius:16px;
-  background:rgba(255,214,10,.03);
-  border:1px solid var(--yellow-line);
+  background:rgba(255,0,0,.03);
+  border:1px solid var(--red-line);
 }
 .aluno-card .aluno-name{
   font-family:var(--font-display);
@@ -673,7 +658,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .aluno-card .aluno-result{
   font-family:var(--font-mono);
-  font-size:15px;color:var(--yellow);
+  font-size:15px;color:var(--red);
   font-weight:700;margin-bottom:8px;
   letter-spacing:-.01em;
 }
@@ -690,14 +675,14 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   display:flex;align-items:baseline;justify-content:space-between;
   flex-wrap:wrap;gap:12px;
   padding:24px 0;
-  border-bottom:2px solid var(--yellow-line);
+  border-bottom:2px solid var(--red-line);
   margin-bottom:24px;
 }
 .bloco-time{
   font-family:var(--font-mono);
   font-size:13px;font-weight:700;
   letter-spacing:.04em;
-  color:var(--yellow);
+  color:var(--red);
 }
 .bloco-title{
   font-family:var(--font-display);
@@ -731,7 +716,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   content:counter(item,decimal-leading-zero);
   font-family:var(--font-mono);
   font-size:13px;font-weight:700;
-  color:var(--yellow);letter-spacing:-.01em;
+  color:var(--red);letter-spacing:-.01em;
   align-self:start;padding-top:2px;
   min-width:24px;
 }
@@ -762,7 +747,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .lunch-break-time{
   font-family:var(--font-mono);
-  font-size:13px;color:var(--yellow);
+  font-size:13px;color:var(--red);
   font-weight:700;margin-bottom:8px;
 }
 .lunch-break-desc{
@@ -790,7 +775,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   margin-left:auto;margin-right:auto;
   letter-spacing:-.01em;
 }
-.case-headline em{color:var(--yellow);font-style:normal;font-weight:700}
+.case-headline em{color:var(--red);font-style:normal;font-weight:700}
 .case-stages{
   display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
   margin-top:32px;
@@ -817,10 +802,10 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   line-height:1.5;
 }
 .case-stage.hoje{
-  background:rgba(255,214,10,.04);
-  border-color:var(--yellow-line);
+  background:rgba(255,0,0,.04);
+  border-color:var(--red-line);
 }
-.case-stage.hoje .stage-num{color:var(--yellow)}
+.case-stage.hoje .stage-num{color:var(--red)}
 
 /* OFERTA */
 #oferta{scroll-margin-top:40px}
@@ -834,7 +819,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   text-align:center;
   font-size:12px;font-weight:700;
   letter-spacing:.18em;text-transform:uppercase;
-  color:var(--yellow);
+  color:var(--red);
   margin-bottom:12px;
 }
 .offer-title{
@@ -861,10 +846,10 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .offer-item .check{
   width:28px;height:28px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(34,197,94,.12);
-  border:1px solid rgba(34,197,94,.3);
+  background:var(--red-soft);
+  border:1px solid var(--red-line);
   border-radius:8px;
-  color:var(--green);font-size:14px;font-weight:700;
+  color:var(--red);font-size:14px;font-weight:700;
 }
 .offer-item .item-info .item-name{
   font-size:15px;font-weight:600;
@@ -907,7 +892,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .price-to small{
   font-size:clamp(24px,3.5vw,34px);
-  vertical-align:super;color:var(--yellow);
+  vertical-align:super;color:var(--red);
   font-weight:700;
 }
 .price-parcela{
@@ -936,7 +921,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .timeline-step{
   font-family:var(--font-mono);
   font-size:13px;font-weight:700;
-  color:var(--yellow);
+  color:var(--red);
   margin-bottom:10px;letter-spacing:-.01em;
 }
 .timeline-title{
@@ -955,24 +940,24 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .garantia-box{
   text-align:center;padding:56px 40px;
   border-radius:24px;
-  border:1px solid var(--yellow-line);
-  background:linear-gradient(180deg,rgba(255,214,10,.04),rgba(255,214,10,.01));
+  border:1px solid var(--red-line);
+  background:linear-gradient(180deg,rgba(255,0,0,.04),rgba(255,0,0,.01));
 }
 .garantia-seal{
   width:130px;height:130px;border-radius:50%;
-  border:3px solid var(--yellow);
+  border:3px solid var(--red);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   margin:0 auto 32px;
-  background:radial-gradient(circle,rgba(255,214,10,.1),transparent 70%);
-  box-shadow:0 0 50px rgba(255,214,10,.15);
+  background:radial-gradient(circle,rgba(255,0,0,.1),transparent 70%);
+  box-shadow:0 0 50px rgba(255,0,0,.15);
 }
 .garantia-seal .num{
   font-family:var(--font-display);font-size:44px;font-weight:800;
-  color:var(--yellow);line-height:1;letter-spacing:-.04em;
+  color:var(--red);line-height:1;letter-spacing:-.04em;
 }
 .garantia-seal .lbl{
   font-size:10px;font-weight:700;
-  letter-spacing:.14em;text-transform:uppercase;color:var(--yellow);
+  letter-spacing:.14em;text-transform:uppercase;color:var(--red);
   margin-top:4px;
 }
 .garantia-box h2{
@@ -996,7 +981,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 }
 .garantia-list li::before{
   content:'✕';position:absolute;left:0;top:6px;
-  color:#FF6B5C;font-weight:700;font-size:13px;
+  color:rgba(255,255,255,.4);font-weight:700;font-size:13px;
 }
 .garantia-sig{
   margin-top:20px;
@@ -1022,8 +1007,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   margin:0 auto 16px;
   display:flex;align-items:center;justify-content:center;
   border-radius:12px;
-  background:rgba(255,214,10,.1);
-  border:1px solid var(--yellow-line);
+  background:rgba(255,0,0,.1);
+  border:1px solid var(--red-line);
   font-size:22px;
 }
 .why-text{
@@ -1042,12 +1027,12 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   border-radius:20px;
 }
 .caminho-card.ruim{
-  background:rgba(255,59,48,.03);
-  border:1px solid rgba(255,59,48,.15);
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.08);
 }
 .caminho-card.bom{
-  background:rgba(255,214,10,.04);
-  border:1px solid var(--yellow-line);
+  background:var(--red-soft);
+  border:1px solid var(--red-line);
 }
 .caminho-num{
   font-family:var(--font-display);
@@ -1055,8 +1040,8 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   line-height:.9;letter-spacing:-.04em;
   opacity:.4;margin-bottom:8px;
 }
-.caminho-card.ruim .caminho-num{color:#FF6B5C}
-.caminho-card.bom .caminho-num{color:var(--yellow)}
+.caminho-card.ruim .caminho-num{color:rgba(255,255,255,.55)}
+.caminho-card.bom .caminho-num{color:var(--red)}
 .caminho-title{
   font-family:var(--font-display);
   font-size:22px;font-weight:700;
@@ -1100,7 +1085,7 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
 .faq-q .icon{
   font-size:22px;font-weight:300;
   transition:transform .3s ease;
-  color:var(--yellow);flex-shrink:0;margin-left:16px;
+  color:var(--red);flex-shrink:0;margin-left:16px;
 }
 .faq-item.active .faq-q .icon{transform:rotate(45deg)}
 .faq-a{
@@ -1179,10 +1164,10 @@ body.no-scroll{overflow:hidden}
   background:rgba(20,20,20,.95);
   backdrop-filter:blur(24px) saturate(1.3);
   -webkit-backdrop-filter:blur(24px) saturate(1.3);
-  border:1px solid var(--yellow-line);
+  border:1px solid var(--red-line);
   border-radius:22px;
   width:100%;max-width:440px;
-  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 80px rgba(255,214,10,.08);
+  box-shadow:0 24px 80px rgba(0,0,0,.7),0 0 80px rgba(255,0,0,.08);
   animation:popUp .3s ease-out;
   position:relative;overflow:hidden;
 }
@@ -1191,17 +1176,17 @@ body.no-scroll{overflow:hidden}
   to{opacity:1;transform:translateY(0) scale(1)}
 }
 .checkout-badge{
-  background:linear-gradient(135deg,#FFE05C,#FFD60A,#E6B800);
+  background:linear-gradient(135deg,#FF3A3A,#FF0000,#CC0000);
   padding:18px 24px;text-align:center;
   font-family:var(--font-display);
   font-size:clamp(18px,3vw,22px);
-  font-weight:800;color:var(--ink);letter-spacing:-.02em;
+  font-weight:800;color:var(--white);letter-spacing:-.02em;
   line-height:1.2;
 }
 .checkout-badge small{
   display:block;font-family:var(--font-body);
   font-size:12px;font-weight:500;
-  color:rgba(10,10,10,.75);
+  color:rgba(255,255,255,.78);
   letter-spacing:.02em;margin-top:6px;
 }
 .checkout-close{
@@ -1233,7 +1218,7 @@ body.no-scroll{overflow:hidden}
   transition:border-color .2s ease;
 }
 .checkout-field input::placeholder{color:rgba(255,255,255,.28)}
-.checkout-field input:focus{border-color:var(--yellow)}
+.checkout-field input:focus{border-color:var(--red)}
 .checkout-submit{
   display:block;width:100%;
   padding:18px 24px;
@@ -1241,16 +1226,16 @@ body.no-scroll{overflow:hidden}
   font-size:15px;font-weight:700;
   letter-spacing:.04em;text-transform:uppercase;
   color:var(--white);
-  background:linear-gradient(135deg,#16A34A,#22C55E,#15803D);
+  background:linear-gradient(135deg,#FF3A3A,#FF0000,#CC0000);
   border:none;border-radius:12px;cursor:pointer;
   position:relative;overflow:hidden;
-  box-shadow:0 0 40px rgba(34,197,94,.28),0 4px 16px rgba(0,0,0,.3);
+  box-shadow:0 0 40px rgba(255,0,0,.32),0 4px 16px rgba(0,0,0,.3);
   transition:all .3s ease;
   margin-top:4px;
 }
 .checkout-submit:hover{
   transform:translateY(-2px);
-  box-shadow:0 0 60px rgba(34,197,94,.4),0 8px 24px rgba(0,0,0,.4);
+  box-shadow:0 0 60px rgba(255,0,0,.45),0 8px 24px rgba(0,0,0,.4);
 }
 .checkout-submit::after{
   content:'';position:absolute;inset:0;
@@ -1268,7 +1253,7 @@ body.no-scroll{overflow:hidden}
 .checkout-timer .timer-digits{
   font-family:var(--font-mono);
   font-size:18px;font-weight:700;
-  color:var(--yellow);
+  color:var(--red);
   letter-spacing:.04em;
 }
 .checkout-secure{
@@ -1282,7 +1267,7 @@ body.no-scroll{overflow:hidden}
   position:fixed;bottom:0;left:0;right:0;z-index:9998;
   background:rgba(10,10,10,.96);
   backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-  border-top:1px solid var(--yellow-line);
+  border-top:1px solid var(--red-line);
   padding:12px 24px;
   display:flex;align-items:center;justify-content:center;gap:16px;
   transform:translateY(100%);
@@ -1306,11 +1291,11 @@ body.no-scroll{overflow:hidden}
   font-size:12px;font-weight:700;
   letter-spacing:.04em;text-transform:uppercase;
   color:var(--white);
-  background:linear-gradient(135deg,#16A34A,#22C55E,#15803D);
+  background:linear-gradient(135deg,#FF3A3A,#FF0000,#CC0000);
   border:none;border-radius:10px;cursor:pointer;
   transition:all .2s ease;
 }
-.timer-bar .timer-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(34,197,94,.3)}
+.timer-bar .timer-cta:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(255,0,0,.4)}
 
 /* RESPONSIVE */
 @media(max-width:980px){
@@ -1340,7 +1325,7 @@ body.no-scroll{overflow:hidden}
   .codigos-grid,.case-stages{grid-template-columns:1fr;gap:12px}
   .urgency-bar{font-size:10px;letter-spacing:.1em}
   .offer-item{grid-template-columns:auto 1fr;gap:12px}
-  .offer-item .item-price{grid-column:2;font-size:12px;color:var(--yellow)}
+  .offer-item .item-price{grid-column:2;font-size:12px;color:var(--red)}
 }
 </style>
 </head>
@@ -1361,10 +1346,10 @@ body.no-scroll{overflow:hidden}
       <div class="hero-content">
         <img src="https://joaoadolfooficial.com/wp-content/uploads/2025/07/IMERSAO-BRANCA.svg" alt="Imersão Canal Lucrativo" class="hero-logo reveal" fetchpriority="high" decoding="async">
         <div class="eyebrow reveal reveal-d1">Pra empresários e profissionais cansados de tráfego pago</div>
-        <h1 class="reveal reveal-d2">Existe uma forma do YouTube te pagar <span class="yellow">R$100 mil por mês de um canal só.</span></h1>
+        <h1 class="reveal reveal-d2">Existe uma forma do YouTube te pagar <span class="red">R$100 mil por mês de um canal só.</span></h1>
         <p class="hero-sub reveal reveal-d3">E praticamente nenhum guru ensina. 1 sábado ao vivo no Zoom com João Adolfo, dia 30/05.</p>
         <ul class="hero-bullets reveal reveal-d3">
-          <li><strong>Cliente que chega no WhatsApp já querendo comprar</strong> — sem gastar 1 real em tráfego pago</li>
+          <li><strong>Cliente que chega no WhatsApp já querendo comprar</strong>, sem gastar 1 real em tráfego pago</li>
           <li><strong>10 formas de monetizar</strong> desde o primeiro vídeo (AdSense é só uma delas)</li>
           <li><strong>Ferramenta de IA</strong> que gera título, descrição, tags e thumb em 15 segundos</li>
         </ul>
@@ -1419,11 +1404,11 @@ body.no-scroll{overflow:hidden}
         </ul>
       </div>
     </div>
-    <p class="empresarios-conclusion reveal reveal-d3">A diferença é uma só. <strong>O segundo aprendeu a usar o YouTube como ferramenta de venda</strong> — não pra virar influencer, não pra fazer dancinha. Pra construir autoridade que vende enquanto ele dorme.</p>
+    <p class="empresarios-conclusion reveal reveal-d3">A diferença é uma só. <strong>O segundo aprendeu a usar o YouTube como ferramenta de venda.</strong> Não pra virar influencer, não pra fazer dancinha. Pra construir autoridade que vende enquanto ele dorme.</p>
   </div>
 </section>
 
-<!-- PROVA SOCIAL — VÍDEOS DE FAMOSOS -->
+<!-- PROVA SOCIAL: VÍDEOS DE FAMOSOS -->
 <section id="prova-video" style="padding:80px 0;scroll-margin-top:40px">
   <div class="container">
     <div class="eyebrow reveal">+10.000 alunos em 10 países</div>
@@ -1453,9 +1438,9 @@ body.no-scroll{overflow:hidden}
 <section>
   <div class="container--narrow">
     <div class="moeda-hero reveal">
-      <h2>Você é uma <span class="yellow">moeda de ouro no fundo do mar.</span></h2>
+      <h2>Você é uma <span class="red">moeda de ouro no fundo do mar.</span></h2>
       <p class="moeda-text">Tem 5, 10, 20 anos de profissão. Tem coisa de verdade pra ensinar. Mas <strong>ninguém te conhece direito, ninguém te procura, ninguém te paga</strong> pelo que você sabe.</p>
-      <p class="moeda-text">Tem valor — mas é invisível. E enquanto isso, no Instagram, você posta, dança, responde stories e o pagamento é zero. <strong>Tem gente com metade do seu conhecimento faturando R$100, R$200, R$500 mil por mês</strong> porque descobriu a única plataforma do mundo que é obrigada a te pagar.</p>
+      <p class="moeda-text">Tem valor. Mas é invisível. E enquanto isso, no Instagram, você posta, dança, responde stories e o pagamento é zero. <strong>Tem gente com metade do seu conhecimento faturando R$100, R$200, R$500 mil por mês</strong> porque descobriu a única plataforma do mundo que é obrigada a te pagar.</p>
     </div>
   </div>
 </section>
@@ -1464,8 +1449,8 @@ body.no-scroll{overflow:hidden}
 <section class="surface">
   <div class="container">
     <div class="eyebrow reveal">O mecanismo invisível</div>
-    <h2 class="reveal">Por que o YouTube é a única plataforma <span style="color:var(--yellow)">obrigada a te pagar</span>.</h2>
-    <p class="lead reveal reveal-d1">Instagram, TikTok, Facebook, Twitter — todos lucram com seu conteúdo e te pagam nada. O YouTube tem uma regra fixa: 55% de toda receita do anúncio que aparece no seu vídeo eles são obrigados a te repassar.</p>
+    <h2 class="reveal">Por que o YouTube é a única plataforma <span style="color:var(--red)">obrigada a te pagar</span>.</h2>
+    <p class="lead reveal reveal-d1">Instagram, TikTok, Facebook, Twitter. Todos lucram com seu conteúdo e te pagam nada. O YouTube tem uma regra fixa: 55% de toda receita do anúncio que aparece no seu vídeo eles são obrigados a te repassar.</p>
     <div class="versus-grid">
       <div class="versus-col lose reveal reveal-d1">
         <h3>Instagram</h3>
@@ -1482,7 +1467,7 @@ body.no-scroll{overflow:hidden}
         <p style="margin-top:18px">Pessoas pesquisam ativamente pelo seu conteúdo, ficam 5, 8, 10, 20 minutos te assistindo, criam conexão real. <strong style="color:var(--white)">Tudo isso pago, em dinheiro, todo mês.</strong></p>
       </div>
     </div>
-    <p class="versus-bridge reveal reveal-d3">"Por isso os grandes nunca ensinam YouTube — eles te ensinam a viralizar no Insta porque <strong>querem você dando conteúdo de graça pro algoritmo e não disputando com eles.</strong>"</p>
+    <p class="versus-bridge reveal reveal-d3">"Por isso os grandes nunca ensinam YouTube. Eles te ensinam a viralizar no Insta porque <strong>querem você dando conteúdo de graça pro algoritmo e não disputando com eles.</strong>"</p>
   </div>
 </section>
 
@@ -1490,8 +1475,8 @@ body.no-scroll{overflow:hidden}
 <section>
   <div class="container">
     <div class="eyebrow reveal">Não confie só em mim</div>
-    <h2 class="reveal">Todos os grandes da internet brasileira <span style="color:var(--yellow)">começaram no YouTube.</span></h2>
-    <p class="lead reveal reveal-d1">Nenhum deles era famoso antes. Todos começaram do zero — e construíram patrimônios de centenas de milhões a partir de um canal.</p>
+    <h2 class="reveal">Todos os grandes da internet brasileira <span style="color:var(--red)">começaram no YouTube.</span></h2>
+    <p class="lead reveal reveal-d1">Nenhum deles era famoso antes. Todos começaram do zero, e construíram patrimônios de centenas de milhões a partir de um canal.</p>
     <div class="famosos-grid">
       <div class="famoso-card reveal reveal-d1">
         <div class="famoso-name">Felipe Neto</div>
@@ -1522,7 +1507,7 @@ body.no-scroll{overflow:hidden}
 <section class="surface">
   <div class="container">
     <div class="eyebrow reveal">A descoberta de 5.000 horas estudando vídeos virais</div>
-    <h2 class="reveal">Os 3 códigos que valem <span style="color:var(--yellow)">R$100 mil por mês</span>.</h2>
+    <h2 class="reveal">Os 3 códigos que valem <span style="color:var(--red)">R$100 mil por mês</span>.</h2>
     <p class="lead reveal reveal-d1">Em 2020, depois de mais de 5.000 horas estudando vídeos virais, eu descobri os 3 códigos que separam quem ganha R$100 mil/mês com YouTube de quem grava, posta e espera. Apliquei e saí de 250 inscritos pra 100 mil em 3 meses. Em dezembro do mesmo ano, fiz R$100 mil em um único mês.</p>
     <div class="codigos-grid">
       <div class="codigo-card reveal reveal-d1">
@@ -1540,7 +1525,7 @@ body.no-scroll{overflow:hidden}
       <div class="codigo-card reveal reveal-d3">
         <div class="codigo-num">03</div>
         <h3 class="codigo-name">Multiplicador de Monetização</h3>
-        <p class="codigo-desc">O YouTube paga diferente pelas mesmas visualizações. Tem palavra que paga R$5 por mil views. Tem palavra que paga R$40 por mil views. Mesmo vídeo, mesmas views — <strong>8x mais dinheiro só pelas palavras certas.</strong></p>
+        <p class="codigo-desc">O YouTube paga diferente pelas mesmas visualizações. Tem palavra que paga R$5 por mil views. Tem palavra que paga R$40 por mil views. Mesmo vídeo, mesmas views. <strong>8x mais dinheiro só pelas palavras certas.</strong></p>
         <span class="codigo-proof">8x mais dinheiro · só pelas palavras certas</span>
       </div>
     </div>
@@ -1615,7 +1600,7 @@ body.no-scroll{overflow:hidden}
       </div>
     </div>
 
-    <h3 class="reveal reveal-d3" style="margin-top:64px;text-align:center;font-size:22px;color:var(--text);font-weight:600">E mais de 10.000 alunos comuns aplicando — em qualquer nicho:</h3>
+    <h3 class="reveal reveal-d3" style="margin-top:64px;text-align:center;font-size:22px;color:var(--text);font-weight:600">E mais de 10.000 alunos comuns aplicando, em qualquer nicho:</h3>
     <div class="alunos-grid">
       <div class="aluno-card reveal reveal-d3">
         <div class="aluno-name">Mecânico de caminhão na França</div>
@@ -1636,7 +1621,7 @@ body.no-scroll{overflow:hidden}
 <section>
   <div class="container--narrow">
     <div class="eyebrow reveal">A jornada do próprio João</div>
-    <h2 class="reveal">O problema nunca foi você. <span style="color:var(--yellow)">Foi a falta de método.</span></h2>
+    <h2 class="reveal">O problema nunca foi você. <span style="color:var(--red)">Foi a falta de método.</span></h2>
     <div class="case-card reveal reveal-d1">
       <p class="case-headline">Ele começou com <em>250 inscritos</em>. Aplicou o sistema. Em 3 meses: <em>100 mil</em>. Hoje: <em>2,5 milhões</em>.</p>
       <div class="case-stages">
@@ -1664,13 +1649,13 @@ body.no-scroll{overflow:hidden}
 <section class="surface">
   <div class="container">
     <div class="eyebrow reveal">O que vai acontecer dia 30/05</div>
-    <h2 class="reveal">8 pilares teóricos. 8 execuções práticas. <span style="color:var(--yellow)">Tudo ao vivo, no Zoom.</span></h2>
+    <h2 class="reveal">8 pilares teóricos. 8 execuções práticas. <span style="color:var(--red)">Tudo ao vivo, no Zoom.</span></h2>
     <p class="lead reveal reveal-d1">7 horas com você do outro lado da tela. De manhã, eu te ensino como o YouTube REALMENTE funciona. De tarde, eu abro meus 21 canais na sua frente e a gente executa junto.</p>
 
     <div class="programacao-block reveal reveal-d1">
       <div class="bloco-header">
         <div>
-          <div class="bloco-time">10h · 12h — MANHÃ</div>
+          <div class="bloco-time">10h · 12h · MANHÃ</div>
           <div class="bloco-title">Os 8 pilares do Canal Lucrativo</div>
         </div>
         <div class="bloco-subtitle">Teoria · Mapa mental · Estratégia</div>
@@ -1685,7 +1670,7 @@ body.no-scroll{overflow:hidden}
         <li>
           <div>
             <div class="programa-item-title">A estratégia exata por trás dos 400 mil views/dia e R$100 mil/mês</div>
-            <div class="programa-item-desc">Vou abrir o YouTube Studio ao vivo — AdSense, painel, métricas, tudo aberto.</div>
+            <div class="programa-item-desc">Vou abrir o YouTube Studio ao vivo. AdSense, painel, métricas, tudo aberto.</div>
           </div>
         </li>
         <li>
@@ -1709,7 +1694,7 @@ body.no-scroll{overflow:hidden}
         <li>
           <div>
             <div class="programa-item-title">O mapa completo das formas reais de fazer dinheiro</div>
-            <div class="programa-item-desc">AdSense é só 1 delas — o dinheiro grande está nas outras.</div>
+            <div class="programa-item-desc">AdSense é só 1 delas. O dinheiro grande está nas outras.</div>
           </div>
         </li>
         <li>
@@ -1721,7 +1706,7 @@ body.no-scroll{overflow:hidden}
         <li>
           <div>
             <div class="programa-item-title">O case Pablo Marçal: de 3M para 9M de views em 28 dias</div>
-            <div class="programa-item-desc">O processo completo — o que eu fiz e como você pode replicar.</div>
+            <div class="programa-item-desc">O processo completo: o que eu fiz e como você pode replicar.</div>
           </div>
         </li>
       </ul>
@@ -1736,7 +1721,7 @@ body.no-scroll{overflow:hidden}
     <div class="programacao-block reveal reveal-d2">
       <div class="bloco-header">
         <div>
-          <div class="bloco-time">14h · 17h — TARDE</div>
+          <div class="bloco-time">14h · 17h · TARDE</div>
           <div class="bloco-title">Mão na massa: 8 execuções práticas</div>
         </div>
         <div class="bloco-subtitle">100% prático · Minha tela ao vivo · Você executa comigo</div>
@@ -1757,13 +1742,13 @@ body.no-scroll{overflow:hidden}
         <li>
           <div>
             <div class="programa-item-title">Como buscar ideias de vídeos que JÁ deram certo</div>
-            <div class="programa-item-desc">Ideias validadas que já fizeram milhões de views — sem inventar.</div>
+            <div class="programa-item-desc">Ideias validadas que já fizeram milhões de views, sem inventar.</div>
           </div>
         </li>
         <li>
           <div>
             <div class="programa-item-title">Ferramenta de IA: título, descrição, tags e thumb em 15 segundos</div>
-            <div class="programa-item-desc">Única no Brasil — não é PDF parado no Drive. É ferramenta de verdade, na sua frente.</div>
+            <div class="programa-item-desc">Única no Brasil. Não é PDF parado no Drive. É ferramenta de verdade, na sua frente.</div>
           </div>
         </li>
         <li>
@@ -1774,7 +1759,7 @@ body.no-scroll{overflow:hidden}
         </li>
         <li>
           <div>
-            <div class="programa-item-title">Como criar Shorts ao vivo — o formato que mais viraliza em 2026</div>
+            <div class="programa-item-title">Como criar Shorts ao vivo: o formato que mais viraliza em 2026</div>
             <div class="programa-item-desc">Estrutura exata que faz Shorts ultrapassarem 1 milhão de views.</div>
           </div>
         </li>
@@ -1820,7 +1805,7 @@ body.no-scroll{overflow:hidden}
           <div class="check">&#10003;</div>
           <div class="item-info">
             <div class="item-name">Ebook · 24 Ideias de Vídeos Virais</div>
-            <div class="item-desc">O arquivo que uso pra nunca ficar sem ideia de conteúdo — pra qualquer nicho.</div>
+            <div class="item-desc">O arquivo que uso pra nunca ficar sem ideia de conteúdo, pra qualquer nicho.</div>
           </div>
           <div class="item-price">R$147</div>
         </div>
@@ -1848,7 +1833,7 @@ body.no-scroll{overflow:hidden}
         <div class="price-parcela">à vista no Pix ou cartão · 12x no cartão</div>
       </div>
       <p class="price-microcopy">Menos do que um almoço.</p>
-      <a href="#" class="cta cta--full cta--green" data-open-checkout>&#128722; QUERO MINHA VAGA AGORA</a>
+      <a href="#" class="cta cta--full" data-open-checkout>&#128722; QUERO MINHA VAGA AGORA</a>
       <p class="cta-note">Pagamento seguro · Processado pela Greenn · Acesso imediato no WhatsApp</p>
     </div>
   </div>
@@ -1874,12 +1859,12 @@ body.no-scroll{overflow:hidden}
       <div class="timeline-card reveal reveal-d3">
         <div class="timeline-step">EM 6 MESES</div>
         <div class="timeline-title">Ativo que trabalha por você</div>
-        <div class="timeline-desc">24h por dia, 7 dias por semana. Você dorme — ele continua gerando lucro.</div>
+        <div class="timeline-desc">24h por dia, 7 dias por semana. Você dorme, ele continua gerando lucro.</div>
       </div>
       <div class="timeline-card reveal reveal-d3">
         <div class="timeline-step">EM 1 ANO</div>
         <div class="timeline-title">A virada total</div>
-        <div class="timeline-desc">Você olha pra trás e fala: "muito obrigado, João — aquele sábado foi a virada que eu precisava".</div>
+        <div class="timeline-desc">Você olha pra trás e fala: "muito obrigado, João. Aquele sábado foi a virada que eu precisava".</div>
       </div>
     </div>
   </div>
@@ -1896,16 +1881,16 @@ body.no-scroll{overflow:hidden}
       <h2>Assista à imersão e aplique. Se não agregar valor, devolvo cada centavo.</h2>
       <div class="garantia-text">
         <p>Participe da Imersão Canal Lucrativo no sábado 30/05. Assista tudo. Me olhe nos olhos por 7 horas inteiras. Execute comigo. Faça as perguntas.</p>
-        <p>E aí, depois de tudo, se você não achar que o conteúdo valeu o que você pagou — é só me mandar uma mensagem em até 30 dias pedindo reembolso.</p>
+        <p>E aí, depois de tudo, se você não achar que o conteúdo valeu o que você pagou, é só me mandar uma mensagem em até 30 dias pedindo reembolso.</p>
         <ul class="garantia-list">
           <li>Sem pergunta</li>
           <li>Sem formulário</li>
           <li>Sem "me dá só mais uma chance"</li>
           <li>Sem burocracia</li>
         </ul>
-        <p>Eu simplesmente <strong style="color:var(--white)">devolvo 100% do seu dinheiro.</strong> Cada centavo. Na hora. <strong style="color:var(--white)">O risco é todo meu</strong> — porque eu sei exatamente o que vai acontecer no dia 30/05.</p>
+        <p>Eu simplesmente <strong style="color:var(--white)">devolvo 100% do seu dinheiro.</strong> Cada centavo. Na hora. <strong style="color:var(--white)">O risco é todo meu.</strong> Porque eu sei exatamente o que vai acontecer no dia 30/05.</p>
       </div>
-      <p class="garantia-sig">— João Adolfo</p>
+      <p class="garantia-sig">João Adolfo</p>
     </div>
   </div>
 </section>
@@ -1943,13 +1928,13 @@ body.no-scroll{overflow:hidden}
 <!-- DOIS CAMINHOS -->
 <section>
   <div class="container">
-    <h2 class="reveal" style="text-align:center">Daqui a 30 dias, <span style="color:var(--yellow)">o sábado 30 de maio vai ter passado.</span></h2>
+    <h2 class="reveal" style="text-align:center">Daqui a 30 dias, <span style="color:var(--red)">o sábado 30 de maio vai ter passado.</span></h2>
     <p class="lead reveal reveal-d1" style="text-align:center;margin-left:auto;margin-right:auto;margin-bottom:0">A pergunta é: em qual lado da história você vai estar?</p>
     <div class="caminhos-grid">
       <div class="caminho-card ruim reveal reveal-d1">
         <div class="caminho-num">1</div>
         <h3 class="caminho-title">Você fecha essa página</h3>
-        <p class="caminho-desc">Volta pra sua rotina. Segunda acorda e tudo igual. Daqui a 6 meses, 1 ano, 5 anos — exatamente onde você está hoje. Vendo os outros crescerem. Gente ainda pior que você.</p>
+        <p class="caminho-desc">Volta pra sua rotina. Segunda acorda e tudo igual. Daqui a 6 meses, 1 ano, 5 anos: exatamente onde você está hoje. Vendo os outros crescerem. Gente ainda pior que você.</p>
       </div>
       <div class="caminho-card bom reveal reveal-d2">
         <div class="caminho-num">2</div>
@@ -1980,15 +1965,15 @@ body.no-scroll{overflow:hidden}
       </div>
       <div class="faq-item">
         <button class="faq-q">Preciso de equipamento profissional? Câmera cara, microfone de estúdio?<span class="icon">+</span></button>
-        <div class="faq-a"><p><strong>Não. Zero. Nada disso.</strong> Meu canal de R$100k/mês é gravado com celular. Não existe "equipamento ideal" — existe <strong>método ideal.</strong> Câmera cara sem método é dinheiro no lixo. Celular com método é dinheiro no bolso.</p></div>
+        <div class="faq-a"><p><strong>Não. Zero. Nada disso.</strong> Meu canal de R$100k/mês é gravado com celular. Não existe "equipamento ideal". Existe <strong>método ideal.</strong> Câmera cara sem método é dinheiro no lixo. Celular com método é dinheiro no bolso.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Funciona para o meu nicho?<span class="icon">+</span></button>
-        <div class="faq-a"><p>O método é baseado em SEO + estrutura + comportamento do algoritmo — coisas universais. Já validei com alunos em finanças, direito, saúde, terapia, mecânica, religião, esportes, culinária, viagens, educação e estética.</p><p><strong>Se o seu público pesquisa no YouTube, o método funciona.</strong></p></div>
+        <div class="faq-a"><p>O método é baseado em SEO + estrutura + comportamento do algoritmo. Coisas universais. Já validei com alunos em finanças, direito, saúde, terapia, mecânica, religião, esportes, culinária, viagens, educação e estética.</p><p><strong>Se o seu público pesquisa no YouTube, o método funciona.</strong></p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Tenho mais de 45 anos. Ainda dá?<span class="icon">+</span></button>
-        <div class="faq-a"><p><strong>Os meus melhores alunos começaram depois dos 45.</strong> O YouTube não pergunta sua idade — pergunta se você tem conhecimento. E você sabe que tem muita coisa pra compartilhar.</p></div>
+        <div class="faq-a"><p><strong>Os meus melhores alunos começaram depois dos 45.</strong> O YouTube não pergunta sua idade. Pergunta se você tem conhecimento. E você sabe que tem muita coisa pra compartilhar.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">Vai ter gravação ou replay?<span class="icon">+</span></button>
@@ -2000,7 +1985,7 @@ body.no-scroll{overflow:hidden}
       </div>
       <div class="faq-item">
         <button class="faq-q">Posso parcelar?<span class="icon">+</span></button>
-        <div class="faq-a"><p><strong>Sim.</strong> R$47 pode ser parcelado em até 12x no cartão. Ou Pix à vista, liberado na hora — sua vaga garantida em segundos.</p></div>
+        <div class="faq-a"><p><strong>Sim.</strong> R$47 pode ser parcelado em até 12x no cartão. Ou Pix à vista, liberado na hora. Sua vaga garantida em segundos.</p></div>
       </div>
       <div class="faq-item">
         <button class="faq-q">E se eu não gostar?<span class="icon">+</span></button>
@@ -2045,7 +2030,7 @@ body.no-scroll{overflow:hidden}
   <div class="checkout-modal">
     <div class="checkout-badge">
       ÚLTIMO PASSO PRA GARANTIR SUA VAGA
-      <small>Preenche seus dados — você é levado pro checkout em segundos</small>
+      <small>Preenche seus dados. Você é levado pro checkout em segundos.</small>
     </div>
     <button class="checkout-close" id="checkoutClose" aria-label="Fechar">&times;</button>
     <div class="checkout-body">
