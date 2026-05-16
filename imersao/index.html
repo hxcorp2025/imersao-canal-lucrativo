@@ -1475,7 +1475,7 @@ body.no-scroll{overflow:hidden}
           (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6a060699f6adc3acd7e2ebbd/v4/player.js";s.async=!0;document.head.appendChild(s);})();
         </script>
       </div>
-      <div class="hero-bottom">
+      <div class="hero-bottom delayed-wrapper">
         <p class="hero-sub reveal reveal-d3"><strong>No dia 30/05</strong>, eu vou te mostrar como usar a mesma estratégia que gera <strong>+400 mil visualizações por dia</strong> e <strong>+R$100 mil por mês</strong> para mim em um único canal, há mais de 5 anos.</p>
         <ul class="hero-bullets reveal reveal-d3">
           <li><strong>Sem precisar ser especialista</strong> em gravar vídeos</li>
@@ -2208,9 +2208,10 @@ body.no-scroll{overflow:hidden}
   (function setupDelay(){
     var forceReveal = new URLSearchParams(window.location.search).get('reveal') === '1';
     function revealNow(){
-      var wrap = document.getElementById('delayedContent');
+      document.querySelectorAll('.delayed-wrapper').forEach(function(el){
+        el.classList.add('revealed');
+      });
       var hint = document.getElementById('waitingHint');
-      if (wrap) wrap.classList.add('revealed');
       if (hint) hint.classList.add('hidden');
     }
     if (forceReveal){
