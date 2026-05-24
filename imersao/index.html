@@ -57,13 +57,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
 <link rel="preload" href="https://cdn.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/6a060687f6adc3acd7e2ebab/main.m3u8" as="fetch">
 
-<!-- Preload vídeos famosos -->
-<link rel="preload" href="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6838f17ee552168ecd42bac8/v4/player.js" as="script">
-<link rel="preload" href="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6838f393096577cb30f3a881/v4/player.js" as="script">
-<link rel="preload" href="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/69e123daf11e94b6510701c3/v4/player.js" as="script">
-<link rel="preload" href="https://cdn.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/6838f17a3a5ce8d4a43adcad/main.m3u8" as="fetch">
-<link rel="preload" href="https://cdn.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/69e123d4eeef2dbf7e29c8ca/main.m3u8" as="fetch">
-<link rel="preload" href="https://cdn.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/6838f3896d13465a546e7771/main.m3u8" as="fetch">
+<!-- Depoimentos sao click-to-play (lazy mount) - sem preload pra nao iniciar audio antes do clique -->
 
 <style>
 /* RESET */
@@ -443,6 +437,51 @@ h3{font-size:clamp(22px,2.8vw,30px);margin-bottom:16px}
   border-radius:16px;
   background:rgba(255,255,255,.02);
   overflow:hidden;
+}
+/* CLICK-TO-PLAY placeholder pros depoimentos (evita autoplay simultaneo com VSL) */
+.video-poster{
+  position:relative;
+  width:100%;max-width:400px;
+  aspect-ratio:9/16;
+  margin:0 auto;
+  cursor:pointer;
+  background:linear-gradient(135deg,#1a1a1a 0%,#0a0a0a 100%);
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:14px;
+  transition:transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+.video-poster:hover{
+  transform:translateY(-2px);
+  border-color:var(--red-line);
+  box-shadow:0 12px 40px rgba(0,0,0,.5), 0 0 30px rgba(255,0,0,.12);
+}
+.video-poster::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at center, rgba(255,0,0,.08), transparent 60%);
+  pointer-events:none;
+}
+.video-poster .play-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(255,0,0,.95);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 40px rgba(255,0,0,.4), 0 4px 20px rgba(0,0,0,.5);
+  position:relative;z-index:1;
+  transition:transform .25s ease;
+}
+.video-poster:hover .play-btn{transform:scale(1.08)}
+.video-poster .play-btn svg{
+  width:28px;height:28px;fill:#fff;
+  margin-left:4px;
+}
+.video-poster .play-label{
+  font-family:var(--font-body);
+  font-size:12px;font-weight:600;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+  position:relative;z-index:1;
 }
 .prova-close{
   text-align:center;
@@ -1598,16 +1637,22 @@ body.no-scroll{overflow:hidden}
     <h2 class="reveal">Veja quem já aplicou o método:</h2>
     <div class="video-grid reveal reveal-d1">
       <div class="video-embed">
-        <vturb-smartplayer id="vid-6838f17ee552168ecd42bac8" style="display:block;margin:0 auto;width:100%;max-width:400px"></vturb-smartplayer>
-        <script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6838f17ee552168ecd42bac8/v4/player.js";s.async=!0;document.head.appendChild(s);})();</script>
+        <div class="video-poster" data-vid="6838f17ee552168ecd42bac8" role="button" tabindex="0" aria-label="Tocar depoimento de aluno">
+          <div class="play-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="play-label">Tocar depoimento</div>
+        </div>
       </div>
       <div class="video-embed">
-        <vturb-smartplayer id="vid-69e123daf11e94b6510701c3" style="display:block;margin:0 auto;width:100%;max-width:400px"></vturb-smartplayer>
-        <script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/69e123daf11e94b6510701c3/v4/player.js";s.async=!0;document.head.appendChild(s);})();</script>
+        <div class="video-poster" data-vid="69e123daf11e94b6510701c3" role="button" tabindex="0" aria-label="Tocar depoimento de aluno">
+          <div class="play-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="play-label">Tocar depoimento</div>
+        </div>
       </div>
       <div class="video-embed">
-        <vturb-smartplayer id="vid-6838f393096577cb30f3a881" style="display:block;margin:0 auto;width:100%;max-width:400px"></vturb-smartplayer>
-        <script type="text/javascript">(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6838f393096577cb30f3a881/v4/player.js";s.async=!0;document.head.appendChild(s);})();</script>
+        <div class="video-poster" data-vid="6838f393096577cb30f3a881" role="button" tabindex="0" aria-label="Tocar depoimento de aluno">
+          <div class="play-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="play-label">Tocar depoimento</div>
+        </div>
       </div>
     </div>
     <p class="prova-close reveal reveal-d2">Esses são <strong>alguns dos alunos</strong> que aplicaram o método. Você é o próximo.</p>
@@ -2288,6 +2333,34 @@ body.no-scroll{overflow:hidden}
       if (href === '#' || href.length < 2) return;
       var target = document.querySelector(href);
       if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    });
+  });
+
+  // ══════════════════════════════════════════
+  // CLICK-TO-PLAY depoimentos (lazy mount Vturb)
+  // - Posters substituem players ate o user clicar
+  // - Garante que nenhum audio toca antes da VSL principal
+  // - Tambem evita disputa de autoplay (player so monta apos gesto explicito)
+  // ══════════════════════════════════════════
+  function mountVturbPlayer(posterEl){
+    var vid = posterEl.getAttribute('data-vid');
+    if (!vid || posterEl.dataset.mounted === '1') return;
+    posterEl.dataset.mounted = '1';
+
+    var player = document.createElement('vturb-smartplayer');
+    player.id = 'vid-' + vid;
+    player.style.cssText = 'display:block;margin:0 auto;width:100%;max-width:400px';
+    posterEl.parentNode.replaceChild(player, posterEl);
+
+    var s = document.createElement('script');
+    s.src = 'https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/' + vid + '/v4/player.js';
+    s.async = true;
+    document.head.appendChild(s);
+  }
+  document.querySelectorAll('.video-poster').forEach(function(poster){
+    poster.addEventListener('click', function(){ mountVturbPlayer(poster); });
+    poster.addEventListener('keydown', function(e){
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); mountVturbPlayer(poster); }
     });
   });
 
