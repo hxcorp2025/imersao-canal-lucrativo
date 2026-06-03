@@ -1562,6 +1562,8 @@ body.no-scroll{overflow:hidden}
         <script type="text/javascript">
           (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/db414655-3f62-4b58-9a37-04bec9afa745/players/6a1b2abae84a1ede56b08e56/v4/player.js";s.async=!0;document.head.appendChild(s);})();
         </script>
+        <!-- sentinela do reveal sincronizado ao video (VTurb displayHiddenElements) -->
+        <div id="vturbReveal" style="display:none" aria-hidden="true"></div>
       </div>
       <div class="hero-bottom delayed-wrapper">
         <p class="hero-sub reveal reveal-d3"><strong>No dia 27/06</strong>, eu vou te mostrar como usar a mesma estratégia que gera <strong>+400 mil visualizações por dia</strong> e <strong>+R$100 mil por mês</strong> para mim em um único canal, há mais de 5 anos.</p>
@@ -2358,6 +2360,37 @@ body.no-scroll{overflow:hidden}
     window.addEventListener('pageshow', check);
     if (document.readyState !== 'loading') check();
     else document.addEventListener('DOMContentLoaded', check);
+
+    // GATILHO PRIMARIO: API oficial do VTurb, sincronizada ao tempo do VIDEO
+    // (a prova de pause, persiste pra quem volta). Revela o sentinela #vturbReveal
+    // ao atingir REVEAL_SECONDS de video; observamos e disparamos o revealNow real.
+    var REVEAL_SECONDS = 300; // 5 min DE VIDEO assistido
+    function hookVturbNative(){
+      try {
+        var player = document.querySelector('vturb-smartplayer');
+        if (!player || typeof player.addEventListener !== 'function') return;
+        function arm(){
+          try {
+            if (typeof player.displayHiddenElements === 'function') {
+              player.displayHiddenElements(REVEAL_SECONDS, ['#vturbReveal'], { persist: true });
+            }
+          } catch (e) {}
+        }
+        try { player.addEventListener('player:ready', arm); } catch (e) {}
+        arm(); // caso o ready ja tenha passado
+        var sentinel = document.getElementById('vturbReveal');
+        if (sentinel && 'MutationObserver' in window) {
+          var mo = new MutationObserver(function(){
+            try {
+              if (getComputedStyle(sentinel).display !== 'none') { revealNow(); mo.disconnect(); }
+            } catch (e) {}
+          });
+          mo.observe(sentinel, { attributes: true, attributeFilter: ['style', 'class'] });
+        }
+      } catch (e) {}
+    }
+    if (document.readyState !== 'loading') hookVturbNative();
+    else document.addEventListener('DOMContentLoaded', hookVturbNative);
 
     // gatilho por VIDEO (best-effort; se os eventos nao baterem, o tempo cobre)
     function hookPlayer(){
