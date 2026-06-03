@@ -2297,24 +2297,95 @@ body.no-scroll{overflow:hidden}
   var VSL_ID = 'vsl5';     // VSL 5 - Vou te dizer algo que vai te incomodar
   var PAGE_ID = 'pageC';   // Página C - avatar empresário premium / autoridade
 
-  // Delay pra revelar conteudo abaixo do hero (force imediato com ?reveal=1 na URL)
+  // Delay pra revelar conteudo abaixo do hero.
+  // BLINDADO contra throttle de timer (background/fullscreen/webview do Insta-FB).
+  // Revela por QUALQUER um destes gatilhos, idempotente:
+  //  1) tempo absoluto auto-recuperavel (re-checa no visibilitychange/focus/pageshow/intervalo)
+  //  2) fim ou avanco do video (eventos do smartplayer, best-effort)
+  //  3) ?reveal=1 forca imediato (debug)
+  // Persistido em sessionStorage: sobrevive reload e bfcache.
   var DELAY_MS = 5 * 60 * 1000;  // 5 minutos
   (function setupDelay(){
-    var forceReveal = new URLSearchParams(window.location.search).get('reveal') === '1';
+    var revealed = false;
+
+    function forceParam(){
+      try { return new URLSearchParams(window.location.search).get('reveal') === '1'; }
+      catch (e) { return /[?&]reveal=1/.test(window.location.search || ''); }
+    }
+
     function revealNow(){
+      if (revealed) return;
+      revealed = true;
+      try { sessionStorage.setItem('icl_revealed', '1'); } catch (e) {}
       document.querySelectorAll('.delayed-wrapper').forEach(function(el){
         el.classList.add('revealed');
       });
+      // garante o CTA principal visivel mesmo se o IntersectionObserver falhar no webview
+      document.querySelectorAll('.hero-bottom .reveal').forEach(function(r){ r.classList.add('visible'); });
       var hint = document.getElementById('waitingHint');
       if (hint) hint.classList.add('hidden');
     }
-    if (forceReveal){
-      // Espera DOM pronto
+    window.__iclReveal = revealNow;
+
+    // debug: revela na hora
+    if (forceParam()){
       if (document.readyState !== 'loading') revealNow();
       else document.addEventListener('DOMContentLoaded', revealNow);
-    } else {
-      setTimeout(revealNow, DELAY_MS);
+      return;
     }
+
+    // marco temporal ABSOLUTO e persistido (nao depende do timer disparar no prazo)
+    var T0;
+    try {
+      T0 = parseInt(sessionStorage.getItem('icl_t0'), 10);
+      if (!T0 || isNaN(T0)) { T0 = Date.now(); sessionStorage.setItem('icl_t0', String(T0)); }
+    } catch (e) { T0 = Date.now(); }
+
+    function check(){
+      if (revealed) return;
+      var done = false;
+      try { done = sessionStorage.getItem('icl_revealed') === '1'; } catch (e) {}
+      if (done || (Date.now() - T0) >= DELAY_MS) revealNow();
+    }
+
+    // happy path
+    try { setTimeout(revealNow, DELAY_MS); } catch (e) {}
+    // re-checagem por tempo absoluto: a 1a batida ao voltar de background ja revela
+    var iv = setInterval(function(){ check(); if (revealed) { try { clearInterval(iv); } catch (e) {} } }, 1000);
+    // auto-recuperacao: voltar de fullscreen / troca de app / bfcache
+    document.addEventListener('visibilitychange', function(){ if (!document.hidden) check(); });
+    window.addEventListener('focus', check);
+    window.addEventListener('pageshow', check);
+    if (document.readyState !== 'loading') check();
+    else document.addEventListener('DOMContentLoaded', check);
+
+    // gatilho por VIDEO (best-effort; se os eventos nao baterem, o tempo cobre)
+    function hookPlayer(){
+      try {
+        var el = document.querySelector('vturb-smartplayer');
+        if (!el) return;
+        ['ended','video:end','smartplayer:ended','complete','finish'].forEach(function(ev){
+          try { el.addEventListener(ev, revealNow); } catch (e) {}
+        });
+        ['timeupdate','progress','smartplayer:timeupdate'].forEach(function(ev){
+          try { el.addEventListener(ev, function(e){
+            var t = (e && e.detail && (e.detail.currentTime || e.detail.time)) || el.currentTime || 0;
+            if (t >= 540) revealNow();  // passou ~9 min de video
+          }); } catch (e) {}
+        });
+      } catch (e) {}
+    }
+    if (document.readyState !== 'loading') hookPlayer();
+    else document.addEventListener('DOMContentLoaded', hookPlayer);
+    try { window.addEventListener('smartplayer:ready', hookPlayer); } catch (e) {}
+    try {
+      window.addEventListener('message', function(ev){
+        try {
+          var d = ev && ev.data;
+          if (d && typeof d === 'object' && (d.type === 'video_end' || d.event === 'ended' || d.name === 'ended')) revealNow();
+        } catch (e) {}
+      });
+    } catch (e) {}
   })();
 
   // Anexa "__vslX__pageY" no utm_content original (ou usa só o identificador se vazio)
@@ -2367,15 +2438,20 @@ body.no-scroll{overflow:hidden}
   // ══════════════════════════════════════════
   // REVEAL ON SCROLL
   // ══════════════════════════════════════════
-  var revealObserver = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold:.08, rootMargin:'0px 0px -40px 0px' });
-  document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+  if (!('IntersectionObserver' in window)) {
+    // webview sem suporte: nao deixa nada invisivel, mostra tudo
+    document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('visible'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold:.08, rootMargin:'0px 0px -40px 0px' });
+    document.querySelectorAll('.reveal').forEach(function(el){ revealObserver.observe(el); });
+  }
 
   // ══════════════════════════════════════════
   // FAQ ACCORDION
