@@ -2306,7 +2306,7 @@ body.no-scroll{overflow:hidden}
   //  2) fim ou avanco do video (eventos do smartplayer, best-effort)
   //  3) ?reveal=1 forca imediato (debug)
   // Persistido em sessionStorage: sobrevive reload e bfcache.
-  var DELAY_MS = 5 * 60 * 1000;  // 5 minutos
+  var DELAY_MS = 10 * 60 * 1000;  // backstop de relogio (so age se o video-sync falhar; nao pre-empta o pitch)
   (function setupDelay(){
     var revealed = false;
 
@@ -2364,7 +2364,7 @@ body.no-scroll{overflow:hidden}
     // GATILHO PRIMARIO: API oficial do VTurb, sincronizada ao tempo do VIDEO
     // (a prova de pause, persiste pra quem volta). Revela o sentinela #vturbReveal
     // ao atingir REVEAL_SECONDS de video; observamos e disparamos o revealNow real.
-    var REVEAL_SECONDS = 300; // 5 min DE VIDEO assistido
+    var REVEAL_SECONDS = 579; // 9:39 = momento do pitch (oferta na VSL)
     function hookVturbNative(){
       try {
         var player = document.querySelector('vturb-smartplayer');
@@ -2403,7 +2403,7 @@ body.no-scroll{overflow:hidden}
         ['timeupdate','progress','smartplayer:timeupdate'].forEach(function(ev){
           try { el.addEventListener(ev, function(e){
             var t = (e && e.detail && (e.detail.currentTime || e.detail.time)) || el.currentTime || 0;
-            if (t >= 540) revealNow();  // passou ~9 min de video
+            if (t >= REVEAL_SECONDS) revealNow();  // atingiu o pitch (9:39)
           }); } catch (e) {}
         });
       } catch (e) {}
