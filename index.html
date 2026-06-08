@@ -2126,6 +2126,8 @@ body.no-scroll{overflow:hidden}
   var CHECKOUT_URL = 'https://payfast.greenn.com.br/2n3x7wv/offer/ZYQBmq?ch_id=138608&b_id_1=136395&b_offer_1=HqpQOR&b_id_2=136399&b_offer_2=viW9a9&b_id_3=hf9zjg2&b_offer_3=EVBImO';
   var WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-LANCAMENTOPAGO-OPERACAO';
   var CAPI_WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-CAPI-IC-DIRECT';
+  // Liga/desliga o popup pré-checkout. false = botão vai DIRETO pro checkout (UTMs + IC no clique). true = popup volta. Popup fica guardado nos 2 casos.
+  var POPUP_ENABLED = false;
   var DDI = '+55';
 
   // Identificadores da página + VSL (usados pra enriquecer utm_content e mandar no webhook)
@@ -2229,13 +2231,18 @@ body.no-scroll{overflow:hidden}
     } catch(e){}
   }
 
-  // Abrir popup
+  // Abrir popup (ou ir DIRETO pro checkout se POPUP_ENABLED=false)
   document.querySelectorAll('[data-open-checkout]').forEach(function(el){
     el.addEventListener('click', function(e){
       e.preventDefault();
       fireInitiateCheckout();
-      overlay.classList.add('active');
-      document.body.classList.add('no-scroll');
+      if (POPUP_ENABLED) {
+        overlay.classList.add('active');
+        document.body.classList.add('no-scroll');
+      } else {
+        var _u = buildCheckoutUrl('', '', '');
+        setTimeout(function(){ window.location.href = _u; }, 250);
+      }
     });
   });
 
