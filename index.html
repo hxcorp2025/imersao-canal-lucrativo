@@ -1376,6 +1376,37 @@ body.no-scroll{overflow:hidden}
 }
 </style>
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "d863245aa43e4cb181e5239826f4e121"}'></script><!-- End Cloudflare Web Analytics -->
+<!-- HX Track Lab -->
+<script>
+(function(){
+  var SUPA='https://ntavetjmfotlwmcgwsju.supabase.co/rest/v1/hx_track_events';
+  var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50YXZldGptZm90bHdtY2d3c2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTAzNDksImV4cCI6MjA1OTYyNjM0OX0.jWCJr4qPHjiun2BCdx8U4Oi7cQ2gQmU-D0vrk10FGao';
+  function ck(n){var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?m.pop():'';}
+  function sid(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now();}}
+  function q(n){return new URLSearchParams(location.search).get(n)||'';}
+  function base(extra){
+    var fbclid=q('fbclid');
+    return Object.assign({
+      session_id:sid(),
+      page_host:location.hostname, page_path:location.pathname, page_url:location.href,
+      referrer:document.referrer||'',
+      utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
+      fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
+      user_agent:navigator.userAgent,
+      device:(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'mobile':'desktop')
+    },extra||{});
+  }
+  function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
+  // 1) pageview (assim que carrega)
+  send(base({event_type:'pageview'}));
+  // 2) checkout_click (clique em CTA que leva pro checkout)
+  document.addEventListener('click',function(e){
+    var el=e.target.closest&&e.target.closest('a[href*="greenn"],a[href*="payfast"],a[href*="checkout"],[data-open-checkout],.cta,.btn,#smyV2SubmitBtn');
+    if(!el)return;
+    send(base({event_type:'checkout_click',extra:{label:(el.textContent||'').trim().slice(0,80),href:(el.getAttribute&&el.getAttribute('href'))||''}}));
+  },true);
+})();
+</script>
 </head>
 <body>
 
