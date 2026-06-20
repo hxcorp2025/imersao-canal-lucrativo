@@ -1564,11 +1564,13 @@ body.no-scroll{overflow:hidden}
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
   // 1) pageview (assim que carrega)
   send(base({event_type:'pageview'}));
-  // 2) checkout_click (clique em CTA que leva pro checkout)
+  // 2) cliques: checkout REAL (pagamento) vs cta (engajamento/ancora)
   document.addEventListener('click',function(e){
-    var el=e.target.closest&&e.target.closest('a[href*="greenn"],a[href*="payfast"],a[href*="checkout"],[data-open-checkout],.cta,.btn,#smyV2SubmitBtn');
-    if(!el)return;
-    send(base({event_type:'checkout_click',extra:{label:(el.textContent||'').trim().slice(0,80),href:(el.getAttribute&&el.getAttribute('href'))||''}}));
+    if(!e.target.closest)return;
+    var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"],.checkout-submit,#ckSubmit,#smyV2SubmitBtn');
+    if(pay){send(base({event_type:'checkout_click',extra:{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||''}}));return;}
+    var cta=e.target.closest('.cta,.btn');
+    if(cta){send(base({event_type:'cta_click',extra:{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''}}));}
   },true);
 })();
 </script>
