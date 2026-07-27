@@ -550,6 +550,47 @@ footer p{max-width:none;margin:0 0 9px}
   }, false);
 
   // ══════════════════════════════════════════
+  // BOTAO NATIVO DO VTURB → mesma atribuicao dos nossos CTAs
+  // O link do botao e configurado no painel, entao nasce estatico e sem
+  // ad_id/fbclid (que so existem na URL do visitante, em runtime).
+  // Aqui a gente reescreve o href assim que ele aparece no DOM, e de novo
+  // no momento exato do clique. Sem preventDefault, pra nao quebrar o
+  // "abrir em nova aba" que o painel oferece.
+  // Exige o botao no DOM da pagina: tipo "Abaixo do video".
+  // ══════════════════════════════════════════
+  var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"]';
+
+  function enriqueceBotaoVturb(a){
+    if (!a || a.hasAttribute('data-open-checkout')) return; // CTA nosso, ja tratado
+    try {
+      var atual = a.getAttribute('href') || '';
+      if (atual.indexOf('utm_content=') > -1) return; // ja enriquecido
+      a.setAttribute('href', montaUrl());
+      a.setAttribute('data-vturb-cta', '1');
+    } catch(e){}
+  }
+  function varreBotoes(){
+    try {
+      var todos = document.querySelectorAll(SEL_CHECKOUT);
+      for (var i = 0; i < todos.length; i++) enriqueceBotaoVturb(todos[i]);
+    } catch(e){}
+  }
+  if ('MutationObserver' in window) {
+    new MutationObserver(varreBotoes).observe(document.documentElement, {childList:true, subtree:true});
+  }
+  varreBotoes();
+  setInterval(varreBotoes, 3000);
+
+  // rede de seguranca: reescreve no clique, antes da navegacao acontecer
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var a = e.target.closest(SEL_CHECKOUT);
+    if (!a || a.hasAttribute('data-open-checkout')) return;
+    try { a.setAttribute('href', montaUrl()); } catch(err){}
+    disparaIC();
+  }, true);
+
+  // ══════════════════════════════════════════
   // REVEAL DA OFERTA
   // Primario: API do VTurb, sincronizada ao tempo do VIDEO (a prova de pause,
   // persiste pra quem volta). Revela o sentinela e a gente abre o bloco real.
