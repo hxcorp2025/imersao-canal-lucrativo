@@ -32,6 +32,11 @@
 <link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/v4/player.js" as="script">
 <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
 <link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a67d6a1014a30aa4ca6bc8b/main.m3u8" as="fetch">
+<!-- Sem headline, o LCP virou a thumbnail do player. Ela tem 2,6KB, entao o
+     problema nao e peso, e DESCOBERTA: o browser so sabe dela depois do JS do
+     player rodar. Preload com prioridade alta antecipa isso. -->
+<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/thumbnail.jpg">
+<link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
