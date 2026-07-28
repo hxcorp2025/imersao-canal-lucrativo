@@ -287,12 +287,59 @@ footer p{max-width:none;margin:0 0 9px}
   <!-- Slot reservado para a headline injetada pelo VTurb (teste A/B) -->
   <div class="hl-slot" id="hlSlot"></div>
 
-  <!-- Headline propria da pagina. Quando o teste A/B do VTurb for ligado no painel,
-       trocar VTURB_HEADLINE para true no bloco de config: esta some e a do VTurb assume. -->
+  <!-- Headline com teste A/B PROPRIO. O markup abaixo e a variante padrao e serve
+       de fallback sem JS. O script logo em seguida e sincrono de proposito: roda
+       antes da pintura, entao a troca de variante nao pisca na tela. -->
   <div id="hlPropria">
-    <h1 class="hl">250 inscritos. Dez meses de esforço. <span class="r">Zero real de retorno.</span></h1>
-    <p class="hl-sub">Oito meses depois, o mesmo canal pagou R$128 mil em um único mês. O que mudou não foi o esforço.</p>
+    <h1 class="hl" id="hlTitulo">250 inscritos. Dez meses de esforço. <span class="r">Zero real de retorno.</span></h1>
+    <p class="hl-sub" id="hlSub">Oito meses depois, o mesmo canal pagou R$128 mil em um único mês. O que mudou não foi o esforço.</p>
   </div>
+  <script>
+  (function(){
+    var HEADLINES = [
+      {id:'hlterreno',
+       h:'Todo mundo conhece um terreno que a família não comprou por achar que era só mato. <span class="r">Hoje tem prédio em cima.</span>',
+       s:'A oportunidade que está aberta agora no Brasil cabe na tela do seu celular. Assista antes que ela fique óbvia.'},
+      {id:'hljanela',
+       h:'O YouTube existe há 20 anos. <span class="r">A janela que paga bem no Brasil abriu agora.</span>',
+       s:'Por que este é o melhor momento para quem começa do zero, com os números na tela.'},
+      {id:'hlprova',
+       h:'250 inscritos. Dez meses de esforço. <span class="r">Zero real de retorno.</span>',
+       s:'Oito meses depois, o mesmo canal pagou R$128 mil em um único mês. O que mudou não foi o esforço.'},
+      {id:'hlwhats',
+       h:'Se você sabe mandar um áudio no WhatsApp, <span class="r">você já sabe o suficiente para começar.</span>',
+       s:'Por que gente de 35, 45 e 65 anos está saindo na frente da molecada no YouTube.'}
+    ];
+    var CHAVE = 'lcy_hl';
+    var forcada = null, escolhida = null;
+
+    try { forcada = new URLSearchParams(location.search).get('hl'); } catch(e){}
+
+    // ?hl=<id> forca a variante (QA e conferencia visual)
+    if (forcada) {
+      for (var i=0;i<HEADLINES.length;i++) if (HEADLINES[i].id === forcada) escolhida = HEADLINES[i];
+    }
+    // visitante que volta ve a MESMA variante, senao o teste mede duas coisas ao mesmo tempo
+    if (!escolhida) {
+      try {
+        var salva = localStorage.getItem(CHAVE);
+        if (salva) for (var j=0;j<HEADLINES.length;j++) if (HEADLINES[j].id === salva) escolhida = HEADLINES[j];
+      } catch(e){}
+    }
+    // primeira visita: sorteia e guarda
+    if (!escolhida) {
+      escolhida = HEADLINES[Math.floor(Math.random()*HEADLINES.length)];
+      try { localStorage.setItem(CHAVE, escolhida.id); } catch(e){}
+    }
+
+    window.LCY_HEADLINE = escolhida.id;
+    try {
+      var t = document.getElementById('hlTitulo'), s = document.getElementById('hlSub');
+      if (t && t.innerHTML !== escolhida.h) t.innerHTML = escolhida.h;
+      if (s && s.innerHTML !== escolhida.s) s.innerHTML = escolhida.s;
+    } catch(e){}
+  })();
+  </script>
 
   <div class="palco">
     <div class="player-box">
@@ -463,21 +510,12 @@ footer p{max-width:none;margin:0 0 9px}
   var PAGE_ID = 'lcy';      // Lucrando com YouTube
   var VALOR   = 197;        // valor do front, ja com o cupom de R$100
 
-  // Ligar quando o teste A/B de headline for configurado no painel do VTurb.
-  // true  = a headline da pagina some e a do VTurb assume (evita headline dupla)
-  var VTURB_HEADLINE = false;
-
   var PITCH_SEGUNDOS = 1548;        // 25:48 = momento do pitch na VSL
   var BACKSTOP_MS = 1620 * 1000;    // 27:00 de relogio. Rede de seguranca: so age
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
-  // ══════════════════════════════════════════
-  // HEADLINE
-  // ══════════════════════════════════════════
-  if (VTURB_HEADLINE) {
-    var propria = document.getElementById('hlPropria');
-    if (propria) propria.style.display = 'none';
-  }
+  // variante sorteada pelo script sincrono la em cima
+  var HEADLINE = window.LCY_HEADLINE || 'hlprova';
 
   // ══════════════════════════════════════════
   // UTM / fbclid  →  checkout + CAPI
@@ -495,8 +533,13 @@ footer p{max-width:none;margin:0 0 9px}
     r.fbc = cookie('_fbc') || (r.fbclid ? ('fb.1.' + Date.now() + '.' + r.fbclid) : null);
     return r;
   }
-  // utm_content enriquecido com vsl+page (mesma convencao das paginas irmas)
-  function enriquece(v){ var s = VSL_ID + '__' + PAGE_ID; return v ? (v + '__' + s) : s; }
+  // utm_content enriquecido com vsl+page+headline (convencao __ das paginas irmas).
+  // A variante precisa viajar ate o checkout, senao da pra medir clique por headline
+  // mas nao RECEITA por headline, que e o que decide o teste.
+  function enriquece(v){
+    var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE;
+    return v ? (v + '__' + s) : s;
+  }
 
   function montaUrl(){
     var t = rastreio(), params = [];
@@ -525,6 +568,7 @@ footer p{max-width:none;margin:0 0 9px}
         body: JSON.stringify({
           event:'InitiateCheckout',
           funil:'LCY',
+          headline:HEADLINE,
           valor:VALOR,
           utm_source:t.utm_source, utm_medium:t.utm_medium, utm_campaign:t.utm_campaign,
           utm_term:t.utm_term, utm_content:enriquece(t.utm_content),
@@ -599,15 +643,37 @@ footer p{max-width:none;margin:0 0 9px}
   var oferta = document.getElementById('oferta');
   var jaAberto = false;
 
-  function abre(){
+  // ── funil por headline: play → pitch → clique ──
+  function marca(evento, extra){
+    try { window.hxTrack && window.hxTrack(evento, extra || {}); } catch(e){}
+    try { window.dataLayer && window.dataLayer.push({event:'lcy_' + evento, headline:HEADLINE}); } catch(e){}
+  }
+
+  var playMarcado = false;
+  function marcaPlay(){
+    if (playMarcado) return;
+    playMarcado = true;
+    marca('video_play', {});
+  }
+
+  var pitchMarcado = false;
+  function marcaPitch(origem){
+    if (pitchMarcado) return;
+    pitchMarcado = true;
+    marca('video_pitch', {origem: origem});
+  }
+
+  function abre(origem){
     if (jaAberto || !oferta) return;
     jaAberto = true;
     oferta.classList.add('aberto');
-    try { window.dataLayer && window.dataLayer.push({event:'lcy_oferta_revelada'}); } catch(e){}
+    // so conta como pitch de verdade quando veio do tempo do VIDEO.
+    // backstop de relogio e debug nao provam que a pessoa assistiu ate la.
+    if (origem === 'vturb') marcaPitch('vturb');
   }
 
   // debug: ?reveal=1 abre na hora
-  if (new URLSearchParams(window.location.search).get('reveal') === '1') abre();
+  if (new URLSearchParams(window.location.search).get('reveal') === '1') abre('debug');
 
   function armaVturb(){
     try {
@@ -623,17 +689,29 @@ footer p{max-width:none;margin:0 0 9px}
       try { player.addEventListener('player:ready', arma); } catch(e){}
       arma(); // caso o ready ja tenha passado
 
+      // play: o VTurb nao documenta um nome unico de evento, entao escutamos os
+      // candidatos plausiveis e deduplicamos. Se nenhum disparar, o funil ainda
+      // fecha por pageview -> pitch -> clique.
+      ['play','playing','player:play','smartplayer:play','video:play'].forEach(function(ev){
+        try { player.addEventListener(ev, marcaPlay); } catch(e){}
+      });
+      try {
+        player.addEventListener('timeupdate', function(){
+          try { if ((player.currentTime || 0) > 1) marcaPlay(); } catch(e){}
+        });
+      } catch(e){}
+
       var sentinela = document.getElementById('vturbReveal');
       if (sentinela && 'MutationObserver' in window) {
         new MutationObserver(function(){
           var vis = window.getComputedStyle(sentinela).display !== 'none';
-          if (vis) abre();
+          if (vis) abre('vturb');
         }).observe(sentinela, {attributes:true, attributeFilter:['style','class']});
       }
       // se o painel apontar a call action direto pro #oferta, tambem cobre
       if (oferta && 'MutationObserver' in window) {
         new MutationObserver(function(){
-          if (!jaAberto && oferta.style.display && oferta.style.display !== 'none') abre();
+          if (!jaAberto && oferta.style.display && oferta.style.display !== 'none') abre('vturb');
         }).observe(oferta, {attributes:true, attributeFilter:['style']});
       }
     } catch(e){}
@@ -645,7 +723,7 @@ footer p{max-width:none;margin:0 0 9px}
   // backstop de relogio, auto-recuperavel (timer de background sofre throttle
   // em webview de Instagram/Facebook, entao re-checamos em cada retorno de foco)
   var t0 = Date.now();
-  function checaBackstop(){ if (Date.now() - t0 >= BACKSTOP_MS) abre(); }
+  function checaBackstop(){ if (Date.now() - t0 >= BACKSTOP_MS) abre('backstop'); }
   setInterval(checaBackstop, 5000);
   document.addEventListener('visibilitychange', checaBackstop);
   window.addEventListener('focus', checaBackstop);
@@ -674,13 +752,23 @@ footer p{max-width:none;margin:0 0 9px}
     },extra||{});
   }
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
-  send(base({event_type:'pageview'}));
+
+  // headline vai em TODO evento: e a dimensao que corta o funil inteiro
+  var HL=window.LCY_HEADLINE||null, FUNIL='LCY';
+  function evento(tipo,extra){
+    var e=Object.assign({headline:HL,funil:FUNIL},extra||{});
+    send(base({event_type:tipo,extra:e}));
+  }
+  // exposto pro script da pagina marcar video_play e video_pitch
+  window.hxTrack=evento;
+
+  evento('pageview');
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
-    if(pay){send(base({event_type:'checkout_click',extra:{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||''}}));return;}
+    if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||''});return;}
     var cta=e.target.closest('.cta,.btn');
-    if(cta){send(base({event_type:'cta_click',extra:{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''}}));}
+    if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
 })();
 </script>
