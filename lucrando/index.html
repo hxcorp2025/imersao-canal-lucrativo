@@ -93,6 +93,13 @@ img{max-width:100%;height:auto}
 /* Reserva de altura: o VTurb injeta a headline por JS acima do player.
    Sem espaco reservado a injecao empurra o player e gera CLS. */
 .hl-slot{min-height:4px}
+/* headline desligada: some da tela mas continua existindo pro leitor de tela e pro buscador */
+.sr-only{
+  position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;
+  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
+/* sem headline o player subiria demais, entao devolve o respiro */
+body.sem-headline .palco{margin-top:26px}
 .hl{
   font-family:var(--fd);font-weight:800;
   font-size:clamp(27px,6.2vw,44px);line-height:1.12;letter-spacing:-.025em;
@@ -310,14 +317,46 @@ footer p{max-width:none;margin:0 0 9px}
        h:'Se você sabe mandar um áudio no WhatsApp, <span class="r">você já sabe o suficiente para começar.</span>',
        s:'Por que gente de 35, 45 e 65 anos está saindo na frente da molecada no YouTube.'}
     ];
+    // ┌──────────────────────────────────────────────────────────────┐
+    // │ CHAVE DO TESTE. false = pagina roda SEM headline, do jeito    │
+    // │ que o copywriter desenhou. A estrutura toda fica de pe:       │
+    // │ variantes, sorteio, captura e dashboard. Virar pra true       │
+    // │ liga o A/B das 4 sem mexer em mais nada.                      │
+    // └──────────────────────────────────────────────────────────────┘
+    var HEADLINE_ATIVA = false;
+
     var CHAVE = 'lcy_hl';
     var forcada = null, escolhida = null;
 
     try { forcada = new URLSearchParams(location.search).get('hl'); } catch(e){}
 
-    // ?hl=<id> forca a variante (QA e conferencia visual)
+    // ?hl=<id> funciona SEMPRE, mesmo com o teste desligado.
+    // E assim que voce e o copywriter olham cada variante sem ligar pra todo mundo.
     if (forcada) {
       for (var i=0;i<HEADLINES.length;i++) if (HEADLINES[i].id === forcada) escolhida = HEADLINES[i];
+    }
+
+    // Teste desligado e sem preview: nao mostra headline nenhuma.
+    // O dado continua sendo marcado como 'semheadline', entao a versao do
+    // copywriter entra no mesmo placar e vira a linha de base do teste.
+    if (!escolhida && !HEADLINE_ATIVA) {
+      window.LCY_HEADLINE = 'semheadline';
+      try {
+        // o script e sincrono e roda cedo, entao o body pode nao existir ainda
+        if (document.body) document.body.classList.add('sem-headline');
+        else document.addEventListener('DOMContentLoaded', function(){
+          document.body && document.body.classList.add('sem-headline');
+        });
+        var bloco = document.getElementById('hlPropria');
+        var tit = document.getElementById('hlTitulo');
+        var sub = document.getElementById('hlSub');
+        // H1 continua no documento (acessibilidade e busca), so que fora da tela,
+        // e com texto neutro em vez de uma headline de venda que ninguem escolheu.
+        if (tit) tit.textContent = 'Lucrando com YouTube, o treinamento completo de João Adolfo';
+        if (sub) sub.parentNode.removeChild(sub);
+        if (bloco) bloco.className = 'sr-only';
+      } catch(e){}
+      return;
     }
     // visitante que volta ve a MESMA variante, senao o teste mede duas coisas ao mesmo tempo
     if (!escolhida) {
