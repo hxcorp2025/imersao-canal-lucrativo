@@ -585,8 +585,22 @@ footer p{max-width:none;margin:0 0 9px}
     return v ? (v + '__' + s) : s;
   }
 
-  function montaUrl(){
+  function montaUrl(hrefAtual){
     var t = rastreio(), params = [];
+    // Preserva parametros que OUTROS scripts ja injetaram no botao antes da gente,
+    // em especial a conversion key do VTurb (comeca com v3_, viaja em src/sid/xcod/subN
+    // e e o que liga a venda de volta ao video no rastreamento de conversoes).
+    try {
+      var q = String(hrefAtual || '').split('?')[1] || '';
+      q.split('&').forEach(function(par){
+        if (!par) return;
+        var k = par.split('=')[0] || '';
+        if (!k) return;
+        if (/^(utm_|fbclid$|gclid$)/.test(k)) return;      // nossos: serao reescritos abaixo
+        if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base (cupom, bumps)
+        params.push(par);
+      });
+    } catch(e){}
     ['utm_source','utm_medium','utm_campaign','utm_term','fbclid'].forEach(function(k){
       if (t[k]) params.push(k + '=' + encodeURIComponent(t[k]));
     });
@@ -653,7 +667,7 @@ footer p{max-width:none;margin:0 0 9px}
     try {
       var atual = a.getAttribute('href') || '';
       if (atual.indexOf('utm_content=') > -1) return; // ja enriquecido
-      a.setAttribute('href', montaUrl());
+      a.setAttribute('href', montaUrl(atual));
       a.setAttribute('data-vturb-cta', '1');
     } catch(e){}
   }
@@ -674,7 +688,7 @@ footer p{max-width:none;margin:0 0 9px}
     if (!e.target.closest) return;
     var a = e.target.closest(SEL_CHECKOUT);
     if (!a || a.hasAttribute('data-open-checkout')) return;
-    try { a.setAttribute('href', montaUrl()); } catch(err){}
+    try { a.setAttribute('href', montaUrl(a.getAttribute('href'))); } catch(err){}
     disparaIC();
   }, true);
 
