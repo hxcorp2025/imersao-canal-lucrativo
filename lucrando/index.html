@@ -712,6 +712,12 @@ footer p{max-width:none;margin:0 0 9px}
     if (playMarcado) return;
     playMarcado = true;
     marca('video_play', {});
+    // Meta: play da VSL = ViewContent (decisao Matheus 29/07)
+    try {
+      if (typeof fbq === 'function') {
+        fbq('track','ViewContent',{content_name:'VSL Lucrando com YouTube',content_category:'vsl',value:VALOR,currency:'BRL'});
+      }
+    } catch(e){}
   }
 
   var pitchMarcado = false;
@@ -719,6 +725,12 @@ footer p{max-width:none;margin:0 0 9px}
     if (pitchMarcado) return;
     pitchMarcado = true;
     marca('video_pitch', {origem: origem});
+    // Meta: chegou no pitch (25:48) = evento custom, otimizavel como custom conversion
+    try {
+      if (typeof fbq === 'function') {
+        fbq('trackCustom','PitchReached',{content_name:'VSL Lucrando com YouTube',value:VALOR,currency:'BRL'});
+      }
+    } catch(e){}
   }
 
   function abre(origem){
