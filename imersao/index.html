@@ -1574,6 +1574,44 @@ body.no-scroll{overflow:hidden}
     var cta=e.target.closest('.cta,.btn');
     if(cta){send(base({event_type:'cta_click',extra:{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''}}));}
   },true);
+  // 3) exposto pro funil da VSL (video_play / video_pitch) — mesmo padrao da /lucrando/
+  window.hxTrack=function(tipo,extra){send(base({event_type:tipo,extra:extra||{}}));};
+})();
+</script>
+<!-- Funil da VSL: video_play / video_pitch — SO o player principal (hero); depoimentos ficam fora -->
+<script>
+(function(){
+  var PITCH_SEGUNDOS = 583; // 9:43 = pitch da VSL SEM DATA 01 (mesmo REVEAL_SECONDS do reveal)
+  var playMarcado=false, pitchMarcado=false;
+  function marca(t){ try{ window.hxTrack && window.hxTrack(t,{}); }catch(e){} }
+  function marcaPlay(){ if(playMarcado) return; playMarcado=true; marca('video_play'); }
+  function marcaPitch(){ if(pitchMarcado) return; pitchMarcado=true; marca('video_pitch'); }
+  function arma(){
+    try{
+      var p=document.getElementById('vid-6a67da7dca706a51ffa626e8');
+      if(!p||typeof p.addEventListener!=='function') return;
+      ['play','playing','player:play','smartplayer:play','video:play'].forEach(function(ev){
+        try{ p.addEventListener(ev, marcaPlay); }catch(e){}
+      });
+      ['timeupdate','smartplayer:timeupdate'].forEach(function(ev){
+        try{ p.addEventListener(ev, function(e){
+          var t=(e&&e.detail&&(e.detail.currentTime||e.detail.time))||p.currentTime||0;
+          if(t>1) marcaPlay();
+          if(t>=PITCH_SEGUNDOS) marcaPitch();
+        }); }catch(e){}
+      });
+      // sentinela #vturbReveal so muda via displayHiddenElements (tempo de VIDEO);
+      // o backstop de relogio chama revealNow() direto e NAO toca aqui — pitch fica video-only
+      var s=document.getElementById('vturbReveal');
+      if(s&&'MutationObserver' in window){
+        new MutationObserver(function(){
+          try{ if(getComputedStyle(s).display!=='none') marcaPitch(); }catch(e){}
+        }).observe(s,{attributes:true,attributeFilter:['style','class']});
+      }
+    }catch(e){}
+  }
+  if(document.readyState!=='loading') arma(); else document.addEventListener('DOMContentLoaded', arma);
+  window.addEventListener('load', arma);
 })();
 </script>
 <!-- Umami Analytics (auto-hospedado, primeira parte para nao ser bloqueado) -->
