@@ -399,7 +399,7 @@ footer p{max-width:none;margin:0 0 9px}
   <!-- sentinela revelado pelo VTurb no tempo do pitch -->
   <div id="vturbReveal" style="display:none" aria-hidden="true"></div>
 
-  <!-- ══════════ OFERTA (revelada aos 25:48) ══════════ -->
+  <!-- ══════════ OFERTA (revelada aos 22:55) ══════════ -->
   <section id="oferta">
 
     <div class="sep"></div>
@@ -548,14 +548,15 @@ footer p{max-width:none;margin:0 0 9px}
   // CONFIG
   // ══════════════════════════════════════════
   var CHECKOUT_URL = 'https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&ch_id=141796&b_id_1=136392&b_offer_1=LvX0zx&b_id_2=136395&b_offer_2=0p8CX2&b_id_3=136399&b_offer_3=DiC8Rq&b_id_4=133939&b_offer_4=Fl1B9f';
-  var CAPI_WEBHOOK_URL = 'https://n8n-n8n.sf6dqo.easypanel.host/webhook/JA-YT-CAPI-IC-DIRECT';
+  var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
 
   var VSL_ID  = 'vsllcy';   // VSL LUCRANDO-001 (vertical, 28:23)
   var PAGE_ID = 'lcy';      // Lucrando com YouTube
   var VALOR   = 197;        // valor do front, ja com o cupom de R$100
 
-  var PITCH_SEGUNDOS = 1548;        // 25:48 = momento do pitch na VSL
-  var BACKSTOP_MS = 1620 * 1000;    // 27:00 de relogio. Rede de seguranca: so age
+  var PITCH_SEGUNDOS = 1375;        // 22:55 = momento do pitch na VSL (ajustado 03/08:
+                                    // o Joao fala o preco aos 22:55, botao aparecia so aos 25:48)
+  var BACKSTOP_MS = 1450 * 1000;    // 24:10 de relogio. Rede de seguranca: so age
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
   // variante sorteada pelo script sincrono la em cima
@@ -725,7 +726,7 @@ footer p{max-width:none;margin:0 0 9px}
     if (pitchMarcado) return;
     pitchMarcado = true;
     marca('video_pitch', {origem: origem});
-    // Meta: chegou no pitch (25:48) = evento custom, otimizavel como custom conversion
+    // Meta: chegou no pitch (22:55) = evento custom, otimizavel como custom conversion
     try {
       if (typeof fbq === 'function') {
         fbq('trackCustom','PitchReached',{content_name:'VSL Lucrando com YouTube',value:VALOR,currency:'BRL'});
