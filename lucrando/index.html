@@ -571,7 +571,7 @@ footer p{max-width:none;margin:0 0 9px}
   }
   function rastreio(){
     var p = new URLSearchParams(window.location.search), r = {};
-    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid'].forEach(function(k){
+    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid','wbraid','gbraid'].forEach(function(k){
       r[k] = p.get(k) || null;
     });
     r.fbp = cookie('_fbp');
@@ -597,12 +597,12 @@ footer p{max-width:none;margin:0 0 9px}
         if (!par) return;
         var k = par.split('=')[0] || '';
         if (!k) return;
-        if (/^(utm_|fbclid$|gclid$)/.test(k)) return;      // nossos: serao reescritos abaixo
+        if (/^(utm_|fbclid$|gclid$|wbraid$|gbraid$)/.test(k)) return;      // nossos: serao reescritos abaixo
         if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base (cupom, bumps)
         params.push(par);
       });
     } catch(e){}
-    ['utm_source','utm_medium','utm_campaign','utm_term','fbclid'].forEach(function(k){
+    ['utm_source','utm_medium','utm_campaign','utm_term','fbclid','gclid','wbraid','gbraid'].forEach(function(k){
       if (t[k]) params.push(k + '=' + encodeURIComponent(t[k]));
     });
     params.push('utm_content=' + encodeURIComponent(enriquece(t.utm_content)));
@@ -632,6 +632,7 @@ footer p{max-width:none;margin:0 0 9px}
           utm_source:t.utm_source, utm_medium:t.utm_medium, utm_campaign:t.utm_campaign,
           utm_term:t.utm_term, utm_content:enriquece(t.utm_content),
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
+          gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
           origem:window.location.href, pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID,
@@ -827,7 +828,7 @@ footer p{max-width:none;margin:0 0 9px}
   // headline vai em TODO evento: e a dimensao que corta o funil inteiro
   var HL=window.LCY_HEADLINE||null, FUNIL='LCY';
   function evento(tipo,extra){
-    var e=Object.assign({headline:HL,funil:FUNIL},extra||{});
+    var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
     send(base({event_type:tipo,extra:e}));
   }
   // exposto pro script da pagina marcar video_play e video_pitch
