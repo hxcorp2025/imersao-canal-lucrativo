@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /lucrando/acesso/
+
+Sitemap: https://aula.joaoadolfooficial.com/sitemap.xml
