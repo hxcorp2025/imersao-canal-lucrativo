@@ -1,15 +1,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A0A0A">
-<title>Lucrando com YouTube · João Adolfo</title>
-<meta name="description" content="O caminho para transformar o YouTube na sua fonte de renda, começando do zero. Com João Adolfo, 21 canais e mais de 2 bilhões de visualizações.">
-<link rel="canonical" href="https://aula.joaoadolfooficial.com/lucrando/">
+<title>Bem-vindo · Lucrando com YouTube</title>
+<meta name="description" content="Área de boas-vindas de novos alunos do Lucrando com YouTube. Assista à sua aula zero com João Adolfo.">
+<link rel="canonical" href="https://aula.joaoadolfooficial.com/lucrando/acesso/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Lucrando com YouTube · João Adolfo">
-<meta property="og:description" content="O caminho para transformar o YouTube na sua fonte de renda, começando do zero.">
-<meta property="og:url" content="https://aula.joaoadolfooficial.com/lucrando/">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="robots" content="index,follow">
+<meta property="og:title" content="Bem-vindo · Lucrando com YouTube">
+<meta property="og:description" content="Sua aula zero com João Adolfo. Assista até o final para completar a sua entrada.">
+<meta property="og:url" content="https://aula.joaoadolfooficial.com/lucrando/acesso/">
+<meta name="twitter:card" content="summary">
+<!-- pagina pos-compra: nao existe pra quem busca, existe pra quem acabou de entrar -->
+<meta name="robots" content="noindex,nofollow">
 
 <!-- DNS prefetch / preconnect -->
 <link rel="dns-prefetch" href="https://scripts.converteai.net">
@@ -28,14 +29,13 @@
 <script src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js" async></script>
 <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
 
-<!-- Preload VSL LUCRANDO-001 (vertical 9:16, 28:23) -->
-<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/v4/player.js" as="script">
+<!-- Preload VSL UPSELL GENESIS (vertical 9:16, 10:00) -->
+<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/v4/player.js" as="script">
 <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
-<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a67d6a1014a30aa4ca6bc8b/main.m3u8" as="fetch">
-<!-- Sem headline, o LCP virou a thumbnail do player. Ela tem 2,6KB, entao o
-     problema nao e peso, e DESCOBERTA: o browser so sabe dela depois do JS do
-     player rodar. Preload com prioridade alta antecipa isso. -->
-<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/thumbnail.jpg">
+<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a8699ad36176ae68be1c21b/main.m3u8" as="fetch">
+<!-- O LCP e a thumbnail do player: o problema nao e peso, e DESCOBERTA (o browser
+     so sabe dela depois do JS do player rodar). Preload de prioridade alta antecipa. -->
+<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/thumbnail.jpg">
 <link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
 <!-- Google Tag Manager -->
@@ -94,26 +94,36 @@ img{max-width:100%;height:auto}
 }
 .marca .pt{width:9px;height:9px;border-radius:50%;background:var(--vermelho);flex:none}
 
-/* ── headline ─────────────────────────────── */
-/* Reserva de altura: o VTurb injeta a headline por JS acima do player.
-   Sem espaco reservado a injecao empurra o player e gera CLS. */
-.hl-slot{min-height:4px}
-/* headline desligada: some da tela mas continua existindo pro leitor de tela e pro buscador */
-.sr-only{
-  position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;
-  overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;
+/* ── barra de progresso do acesso ─────────── */
+.prog-wrap{max-width:440px;margin:20px auto 4px}
+.prog-head{
+  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+  font-family:var(--fm);font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--g3);margin-bottom:9px;
 }
-/* sem headline o player subiria demais, entao devolve o respiro */
-body.sem-headline .palco{margin-top:26px}
+.prog-head b{color:var(--vermelho);font-weight:700;letter-spacing:.1em}
+.prog-track{
+  height:10px;border-radius:999px;overflow:hidden;
+  background:var(--glass);border:1px solid var(--borda);
+}
+.prog-fill{
+  height:100%;width:90%;border-radius:999px;
+  background:linear-gradient(90deg,var(--vermelho-esc),var(--vermelho));
+  box-shadow:0 0 14px rgba(255,0,0,.35);
+  animation:enche 1.2s cubic-bezier(.25,.8,.3,1) .2s both;
+}
+@keyframes enche{from{width:5%}to{width:90%}}
+
+/* ── headline ─────────────────────────────── */
 .hl{
   font-family:var(--fd);font-weight:800;
   font-size:clamp(27px,6.2vw,44px);line-height:1.12;letter-spacing:-.025em;
-  color:var(--branco);text-align:center;margin:14px 0 10px;text-wrap:balance;
+  color:var(--branco);text-align:center;margin:16px 0 10px;text-wrap:balance;
 }
 .hl .r{color:var(--vermelho)}
 .hl-sub{
   text-align:center;color:var(--g2);font-size:clamp(15px,3.4vw,18px);
-  margin:0 auto 22px;max-width:33ch;text-wrap:balance;
+  margin:0 auto 24px;max-width:36ch;text-wrap:balance;
 }
 
 /* ── player vertical ──────────────────────── */
@@ -151,23 +161,7 @@ p{margin:0 0 18px;max-width:66ch}
 .centro{text-align:center}
 .centro p,.centro h2{margin-left:auto;margin-right:auto}
 
-/* cards */
-.cards{display:grid;gap:12px;margin:26px 0}
-.card{
-  background:var(--glass);border:1px solid var(--borda);border-radius:14px;
-  padding:20px 20px 18px;
-}
-.card .num{
-  font-family:var(--fm);font-size:12px;color:var(--vermelho);
-  letter-spacing:.1em;margin-bottom:7px;
-}
-.card h3{
-  font-family:var(--fd);font-weight:700;font-size:18.5px;
-  color:var(--branco);margin:0 0 6px;letter-spacing:-.01em;
-}
-.card p{font-size:15.5px;color:var(--g2);margin:0;max-width:none}
-
-/* lista de bonus */
+/* lista de entregaveis */
 .bonus{list-style:none;padding:0;margin:22px 0}
 .bonus li{
   display:flex;gap:13px;align-items:flex-start;
@@ -188,8 +182,6 @@ p{margin:0 0 18px;max-width:66ch}
   border:1px solid var(--borda);border-radius:20px;
   padding:34px 24px 30px;text-align:center;margin:30px 0;
 }
-.de{color:var(--g3);font-size:16px;margin:0 0 4px}
-.de s{text-decoration-color:var(--vermelho);text-decoration-thickness:2px}
 .por{
   font-family:var(--fd);font-weight:800;letter-spacing:-.03em;color:var(--branco);
   font-size:clamp(46px,11vw,68px);line-height:1;margin:6px 0 4px;
@@ -239,33 +231,12 @@ p{margin:0 0 18px;max-width:66ch}
 .gar h3{font-family:var(--fd);font-weight:700;font-size:19px;color:var(--branco);margin:0 0 6px}
 .gar p{margin:0;font-size:15.5px;color:var(--g2);max-width:none}
 
-/* prova */
-.numeros{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px 0}
-.numeros div{
-  background:var(--glass);border:1px solid var(--borda);
-  border-radius:12px;padding:16px 10px;text-align:center;
+/* saida de quem segue sem a ferramenta */
+.saida{
+  text-align:center;color:var(--g3);font-size:14px;
+  margin:26px auto 0;max-width:52ch;
 }
-.numeros .v{font-family:var(--fd);font-weight:800;font-size:clamp(19px,4.6vw,26px);color:var(--branco);line-height:1.05}
-.numeros .l{font-size:12px;color:var(--g3);margin-top:5px;line-height:1.3}
-.casos{list-style:none;padding:0;margin:22px 0}
-.casos li{padding:13px 0;border-bottom:1px solid var(--borda);font-size:15.5px;color:var(--g2)}
-.casos li:last-child{border-bottom:0}
-.casos b{color:var(--branco);font-weight:600}
-
-/* faq */
-details{border-bottom:1px solid var(--borda)}
-details summary{
-  cursor:pointer;list-style:none;padding:18px 34px 18px 0;position:relative;
-  font-family:var(--fd);font-weight:600;font-size:17px;color:var(--branco);
-}
-details summary::-webkit-details-marker{display:none}
-details summary::after{
-  content:"+";position:absolute;right:6px;top:50%;transform:translateY(-50%);
-  color:var(--vermelho);font-size:22px;font-weight:400;line-height:1;
-}
-details[open] summary::after{content:"–"}
-details .resp{padding:0 0 18px;color:var(--g2);font-size:15.5px}
-details .resp p{margin:0;max-width:none}
+.saida b{color:var(--g2);font-weight:600}
 
 /* rodape */
 footer{
@@ -276,17 +247,14 @@ footer a{color:var(--g2);text-decoration:none;border-bottom:1px solid var(--bord
 footer p{max-width:none;margin:0 0 9px}
 
 @media(min-width:720px){
-  .cards{grid-template-columns:1fr 1fr}
   body{font-size:17.5px}
 }
 @media(max-width:420px){
   .gar{flex-direction:column;text-align:center;gap:16px}
-  .numeros{grid-template-columns:1fr;gap:8px}
-  .numeros div{display:flex;align-items:baseline;justify-content:center;gap:9px;padding:13px}
-  .numeros .l{margin-top:0}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
+  .prog-fill{width:90%}
 }
 </style>
 
@@ -296,100 +264,40 @@ footer p{max-width:none;margin:0 0 9px}
     <span class="marca"><span class="pt"></span>João Adolfo</span>
   </div>
 
-  <!-- Slot reservado para a headline injetada pelo VTurb (teste A/B) -->
-  <div class="hl-slot" id="hlSlot"></div>
-
-  <!-- Headline com teste A/B PROPRIO. O markup abaixo e a variante padrao e serve
-       de fallback sem JS. O script logo em seguida e sincrono de proposito: roda
-       antes da pintura, entao a troca de variante nao pisca na tela. -->
-  <div id="hlPropria">
-    <h1 class="hl" id="hlTitulo">250 inscritos. Dez meses de esforço. <span class="r">Zero real de retorno.</span></h1>
-    <p class="hl-sub" id="hlSub">Oito meses depois, o mesmo canal pagou R$128 mil em um único mês. O que mudou não foi o esforço.</p>
+  <!-- barra do acesso: a pessoa acabou de pagar; o que falta e a aula zero -->
+  <div class="prog-wrap" aria-hidden="false">
+    <div class="prog-head"><span>Liberando seu acesso</span><b>90%</b></div>
+    <div class="prog-track" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-label="Liberação do acesso em 90 por cento">
+      <div class="prog-fill"></div>
+    </div>
   </div>
+
+  <h1 class="hl">Seu acesso está <span class="r">quase</span> liberado</h1>
+  <p class="hl-sub">Pra completar, assista à aula zero que o João gravou pra quem acabou de entrar. Ela só existe nesta página: se fechar, não aparece de novo.</p>
+
+  <!-- config sincrona: roda ANTES do script principal e do HX Track.
+       Sem A/B aqui; a global existe porque os dois blocos de baixo leem ela. -->
   <script>
   (function(){
-    var HEADLINES = [
-      {id:'hlterreno',
-       h:'Todo mundo conhece um terreno que a família não comprou por achar que era só mato. <span class="r">Hoje tem prédio em cima.</span>',
-       s:'A oportunidade que está aberta agora no Brasil cabe na tela do seu celular. Assista antes que ela fique óbvia.'},
-      {id:'hljanela',
-       h:'O YouTube existe há 20 anos. <span class="r">A janela que paga bem no Brasil abriu agora.</span>',
-       s:'Por que este é o melhor momento para quem começa do zero, com os números na tela.'},
-      {id:'hlprova',
-       h:'250 inscritos. Dez meses de esforço. <span class="r">Zero real de retorno.</span>',
-       s:'Oito meses depois, o mesmo canal pagou R$128 mil em um único mês. O que mudou não foi o esforço.'},
-      {id:'hlwhats',
-       h:'Se você sabe mandar um áudio no WhatsApp, <span class="r">você já sabe o suficiente para começar.</span>',
-       s:'Por que gente de 35, 45 e 65 anos está saindo na frente da molecada no YouTube.'}
-    ];
-    // ┌──────────────────────────────────────────────────────────────┐
-    // │ CHAVE DO TESTE. false = pagina roda SEM headline, do jeito    │
-    // │ que o copywriter desenhou. A estrutura toda fica de pe:       │
-    // │ variantes, sorteio, captura e dashboard. Virar pra true       │
-    // │ liga o A/B das 4 sem mexer em mais nada.                      │
-    // └──────────────────────────────────────────────────────────────┘
-    var HEADLINE_ATIVA = false;
-
-    var CHAVE = 'lcy_hl';
-    var forcada = null, escolhida = null;
-
-    try { forcada = new URLSearchParams(location.search).get('hl'); } catch(e){}
-
-    // ?hl=<id> funciona SEMPRE, mesmo com o teste desligado.
-    // E assim que voce e o copywriter olham cada variante sem ligar pra todo mundo.
-    if (forcada) {
-      for (var i=0;i<HEADLINES.length;i++) if (HEADLINES[i].id === forcada) escolhida = HEADLINES[i];
-    }
-
-    // Teste desligado e sem preview: nao mostra headline nenhuma.
-    // O dado continua sendo marcado como 'semheadline', entao a versao do
-    // copywriter entra no mesmo placar e vira a linha de base do teste.
-    if (!escolhida && !HEADLINE_ATIVA) {
-      window.LCY_HEADLINE = 'semheadline';
-      try {
-        // o script e sincrono e roda cedo, entao o body pode nao existir ainda
-        if (document.body) document.body.classList.add('sem-headline');
-        else document.addEventListener('DOMContentLoaded', function(){
-          document.body && document.body.classList.add('sem-headline');
-        });
-        var bloco = document.getElementById('hlPropria');
-        var tit = document.getElementById('hlTitulo');
-        var sub = document.getElementById('hlSub');
-        // H1 continua no documento (acessibilidade e busca), so que fora da tela,
-        // e com texto neutro em vez de uma headline de venda que ninguem escolheu.
-        if (tit) tit.textContent = 'Lucrando com YouTube, o treinamento completo de João Adolfo';
-        if (sub) sub.parentNode.removeChild(sub);
-        if (bloco) bloco.className = 'sr-only';
-      } catch(e){}
-      return;
-    }
-    // visitante que volta ve a MESMA variante, senao o teste mede duas coisas ao mesmo tempo
-    if (!escolhida) {
-      try {
-        var salva = localStorage.getItem(CHAVE);
-        if (salva) for (var j=0;j<HEADLINES.length;j++) if (HEADLINES[j].id === salva) escolhida = HEADLINES[j];
-      } catch(e){}
-    }
-    // primeira visita: sorteia e guarda
-    if (!escolhida) {
-      escolhida = HEADLINES[Math.floor(Math.random()*HEADLINES.length)];
-      try { localStorage.setItem(CHAVE, escolhida.id); } catch(e){}
-    }
-
-    window.LCY_HEADLINE = escolhida.id;
+    window.LCY_HEADLINE = 'semheadline';
+    // Rastreio guardado pela pagina /lucrando/ (stash de 7 dias): e o que liga a
+    // venda do upsell de volta ao anuncio, ja que o redirect da Greenn chega sem UTM.
+    window.__LCY_STASH = null;
     try {
-      var t = document.getElementById('hlTitulo'), s = document.getElementById('hlSub');
-      if (t && t.innerHTML !== escolhida.h) t.innerHTML = escolhida.h;
-      if (s && s.innerHTML !== escolhida.s) s.innerHTML = escolhida.s;
+      var raw = localStorage.getItem('lcy_utms');
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && o.ts && (Date.now() - o.ts) <= 7*864e5 && o.d) window.__LCY_STASH = o.d;
+      }
     } catch(e){}
   })();
   </script>
 
   <div class="palco">
     <div class="player-box">
-      <vturb-smartplayer id="vid-6a67d6c9a9935db927655d1b"></vturb-smartplayer>
+      <vturb-smartplayer id="vid-6a869a105bc5ead0e04d95bb"></vturb-smartplayer>
       <script type="text/javascript">
-        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/v4/player.js";s.async=!0;document.head.appendChild(s);})();
+        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/v4/player.js";s.async=!0;document.head.appendChild(s);})();
       </script>
     </div>
   </div>
@@ -399,136 +307,57 @@ footer p{max-width:none;margin:0 0 9px}
   <!-- sentinela revelado pelo VTurb no tempo do pitch -->
   <div id="vturbReveal" style="display:none" aria-hidden="true"></div>
 
-  <!-- ══════════ OFERTA (revelada aos 22:55) ══════════ -->
+  <!-- ══════════ OFERTA (revelada aos 08:35) ══════════ -->
   <section id="oferta">
 
     <div class="sep"></div>
 
     <div class="centro">
-      <p class="olho">O treinamento completo</p>
-      <h2>Lucrando com YouTube</h2>
-      <p>Do absoluto zero, sem canal, sem equipamento e sem experiência, até o canal monetizado e crescendo. Na ordem certa, nas mesmas quatro fases que o João usou nos próprios canais.</p>
+      <p class="olho">A ferramenta da aula zero · só nesta página</p>
+      <h2>yTube Gênesis</h2>
+      <p>A ferramenta interna da operação do João fazendo a parte técnica de cada vídeo por você, pelos seus próximos 6 meses. Sobra pra você só o que ninguém faz no seu lugar: falar do que você sabe.</p>
     </div>
 
-    <div class="cards">
-      <div class="card">
-        <div class="num">FASE 01</div>
-        <h3>Fundação</h3>
-        <p>Você cria e configura o canal comigo na tela, clique por clique. Uma única configuração errada corta até 70% do seu alcance, e a gente resolve isso logo de cara.</p>
-      </div>
-      <div class="card">
-        <div class="num">FASE 02</div>
-        <h3>O nicho que paga</h3>
-        <p>Garimpar o ângulo lucrativo dentro do que você já sabe e já gosta, cruzado com a tabela que define se mil visualizações valem R$5 ou R$40.</p>
-      </div>
-      <div class="card">
-        <div class="num">FASE 03</div>
-        <h3>Vídeos com os três códigos</h3>
-        <p>Título e capa com o código do clique, estrutura com o efeito novela, e os formatos que mais crescem em cada nicho. Gravando com o celular que você já tem na mão.</p>
-      </div>
-      <div class="card">
-        <div class="num">FASE 04</div>
-        <h3>Monetização em camadas</h3>
-        <p>Da primeira liberação do AdSense até as camadas de cima: parcerias, indicações, produtos, e o canal virando vitrine aberta para o seu negócio.</p>
-      </div>
-    </div>
-
-    <div class="sep"></div>
-
-    <p class="olho">Entrando hoje, vem junto</p>
-    <h2>Quatro bônus</h2>
     <ul class="bonus">
-      <li><span class="tag">01</span><span><b>Como fazer 100 mil visualizações em 15 dias</b><span class="d">O passo a passo para as suas primeiras 100 mil visualizações em duas semanas.</span></span></li>
-      <li><span class="tag">02</span><span><b>10 formas de ganhar com o YouTube</b><span class="d">O AdSense é só a primeira camada. Aqui estão as outras, inclusive antes de ter um canal grande.</span></span></li>
-      <li><span class="tag">03</span><span><b>As ferramentas que a equipe usa</b><span class="d">O que faz em minutos o que a maioria leva horas: capa, título e ideia de vídeo.</span></span></li>
-      <li><span class="tag">04</span><span><b>Checklist de implementação</b><span class="d">Porque o difícil nunca foi aprender, foi sair do lugar. Terminou a aula, abre a lista e executa.</span></span></li>
+      <li><span class="tag">01</span><span><b>Título, descrição, tags e SEO prontos</b><span class="d">No padrão do código do clique. Você preenche 3 campos, revisa do seu jeito e publica no idioma do algoritmo.</span></span></li>
+      <li><span class="tag">02</span><span><b>Cada vídeo em minutos, não numa tarde</b><span class="d">A armadilha da velocidade morre aqui: a consistência que o algoritmo premia deixa de custar caro.</span></span></li>
+      <li><span class="tag">03</span><span><b>Ilimitado durante os 6 meses</b><span class="d">Todos os vídeos que você fizer no período. Seis meses é exatamente a travessia do zero ao canal monetizado.</span></span></li>
+      <li><span class="tag">04</span><span><b>Suporte pelo WhatsApp + atualizações</b><span class="d">Travou, chamou, destravou. E toda melhoria da ferramenta entra no seu acesso sem custo.</span></span></li>
+      <li><span class="tag">05</span><span><b>Ela aprende o seu jeito</b><span class="d">Quanto mais você usa, mais ela entende o seu nicho e o seu perfil. Vai ficando cada vez mais sua.</span></span></li>
     </ul>
 
     <div class="preco-box">
-      <p class="de">De <s>R$297</s></p>
-      <div class="por"><span class="cif">R$</span>197</div>
-      <p class="parc">ou <b>12x de R$19,97</b></p>
-      <span class="cupom-nota">Cupom de R$100 já aplicado no botão</span>
+      <p class="parc">yTube Gênesis · 6 meses de acesso</p>
+      <div class="por"><span class="cif">R$</span>397</div>
+      <p class="parc">ou <b>12x de R$40,82</b> no cartão</p>
+      <span class="cupom-nota">Postando 2 vídeos por semana, sai menos de R$8 por vídeo</span>
 
-      <a class="cta" href="https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&amp;ch_id=141796&amp;b_id_1=136392&amp;b_offer_1=LvX0zx&amp;b_id_2=136395&amp;b_offer_2=0p8CX2&amp;b_id_3=136399&amp;b_offer_3=DiC8Rq&amp;b_id_4=133939&amp;b_offer_4=Fl1B9f" data-open-checkout="1">
-        QUERO COMEÇAR AGORA
-        <small>Acesso liberado no seu e-mail em minutos</small>
+      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1">
+        QUERO A GÊNESIS COMIGO
+        <small>Acesso liberado junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Acesso imediato e vitalício. Assiste no celular, no computador ou na TV, no seu ritmo, revendo quantas vezes quiser.</p>
+      <p class="sob-cta">Pagamento processado pela Greenn. Cartão em até 12x, Pix ou PayPal.</p>
     </div>
 
     <div class="gar">
       <div class="selo"><span class="n">7</span><span class="u">DIAS</span></div>
       <div>
-        <h3>O risco fica todo do lado de cá</h3>
-        <p>Entra, assiste as aulas, abre os bônus e olha tudo que tem lá dentro. Se em 7 dias você sentir que não é para você, manda uma mensagem e o dinheiro volta inteiro, sem pergunta nenhuma.</p>
+        <h3>Usa de verdade antes de decidir</h3>
+        <p>Entra e gera os seus primeiros vídeos com ela. Se em até 7 dias você sentir que não é pra você, manda uma mensagem e o dinheiro volta inteiro, sem pergunta e sem burocracia.</p>
       </div>
     </div>
 
-    <div class="sep"></div>
-
-    <div class="centro">
-      <p class="olho">Quem está te ensinando</p>
-      <h2>João Adolfo</h2>
-      <p>Ex-mecânico de motos em Ibirubá, cidade de 20 mil habitantes no interior do Rio Grande do Sul. Começou devendo em três bancos e criou um canal para atrair clientes para a própria financeira.</p>
-    </div>
-
-    <div class="numeros">
-      <div><div class="v">21</div><div class="l">canais próprios</div></div>
-      <div><div class="v">2 bi+</div><div class="l">de visualizações somadas</div></div>
-      <div><div class="v">10 mil+</div><div class="l">alunos em 10 países</div></div>
-    </div>
-
-    <p>Hoje um único canal dele passa de 2,5 milhões de inscritos, faz mais de 400 mil visualizações por dia e paga mais de R$100 mil por mês, há mais de cinco anos. Pelas mãos dele passaram canais como Pablo Marçal, Brasil Paralelo, Leandro Ladeira e Wendel Carvalho.</p>
-
-    <p class="olho" style="margin-top:34px">E gente comum aplicando</p>
-    <ul class="casos">
-      <li><b>Tati</b>, nicho previdenciário, começou do absoluto zero e monetizou o primeiro canal em 20 dias. Hoje passa de 113 mil inscritos.</li>
-      <li><b>Pauline</b>, advogada, nunca tinha aparecido na internet. Monetizou em dois meses.</li>
-      <li><b>Dr. Rogério</b>, médico, zero experiência com vídeo. Já passou de 50 mil inscritos.</li>
-      <li><b>Raquel</b> pegou um canal parado com 9 mil inscritos e levou a mais de 320 mil em um ano, sem investir um real em anúncio.</li>
-    </ul>
-
-    <div class="sep"></div>
-
-    <div class="centro"><h2>Ainda em dúvida?</h2></div>
-    <div style="margin-top:22px">
-      <details>
-        <summary>Eu já passei da idade para isso?</summary>
-        <div class="resp"><p>O algoritmo não pergunta a sua idade, e na maioria das vezes nem sabe. Ele só quer saber se as pessoas clicam e assistem até o final. Quem viveu mais tem mais história para contar, e nesse jogo a sua idade é acervo, não obstáculo.</p></div>
-      </details>
-      <details>
-        <summary>Eu morro de vergonha de câmera.</summary>
-        <div class="resp"><p>Todo mundo começa assim. Gravar parece um palco, mas na prática é mais parecido com mandar um áudio longo no WhatsApp, conversando sobre algo que você domina. Nos primeiros vídeos a vergonha aparece. Nos seguintes, ela vai embora.</p></div>
-      </details>
-      <details>
-        <summary>Eu não entendo nada de tecnologia.</summary>
-        <div class="resp"><p>Se você consegue mandar um áudio no WhatsApp, você consegue gravar um vídeo. O resto, configuração, capa e título, está mastigado no treinamento, clicando junto com você na tela.</p></div>
-      </details>
-      <details>
-        <summary>Sobre o que eu vou falar? Não sou especialista em nada.</summary>
-        <div class="resp"><p>O João criou o canal da financeira dele sem dominar finanças. Você não precisa ser o maior especialista do Brasil, precisa estar um passo à frente de quem assiste. O resto você aprende no caminho.</p></div>
-      </details>
-      <details>
-        <summary>Preciso comprar equipamento?</summary>
-        <div class="resp"><p>Não. O canal que paga mais de R$100 mil por mês é gravado com celular e com a câmera do computador. Tem vídeo de um milhão de visualizações que foi gravado dentro do carro.</p></div>
-      </details>
-      <details>
-        <summary>E se eu já tenho um canal parado?</summary>
-        <div class="resp"><p>Melhor ainda. O treinamento vira o seu mapa de reforma, e você vai saber exatamente o que corrigir primeiro em vez de continuar postando no escuro.</p></div>
-      </details>
-    </div>
-
     <div class="preco-box" style="margin-top:44px">
-      <p class="olho" style="margin-bottom:14px">Um pensamento não muda nada. Uma decisão muda tudo.</p>
-      <div class="por"><span class="cif">R$</span>197</div>
-      <p class="parc">ou <b>12x de R$19,97</b>, com 7 dias de garantia</p>
-      <a class="cta" href="https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&amp;ch_id=141796&amp;b_id_1=136392&amp;b_offer_1=LvX0zx&amp;b_id_2=136395&amp;b_offer_2=0p8CX2&amp;b_id_3=136399&amp;b_offer_3=DiC8Rq&amp;b_id_4=133939&amp;b_offer_4=Fl1B9f" data-open-checkout="1">
-        GARANTIR MINHA VAGA
-        <small>Acesso liberado no seu e-mail em minutos</small>
+      <p class="olho" style="margin-bottom:14px">Saindo desta página, essa condição se encerra</p>
+      <div class="por"><span class="cif">R$</span>397</div>
+      <p class="parc">ou <b>12x de R$40,82</b>, com 7 dias de garantia</p>
+      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1">
+        ATIVAR MEUS 6 MESES DA GÊNESIS
+        <small>Um clique e o acesso chega junto com o do curso</small>
       </a>
-      <p class="sob-cta">Pagamento processado pela Greenn. Cartão, Pix ou boleto.</p>
     </div>
+
+    <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
 
   </section>
 
@@ -547,40 +376,40 @@ footer p{max-width:none;margin:0 0 9px}
   // ══════════════════════════════════════════
   // CONFIG
   // ══════════════════════════════════════════
-  var CHECKOUT_URL = 'https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&ch_id=141796&b_id_1=136392&b_offer_1=LvX0zx&b_id_2=136395&b_offer_2=0p8CX2&b_id_3=136399&b_offer_3=DiC8Rq&b_id_4=133939&b_offer_4=Fl1B9f';
-  var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
+  var CHECKOUT_URL = 'https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY';
+  var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // mesmo IC generico das paginas (payload leva funil proprio)
 
-  var VSL_ID  = 'vsllcy';   // VSL LUCRANDO-001 (vertical, 28:23)
-  var PAGE_ID = 'lcy';      // Lucrando com YouTube
-  var VALOR   = 197;        // valor do front, ja com o cupom de R$100
+  var VSL_ID  = 'vslgen';   // VSL do upsell Genesis (vertical, 10:00)
+  var PAGE_ID = 'lcyup';    // pagina de acesso / upsell do Lucrando
+  var VALOR   = 397;        // valor do Genesis 6 meses
 
-  var PITCH_SEGUNDOS = 1375;        // 22:55 = momento do pitch na VSL (ajustado 03/08:
-                                    // o Joao fala o preco aos 22:55, botao aparecia so aos 25:48)
-  var BACKSTOP_MS = 1450 * 1000;    // 24:10 de relogio. Rede de seguranca: so age
+  var PITCH_SEGUNDOS = 515;         // 08:35 = momento do pitch na VSL do upsell
+  var BACKSTOP_MS = 560 * 1000;     // 09:20 de relogio. Rede de seguranca: so age
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
-  // variante sorteada pelo script sincrono la em cima
-  var HEADLINE = window.LCY_HEADLINE || 'hlprova';
+  var HEADLINE = window.LCY_HEADLINE || 'semheadline';
 
   // ══════════════════════════════════════════
   // UTM / fbclid  →  checkout + CAPI
+  // A pessoa chega aqui pelo redirect da Greenn, SEM UTM na URL. A atribuicao
+  // vem do stash que a /lucrando/ guardou (window.__LCY_STASH, 7 dias) e dos
+  // cookies _fbp/_fbc que ja existem neste dominio. URL sempre vence o stash.
   // ══════════════════════════════════════════
   function cookie(n){
     var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)'));
     return m ? decodeURIComponent(m[1]) : null;
   }
+  var CHAVES = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid','wbraid','gbraid'];
   function rastreio(){
     var p = new URLSearchParams(window.location.search), r = {};
-    ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid','wbraid','gbraid'].forEach(function(k){
-      r[k] = p.get(k) || null;
-    });
-    r.fbp = cookie('_fbp');
-    r.fbc = cookie('_fbc') || (r.fbclid ? ('fb.1.' + Date.now() + '.' + r.fbclid) : null);
+    CHAVES.forEach(function(k){ r[k] = p.get(k) || null; });
+    var s = window.__LCY_STASH;
+    if (s) CHAVES.forEach(function(k){ if (!r[k] && s[k]) r[k] = s[k]; });
+    r.fbp = cookie('_fbp') || (s && s.fbp) || null;
+    r.fbc = cookie('_fbc') || (s && s.fbc) || (r.fbclid ? ('fb.1.' + Date.now() + '.' + r.fbclid) : null);
     return r;
   }
-  // utm_content enriquecido com vsl+page+headline (convencao __ das paginas irmas).
-  // A variante precisa viajar ate o checkout, senao da pra medir clique por headline
-  // mas nao RECEITA por headline, que e o que decide o teste.
+  // utm_content enriquecido com vsl+page+headline (convencao __ das paginas irmas)
   function enriquece(v){
     var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE;
     return v ? (v + '__' + s) : s;
@@ -598,7 +427,7 @@ footer p{max-width:none;margin:0 0 9px}
         var k = par.split('=')[0] || '';
         if (!k) return;
         if (/^(utm_|fbclid$|gclid$|wbraid$|gbraid$)/.test(k)) return;      // nossos: serao reescritos abaixo
-        if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base (cupom, bumps)
+        if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base
         params.push(par);
       });
     } catch(e){}
@@ -610,17 +439,6 @@ footer p{max-width:none;margin:0 0 9px}
     return CHECKOUT_URL + sep + params.join('&');
   }
 
-  // Stash de atribuicao pra pagina de acesso (upsell): o redirect pos-compra da
-  // Greenn volta SEM UTM, entao a /lucrando/acesso/ le este stash (7 dias) e
-  // re-injeta a origem no checkout do upsell. So grava quando ha origem de
-  // verdade, pra uma visita organica nao apagar um stash rico de anuncio.
-  try {
-    var _t0 = rastreio();
-    if (_t0.utm_medium || _t0.fbclid || _t0.gclid || _t0.utm_source) {
-      localStorage.setItem('lcy_utms', JSON.stringify({ts:Date.now(), d:_t0}));
-    }
-  } catch(e){}
-
   var icDisparado = false;
   function disparaIC(){
     if (icDisparado) return;
@@ -628,7 +446,7 @@ footer p{max-width:none;margin:0 0 9px}
     var t = rastreio();
     try {
       if (typeof fbq === 'function') {
-        fbq('track','InitiateCheckout',{value:VALOR,currency:'BRL',content_name:'Lucrando com YouTube'});
+        fbq('track','InitiateCheckout',{value:VALOR,currency:'BRL',content_name:'yTube Gênesis'});
       }
     } catch(e){}
     try {
@@ -637,7 +455,7 @@ footer p{max-width:none;margin:0 0 9px}
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({
           event:'InitiateCheckout',
-          funil:'LCY',
+          funil:'LCY_UP',
           headline:HEADLINE,
           valor:VALOR,
           utm_source:t.utm_source, utm_medium:t.utm_medium, utm_campaign:t.utm_campaign,
@@ -660,19 +478,14 @@ footer p{max-width:none;margin:0 0 9px}
     if (!btn) return;
     e.preventDefault();
     disparaIC();
-    // passa o href atual: se o VTurb ja injetou a conversion key v3_ no botao,
-    // ela sobrevive a reescrita (antes: montaUrl() sem argumento descartava)
+    // passa o href atual: se algum script (VTurb) ja injetou a conversion key
+    // v3_ no botao, ela sobrevive a reescrita (gap corrigido vs pagina mae)
     var url = montaUrl(btn.getAttribute('href'));
     setTimeout(function(){ window.location.href = url; }, 250);
   }, false);
 
   // ══════════════════════════════════════════
   // BOTAO NATIVO DO VTURB → mesma atribuicao dos nossos CTAs
-  // O link do botao e configurado no painel, entao nasce estatico e sem
-  // ad_id/fbclid (que so existem na URL do visitante, em runtime).
-  // Aqui a gente reescreve o href assim que ele aparece no DOM, e de novo
-  // no momento exato do clique. Sem preventDefault, pra nao quebrar o
-  // "abrir em nova aba" que o painel oferece.
   // Exige o botao no DOM da pagina: tipo "Abaixo do video".
   // ══════════════════════════════════════════
   var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"]';
@@ -711,15 +524,13 @@ footer p{max-width:none;margin:0 0 9px}
   // REVEAL DA OFERTA
   // Primario: API do VTurb, sincronizada ao tempo do VIDEO (a prova de pause,
   // persiste pra quem volta). Revela o sentinela e a gente abre o bloco real.
-  // Funciona mesmo sem call action configurada no painel.
   // ══════════════════════════════════════════
   var oferta = document.getElementById('oferta');
   var jaAberto = false;
 
-  // ── funil por headline: play → pitch → clique ──
   function marca(evento, extra){
     try { window.hxTrack && window.hxTrack(evento, extra || {}); } catch(e){}
-    try { window.dataLayer && window.dataLayer.push({event:'lcy_' + evento, headline:HEADLINE}); } catch(e){}
+    try { window.dataLayer && window.dataLayer.push({event:'lcyup_' + evento, headline:HEADLINE}); } catch(e){}
   }
 
   var playMarcado = false;
@@ -727,10 +538,9 @@ footer p{max-width:none;margin:0 0 9px}
     if (playMarcado) return;
     playMarcado = true;
     marca('video_play', {});
-    // Meta: play da VSL = ViewContent (decisao Matheus 29/07)
     try {
       if (typeof fbq === 'function') {
-        fbq('track','ViewContent',{content_name:'VSL Lucrando com YouTube',content_category:'vsl',value:VALOR,currency:'BRL'});
+        fbq('track','ViewContent',{content_name:'VSL yTube Gênesis',content_category:'upsell',value:VALOR,currency:'BRL'});
       }
     } catch(e){}
   }
@@ -740,10 +550,9 @@ footer p{max-width:none;margin:0 0 9px}
     if (pitchMarcado) return;
     pitchMarcado = true;
     marca('video_pitch', {origem: origem});
-    // Meta: chegou no pitch (22:55) = evento custom, otimizavel como custom conversion
     try {
       if (typeof fbq === 'function') {
-        fbq('trackCustom','PitchReached',{content_name:'VSL Lucrando com YouTube',value:VALOR,currency:'BRL'});
+        fbq('trackCustom','PitchReached',{content_name:'VSL yTube Gênesis',value:VALOR,currency:'BRL'});
       }
     } catch(e){}
   }
@@ -752,8 +561,7 @@ footer p{max-width:none;margin:0 0 9px}
     if (jaAberto || !oferta) return;
     jaAberto = true;
     oferta.classList.add('aberto');
-    // so conta como pitch de verdade quando veio do tempo do VIDEO.
-    // backstop de relogio e debug nao provam que a pessoa assistiu ate la.
+    // so conta como pitch de verdade quando veio do tempo do VIDEO
     if (origem === 'vturb') marcaPitch('vturb');
   }
 
@@ -774,9 +582,6 @@ footer p{max-width:none;margin:0 0 9px}
       try { player.addEventListener('player:ready', arma); } catch(e){}
       arma(); // caso o ready ja tenha passado
 
-      // play: o VTurb nao documenta um nome unico de evento, entao escutamos os
-      // candidatos plausiveis e deduplicamos. Se nenhum disparar, o funil ainda
-      // fecha por pageview -> pitch -> clique.
       ['play','playing','player:play','smartplayer:play','video:play'].forEach(function(ev){
         try { player.addEventListener(ev, marcaPlay); } catch(e){}
       });
@@ -793,7 +598,6 @@ footer p{max-width:none;margin:0 0 9px}
           if (vis) abre('vturb');
         }).observe(sentinela, {attributes:true, attributeFilter:['style','class']});
       }
-      // se o painel apontar a call action direto pro #oferta, tambem cobre
       if (oferta && 'MutationObserver' in window) {
         new MutationObserver(function(){
           if (!jaAberto && oferta.style.display && oferta.style.display !== 'none') abre('vturb');
@@ -823,7 +627,13 @@ footer p{max-width:none;margin:0 0 9px}
   var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50YXZldGptZm90bHdtY2d3c2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTAzNDksImV4cCI6MjA1OTYyNjM0OX0.jWCJr4qPHjiun2BCdx8U4Oi7cQ2gQmU-D0vrk10FGao';
   function ck(n){var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?m.pop():'';}
   function sid(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now();}}
-  function q(n){return new URLSearchParams(location.search).get(n)||'';}
+  // URL primeiro; stash da /lucrando/ como fallback (redirect da Greenn chega sem UTM)
+  function q(n){
+    var v=new URLSearchParams(location.search).get(n);
+    if(v)return v;
+    var s=window.__LCY_STASH;
+    return (s&&s[n])||'';
+  }
   function base(extra){
     var fbclid=q('fbclid');
     return Object.assign({
@@ -838,13 +648,11 @@ footer p{max-width:none;margin:0 0 9px}
   }
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
 
-  // headline vai em TODO evento: e a dimensao que corta o funil inteiro
-  var HL=window.LCY_HEADLINE||null, FUNIL='LCY';
+  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP';
   function evento(tipo,extra){
     var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
     send(base({event_type:tipo,extra:e}));
   }
-  // exposto pro script da pagina marcar video_play e video_pitch
   window.hxTrack=evento;
 
   evento('pageview');
