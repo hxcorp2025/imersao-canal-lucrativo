@@ -29,13 +29,13 @@
 <script src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js" async></script>
 <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
 
-<!-- Preload VSL UPSELL GENESIS (vertical 9:16, 10:00) -->
-<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/v4/player.js" as="script">
+<!-- Preload VSL UPSELL GENESIS v2 otimizada 21/08 (vertical 9:16, 10:00) -->
+<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a8851d8f72a1f0b1a5dec06/v4/player.js" as="script">
 <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
-<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a8699ad36176ae68be1c21b/main.m3u8" as="fetch" crossorigin>
+<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a8851945004748d66336c12/main.m3u8" as="fetch" crossorigin>
 <!-- O LCP e a thumbnail do player: o problema nao e peso, e DESCOBERTA (o browser
      so sabe dela depois do JS do player rodar). Preload de prioridade alta antecipa. -->
-<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/thumbnail.jpg">
+<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a8851d8f72a1f0b1a5dec06/thumbnail.jpg">
 <link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
 <!-- Google Tag Manager -->
@@ -284,6 +284,9 @@ footer p{max-width:none;margin:0 0 9px}
   <script>
   (function(){
     window.LCY_HEADLINE = 'semheadline';
+    // Versao da VSL do upsell: v2 otimizada no ar em 21/08/2026 (v1 'vslgen' ate 20/08).
+    // Le-se aqui nos dois blocos de script pra separar antes/depois nos dados.
+    window.LCY_VSL_ID = 'vslgen2';
     // Rastreio guardado pela pagina /lucrando/ (stash de 7 dias): e o que liga a
     // venda do upsell de volta ao anuncio, ja que o redirect da Greenn chega sem UTM.
     window.__LCY_STASH = null;
@@ -299,9 +302,9 @@ footer p{max-width:none;margin:0 0 9px}
 
   <div class="palco">
     <div class="player-box">
-      <vturb-smartplayer id="vid-6a869a105bc5ead0e04d95bb"></vturb-smartplayer>
+      <vturb-smartplayer id="vid-6a8851d8f72a1f0b1a5dec06"></vturb-smartplayer>
       <script type="text/javascript">
-        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a869a105bc5ead0e04d95bb/v4/player.js";s.async=!0;document.head.appendChild(s);})();
+        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a8851d8f72a1f0b1a5dec06/v4/player.js";s.async=!0;document.head.appendChild(s);})();
       </script>
     </div>
   </div>
@@ -384,7 +387,7 @@ footer p{max-width:none;margin:0 0 9px}
   var CHECKOUT_URL = 'https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY';
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // mesmo IC generico das paginas (payload leva funil proprio)
 
-  var VSL_ID  = 'vslgen';   // VSL do upsell Genesis (vertical, 10:00)
+  var VSL_ID  = window.LCY_VSL_ID || 'vslgen2';   // VSL do upsell Genesis v2 (vertical, 10:00, pitch 08:35)
   var PAGE_ID = 'lcyup';    // pagina de acesso / upsell do Lucrando
   var VALOR   = 397;        // valor do Genesis 6 meses
 
@@ -535,7 +538,7 @@ footer p{max-width:none;margin:0 0 9px}
 
   function marca(evento, extra){
     try { window.hxTrack && window.hxTrack(evento, extra || {}); } catch(e){}
-    try { window.dataLayer && window.dataLayer.push({event:'lcyup_' + evento, headline:HEADLINE}); } catch(e){}
+    try { window.dataLayer && window.dataLayer.push({event:'lcyup_' + evento, headline:HEADLINE, vsl_id:VSL_ID}); } catch(e){}
   }
 
   var playMarcado = false;
@@ -653,9 +656,9 @@ footer p{max-width:none;margin:0 0 9px}
   }
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
 
-  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP';
+  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||null;
   function evento(tipo,extra){
-    var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
+    var e=Object.assign({headline:HL,funil:FUNIL,vsl_id:VSL,gclid:q('gclid')||null},extra||{});
     send(base({event_type:tipo,extra:e}));
   }
   window.hxTrack=evento;
