@@ -656,7 +656,7 @@ footer p{max-width:none;margin:0 0 9px}
   }
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
 
-  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||null;
+  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||'vslgen2';
   function evento(tipo,extra){
     var e=Object.assign({headline:HL,funil:FUNIL,vsl_id:VSL,gclid:q('gclid')||null},extra||{});
     send(base({event_type:tipo,extra:e}));
