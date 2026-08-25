@@ -190,6 +190,17 @@ vturb-smartplayer{display:block;width:100%}
 vturb-smartplayer:empty{aspect-ratio:9/16}
 /* o arredondamento vai no filho certo (a thumbnail); no host cortaria o botao */
 vturb-smartplayer .thumbnail{border-radius:13px;overflow:hidden}
+/* Cores do player pela PAGINA: o VTurb escreve essas variaveis inline no proprio
+   elemento, entao !important daqui vence sem precisar do painel. Mata a fakebar e
+   o resume roxos (#674EA7) e o big play azul (#1890FF). O botao nativo segue VERDE
+   por decisao do Matheus (25/08) - nao tem override de cor nele de proposito. */
+vturb-smartplayer{
+  --fakebar-background-color:#FF0000!important;
+  --resume-background-color:#C50000!important;
+  --resume-foreground-color:#FFFFFF!important;
+  --bigplay-background:#FF0000!important;
+  --bigplay-background-hover:#C50000!important;
+}
 .assinatura{
   font-family:var(--fm);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
   text-align:center;color:var(--vermelho);padding:13px 0 11px;margin:0;
