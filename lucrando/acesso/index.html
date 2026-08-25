@@ -175,8 +175,12 @@ img{max-width:100%;height:auto}
 
 /* ── player vertical no card ──────────── */
 .palco{width:100%;display:flex;justify-content:center}
+/* Sem padding lateral de proposito: cada pixel de largura conta porque o
+   arquivo no VTurb tem só 404px de largura nativa. A moldura vermelha vira
+   uma linha em volta do vídeo. NÃO colocar overflow:hidden aqui - o botao
+   nativo do VTurb nasce dentro do player e seria cortado. */
 .player-card{
-  width:100%;max-width:398px;padding:9px 9px 0;border-radius:20px;
+  width:100%;max-width:400px;padding:0;border-radius:20px;
   border:1px solid rgba(255,0,0,.42);
   background:linear-gradient(180deg,rgba(255,0,0,.055),rgba(255,255,255,.018));
   box-shadow:0 0 46px rgba(255,0,0,.10),inset 0 1px 0 rgba(255,255,255,.05);
@@ -189,7 +193,8 @@ img{max-width:100%;height:auto}
 vturb-smartplayer{display:block;width:100%}
 vturb-smartplayer:empty{aspect-ratio:9/16}
 /* o arredondamento vai no filho certo (a thumbnail); no host cortaria o botao */
-vturb-smartplayer .thumbnail{border-radius:13px;overflow:hidden}
+/* so os cantos de cima: o video encosta no topo do card (19px = 20 do card - 1 da borda) */
+vturb-smartplayer .thumbnail{border-radius:19px 19px 0 0;overflow:hidden}
 /* Cores do player pela PAGINA: o VTurb escreve essas variaveis inline no proprio
    elemento, entao !important daqui vence sem precisar do painel. Mata a fakebar e
    o resume roxos (#674EA7) e o big play azul (#1890FF). O botao nativo segue VERDE
@@ -203,7 +208,7 @@ vturb-smartplayer{
 }
 .assinatura{
   font-family:var(--fm);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
-  text-align:center;color:var(--vermelho);padding:13px 0 11px;margin:0;
+  text-align:center;color:var(--vermelho);padding:13px 12px 12px;margin:0;
 }
 .assinatura b{color:var(--branco);font-weight:700}
 .dica{
