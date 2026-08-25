@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0A0A0A">
@@ -17,6 +20,9 @@
 <link rel="dns-prefetch" href="https://cdn.converteai.net">
 <link rel="dns-prefetch" href="https://images.converteai.net">
 <link rel="dns-prefetch" href="https://license.vturb.com">
+<!-- checkout: so e clicado depois do pitch, mas o DNS nao custa nada agora.
+     O preconnect de verdade acontece no abre(), quando a oferta aparece. -->
+<link rel="dns-prefetch" href="https://payfast.greenn.com.br">
 <link rel="preconnect" href="https://scripts.converteai.net" crossorigin>
 <link rel="preconnect" href="https://cdn.converteai.net" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,12 +55,17 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKMPTX15RK"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17669903431');</script>
 
-<!-- Microsoft Clarity -->
+<!-- Microsoft Clarity: e ferramenta de CRO, nao de dinheiro. A fila (window.clarity)
+     nasce na hora, mas o script so entra depois do load pra nao disputar banda com a
+     VSL, que e o LCP. GTM, Meta Pixel e gtag do Ads seguem exatamente como estavam. -->
 <script type="text/javascript">
-(function(c,l,a,r,i,t,y){
+(function(c,l,a,r,i){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    function boot(){
+      var t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+      var y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    }
+    if(l.readyState==="complete")boot();else c.addEventListener("load",boot);
 })(window, document, "clarity", "script", "ox4mx9nv30");
 </script>
 
@@ -73,7 +84,10 @@ fbq('init','1452797958735774');fbq('track','PageView');
 :root{
   --preto:#0A0A0A; --preto2:#111113; --vermelho:#FF0000; --vermelho-esc:#C50000;
   --branco:#FFFFFF; --g1:#EDEDEF; --g2:#A8A8B0; --g3:#6E6E78;
-  --glass:rgba(255,255,255,.035); --borda:rgba(255,255,255,.09);
+  --glass:rgba(255,255,255,.035); --borda:rgba(255,255,255,.09); --borda2:rgba(255,255,255,.14);
+  /* verde e o UNICO ponto fora do preto/vermelho/branco: sinal de pagamento aprovado,
+     nao decoracao. Vive so na barra de confirmacao e na etapa 1 do stepper. */
+  --verde:#22C55E; --verde-txt:#D6F5E3;
   --fd:'Bricolage Grotesque',system-ui,sans-serif;
   --fb:'Geist',system-ui,-apple-system,sans-serif;
   --fm:'JetBrains Mono',ui-monospace,monospace;
@@ -89,55 +103,101 @@ body{
 .wrap{width:var(--col);margin:0 auto;padding:0 20px}
 img{max-width:100%;height:auto}
 
-/* ── topo ─────────────────────────────────── */
-.topo{padding:22px 0 6px;text-align:center}
-.marca{
-  display:inline-flex;align-items:center;gap:9px;
-  font-family:var(--fd);font-weight:800;font-size:15px;
-  letter-spacing:-.01em;color:var(--branco);text-transform:uppercase;
+/* ── barra: pagamento confirmado ─────────
+   Full-bleed e primeiro no DOM porque responde a pergunta com que a pessoa
+   chega ("meu pagamento passou?"). Ansiedade resolvida antes do primeiro scroll. */
+.pago{
+  background:linear-gradient(180deg,rgba(22,163,74,.20),rgba(22,163,74,.07));
+  border-bottom:1px solid rgba(34,197,94,.30);padding:12px 18px;
 }
-.marca .pt{width:9px;height:9px;border-radius:50%;background:var(--vermelho);flex:none}
+.pago-in{
+  width:var(--col);margin:0 auto;display:flex;align-items:center;gap:10px;
+  justify-content:center;font-size:14px;line-height:1.4;color:var(--verde-txt);
+}
+.pago b{color:var(--branco);font-weight:600}
+.pago .ck{width:19px;height:19px;flex:none;border-radius:50%;background:var(--verde);display:grid;place-items:center}
+.pago .ck svg{width:11px;height:11px;display:block}
 
-/* ── barra de progresso do acesso ─────────── */
-.prog-wrap{max-width:440px;margin:20px auto 4px}
-.prog-head{
-  display:flex;justify-content:space-between;align-items:baseline;gap:12px;
-  font-family:var(--fm);font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--g3);margin-bottom:9px;
+/* ── stepper de 3 etapas ────────────────
+   Trocou a barra generica de 90%: em vez de "quase la", mostra ONDE ela esta.
+   A trilha vai do centro da 1a coluna ao centro da 3a, entao o ponto 50% do
+   gradiente cai exatamente no centro da etapa atual: colorido ate aqui, cinza depois. */
+.steps{
+  position:relative;display:grid;grid-template-columns:repeat(3,1fr);
+  list-style:none;max-width:430px;margin:24px auto 4px;padding:0;
 }
-.prog-head b{color:var(--vermelho);font-weight:700;letter-spacing:.1em}
-.prog-track{
-  height:10px;border-radius:999px;overflow:hidden;
-  background:var(--glass);border:1px solid var(--borda);
+.steps::before{
+  content:"";position:absolute;top:17px;left:16.667%;right:16.667%;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--verde) 0%,var(--vermelho) 50%,var(--borda2) 50%,var(--borda2) 100%);
 }
-.prog-fill{
-  height:100%;width:90%;border-radius:999px;
-  background:linear-gradient(90deg,var(--vermelho-esc),var(--vermelho));
-  box-shadow:0 0 14px rgba(255,0,0,.35);
-  animation:enche 1.2s cubic-bezier(.25,.8,.3,1) .2s both;
+.step{position:relative;z-index:1;text-align:center;padding:0 3px}
+.bolha{
+  width:36px;height:36px;margin:0 auto 9px;border-radius:50%;
+  display:grid;place-items:center;background:var(--preto);
 }
-@keyframes enche{from{width:5%}to{width:90%}}
+.bolha svg{display:block}
+.step.ok .bolha{background:var(--verde);box-shadow:0 0 0 4px rgba(34,197,94,.13)}
+.step.agora .bolha{background:var(--vermelho);animation:respira 2.4s ease-in-out infinite}
+.step.trava .bolha{background:var(--preto2);border:1px solid var(--borda2)}
+@keyframes respira{0%,100%{box-shadow:0 0 0 4px rgba(255,0,0,.18)}50%{box-shadow:0 0 0 10px rgba(255,0,0,0)}}
+.step .nome{
+  display:block;font-family:var(--fm);font-size:9.5px;letter-spacing:.11em;
+  text-transform:uppercase;color:#8C8C96;line-height:1.35;
+  /* 2 linhas reservadas: "ACESSO COMPLETO" quebra no celular e sem isso o
+     estado de baixo descia sozinho, desalinhando as 3 colunas */
+  min-height:2.7em;
+}
+.step.ok .nome{color:var(--verde)}
+.step.agora .nome{color:var(--branco)}
+.step .estado{display:block;font-family:var(--fb);font-size:11px;letter-spacing:0;text-transform:none;margin-top:2px;color:#8C8C96}
+.step.ok .estado{color:rgba(34,197,94,.85)}
+.step.agora .estado{color:var(--vermelho);font-weight:600}
 
-/* ── headline ─────────────────────────────── */
+/* ── headline ─────────────────────── */
 .hl{
-  font-family:var(--fd);font-weight:800;
-  font-size:clamp(27px,6.2vw,44px);line-height:1.12;letter-spacing:-.025em;
-  color:var(--branco);text-align:center;margin:16px 0 10px;text-wrap:balance;
+  font-family:var(--fd);font-weight:800;text-transform:uppercase;
+  font-size:clamp(32px,8.6vw,52px);line-height:1.03;letter-spacing:-.032em;
+  color:var(--branco);text-align:center;margin:20px 0 10px;text-wrap:balance;
 }
 .hl .r{color:var(--vermelho)}
 .hl-sub{
-  text-align:center;color:var(--g2);font-size:clamp(15px,3.4vw,18px);
-  margin:0 auto 24px;max-width:36ch;text-wrap:balance;
+  text-align:center;color:var(--g2);font-size:clamp(15px,3.6vw,18.5px);
+  margin:0 auto 4px;max-width:34ch;text-wrap:balance;
 }
+.hl-sub b{color:var(--branco);font-weight:600}
 
-/* ── player vertical ──────────────────────── */
+/* ── seta pro play ──────────────────
+   A pagina inteira existe pra um clique so. A seta e a unica coisa que se move
+   enquanto o video nao roda: o olho segue movimento antes de ler texto. */
+.seta{display:flex;justify-content:center;margin:14px 0 12px;color:var(--vermelho)}
+.seta svg{width:38px;height:auto;display:block;animation:desce 2s ease-in-out infinite}
+@keyframes desce{0%,100%{transform:translateY(-3px)}50%{transform:translateY(4px)}}
+
+/* ── player vertical no card ──────────── */
 .palco{width:100%;display:flex;justify-content:center}
-.player-box{width:100%;max-width:400px}
-/* aspect-ratio reservado = CLS 0 (licao das paginas irmas) */
-vturb-smartplayer{display:block;width:100%;aspect-ratio:9/16}
+.player-card{
+  width:100%;max-width:398px;padding:9px 9px 0;border-radius:20px;
+  border:1px solid rgba(255,0,0,.42);
+  background:linear-gradient(180deg,rgba(255,0,0,.055),rgba(255,255,255,.018));
+  box-shadow:0 0 46px rgba(255,0,0,.10),inset 0 1px 0 rgba(255,255,255,.05);
+}
+/* aspect-ratio SO enquanto o player esta VAZIO: reserva o espaco antes do JS
+   (CLS 0, licao das paginas irmas) e devolve a altura ao conteudo assim que o
+   VTurb popula. Isso e critico: o botao nativo do VTurb e injetado DENTRO deste
+   elemento (.vturb-light-dom-inject), abaixo do video, e so ganha altura no pitch.
+   Com altura travada ele nasce pra fora da caixa; com overflow:hidden, sumiria. */
+vturb-smartplayer{display:block;width:100%}
+vturb-smartplayer:empty{aspect-ratio:9/16}
+/* o arredondamento vai no filho certo (a thumbnail); no host cortaria o botao */
+vturb-smartplayer .thumbnail{border-radius:13px;overflow:hidden}
+.assinatura{
+  font-family:var(--fm);font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;
+  text-align:center;color:var(--vermelho);padding:13px 0 11px;margin:0;
+}
+.assinatura b{color:var(--branco);font-weight:700}
 .dica{
   text-align:center;color:var(--g3);font-size:13.5px;
-  margin:14px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
+  margin:16px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
 }
 .dica .pulso{
   width:7px;height:7px;border-radius:50%;background:var(--vermelho);
@@ -193,6 +253,13 @@ p{margin:0 0 18px;max-width:66ch}
 .por .cif{font-size:.45em;vertical-align:.42em;margin-right:3px;color:var(--g2)}
 .parc{color:var(--g2);font-size:16px;margin:0 0 4px}
 .parc b{color:var(--branco);font-weight:600}
+/* mesma moldura do card do player: amarra topo e oferta na mesma linguagem
+   visual, sem encostar em uma palavra do copy que ja esta rodando */
+.preco-box.destaque{
+  border-color:rgba(255,0,0,.42);
+  background:linear-gradient(180deg,rgba(255,0,0,.055),rgba(255,255,255,.018));
+  box-shadow:0 0 46px rgba(255,0,0,.10),inset 0 1px 0 rgba(255,255,255,.05);
+}
 .cupom-nota{
   display:inline-block;margin-top:12px;font-size:13.5px;color:var(--g2);
   background:rgba(255,0,0,.09);border:1px solid rgba(255,0,0,.28);
@@ -258,32 +325,54 @@ footer p{max-width:none;margin:0 0 9px}
 }
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
-  .prog-fill{width:90%}
+  .seta svg{transform:none}
 }
 </style>
+</head>
+
+<body>
+
+<div class="pago">
+  <p class="pago-in">
+    <span class="ck" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.6 6.3 4.4 9 10.4 2.9" stroke="#06301A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span><b>Pagamento confirmado</b> · seu acesso está chegando no seu e-mail.</span>
+  </p>
+</div>
 
 <div class="wrap">
 
-  <div class="topo">
-    <span class="marca"><span class="pt"></span>João Adolfo</span>
+  <!-- onde ela esta na entrada: pagou, falta a aula 0, dai o acesso completo -->
+  <ol class="steps" aria-label="Etapas da sua entrada">
+    <li class="step ok">
+      <span class="bolha" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 13 13" fill="none"><path d="M2.2 6.8 5 9.5 10.8 3.3" stroke="#06301A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="nome">Pagamento</span><span class="estado">Concluído</span>
+    </li>
+    <li class="step agora" aria-current="step">
+      <span class="bolha" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M4.2 2.6 10.4 6.5 4.2 10.4Z" fill="#fff"/></svg></span>
+      <span class="nome">Aula 0</span><span class="estado">Você está aqui</span>
+    </li>
+    <li class="step trava">
+      <span class="bolha" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M3.9 6.2V4.6a2.6 2.6 0 0 1 5.2 0v1.6" stroke="#6E6E78" stroke-width="1.5" stroke-linecap="round"/><rect x="2.7" y="6.1" width="7.6" height="5.4" rx="1.5" fill="#6E6E78"/></svg></span>
+      <span class="nome">Acesso completo</span><span class="estado">Falta pouco</span>
+    </li>
+  </ol>
+
+  <h1 class="hl">Assista à <span class="r">Aula 0</span></h1>
+  <p class="hl-sub">Ela só existe nesta página. <b>Aperte o play.</b></p>
+
+  <div class="seta" aria-hidden="true">
+    <svg viewBox="0 0 40 27" fill="none"><path d="M6 4.5 20 15 34 4.5" stroke="currentColor" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 14.5 20 25 34 14.5" stroke="currentColor" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round" opacity=".42"/></svg>
   </div>
 
-  <!-- barra do acesso: a pessoa acabou de pagar; o que falta e a aula zero -->
-  <div class="prog-wrap" aria-hidden="false">
-    <div class="prog-head"><span>Liberando seu acesso</span><b>90%</b></div>
-    <div class="prog-track" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" aria-label="Liberação do acesso em 90 por cento">
-      <div class="prog-fill"></div>
-    </div>
-  </div>
-
-  <h1 class="hl">Seu acesso está <span class="r">quase</span> liberado</h1>
-  <p class="hl-sub">Pra completar, assista à aula zero que o João gravou pra quem acabou de entrar. Ela só existe nesta página: se fechar, não aparece de novo.</p>
 
   <!-- config sincrona: roda ANTES do script principal e do HX Track.
        Sem A/B aqui; a global existe porque os dois blocos de baixo leem ela. -->
   <script>
   (function(){
-    window.LCY_HEADLINE = 'semheadline';
+    // Versao do LAYOUT da pagina: 'aula0' no ar em 25/08/2026 ('semheadline' era o
+    // topo antigo, de barra 90%). Viaja no utm_content, no hxTrack e no dataLayer,
+    // entao da pra comparar conversao antes x depois por query, igual ao vslgen2.
+    window.LCY_HEADLINE = 'aula0';
     // Versao da VSL do upsell: v2 otimizada no ar em 21/08/2026 (v1 'vslgen' ate 20/08).
     // Le-se aqui nos dois blocos de script pra separar antes/depois nos dados.
     window.LCY_VSL_ID = 'vslgen2';
@@ -301,11 +390,12 @@ footer p{max-width:none;margin:0 0 9px}
   </script>
 
   <div class="palco">
-    <div class="player-box">
+    <div class="player-card">
       <vturb-smartplayer id="vid-6a8851d8f72a1f0b1a5dec06"></vturb-smartplayer>
       <script type="text/javascript">
         (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a8851d8f72a1f0b1a5dec06/v4/player.js";s.async=!0;document.head.appendChild(s);})();
       </script>
+      <p class="assinatura"><b>Aula 0</b> · João Adolfo</p>
     </div>
   </div>
 
@@ -333,7 +423,7 @@ footer p{max-width:none;margin:0 0 9px}
       <li><span class="tag">05</span><span><b>Ela aprende o seu jeito</b><span class="d">Quanto mais você usa, mais ela entende o seu nicho e o seu perfil. Vai ficando cada vez mais sua.</span></span></li>
     </ul>
 
-    <div class="preco-box">
+    <div class="preco-box destaque">
       <p class="parc">yTube Gênesis · 6 meses de acesso</p>
       <div class="por"><span class="cif">R$</span>397</div>
       <p class="parc">ou <b>12x de R$40,82</b> no cartão</p>
@@ -395,7 +485,7 @@ footer p{max-width:none;margin:0 0 9px}
   var BACKSTOP_MS = 560 * 1000;     // 09:20 de relogio. Rede de seguranca: so age
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
-  var HEADLINE = window.LCY_HEADLINE || 'semheadline';
+  var HEADLINE = window.LCY_HEADLINE || 'aula0';   // fallback alinhado a global (licao do vsl_id)
 
   // ══════════════════════════════════════════
   // UTM / fbclid  →  checkout + CAPI
@@ -569,6 +659,15 @@ footer p{max-width:none;margin:0 0 9px}
     if (jaAberto || !oferta) return;
     jaAberto = true;
     oferta.classList.add('aberto');
+    // Oferta na tela = o proximo clique vai pro checkout. Abrir DNS+TCP+TLS agora
+    // faz o handshake acontecer enquanto ela le, e nao no clique quente.
+    try {
+      if (!document.getElementById('pc-greenn')) {
+        var pc = document.createElement('link');
+        pc.id = 'pc-greenn'; pc.rel = 'preconnect'; pc.href = 'https://payfast.greenn.com.br';
+        document.head.appendChild(pc);
+      }
+    } catch(e){}
     // so conta como pitch de verdade quando veio do tempo do VIDEO
     if (origem === 'vturb') marcaPitch('vturb');
   }
@@ -656,7 +755,7 @@ footer p{max-width:none;margin:0 0 9px}
   }
   function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
 
-  var HL=window.LCY_HEADLINE||null, FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||'vslgen2';
+  var HL=window.LCY_HEADLINE||'aula0', FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||'vslgen2';
   function evento(tipo,extra){
     var e=Object.assign({headline:HL,funil:FUNIL,vsl_id:VSL,gclid:q('gclid')||null},extra||{});
     send(base({event_type:tipo,extra:e}));
@@ -673,3 +772,6 @@ footer p{max-width:none;margin:0 0 9px}
   },true);
 })();
 </script>
+
+</body>
+</html>
