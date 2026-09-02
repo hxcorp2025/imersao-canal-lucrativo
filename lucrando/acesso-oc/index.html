@@ -464,10 +464,10 @@ footer p{max-width:none;margin:0 0 9px}
            valendo como fallback: sem token valido, o clique vai pro checkout completo. -->
       <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
          data-greenn-upsell="6491" data-greenn-one-click="true">
-        QUERO A GÊNESIS COMIGO
+        <span class="rotulo">QUERO A GÊNESIS COMIGO</span>
         <small>Acesso liberado junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Pagamento processado pela Greenn. Cartão em até 12x, Pix ou PayPal.</p>
+      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
     </div>
 
     <div class="gar">
@@ -484,9 +484,10 @@ footer p{max-width:none;margin:0 0 9px}
       <p class="parc">ou <b>12x de R$40,82</b>, com 7 dias de garantia</p>
       <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
          data-greenn-upsell="6491" data-greenn-one-click="true">
-        ATIVAR MEUS 6 MESES DA GÊNESIS
+        <span class="rotulo">ATIVAR MEUS 6 MESES DA GÊNESIS</span>
         <small>Um clique e o acesso chega junto com o do curso</small>
       </a>
+      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
     </div>
 
     <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
@@ -604,7 +605,8 @@ footer p{max-width:none;margin:0 0 9px}
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
-          origem:window.location.href, pagina_origem:window.location.pathname,
+          origem:window.location.href.replace(/([?&]token=)[^&]*/i,'$1[redigido]'),
+          pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID, modo:(modo || MODO_PADRAO),
           data:new Date().toISOString()
         }),
@@ -628,26 +630,66 @@ footer p{max-width:none;margin:0 0 9px}
       return !!(t && t.length > 8);
     } catch(e){ return false; }
   }
-  function oneClickDePe(){
-    // #greenn-upsell-div e injetado no FIM do init deles, logo depois de registrarem
-    // o listener nos botoes. Se ele existe no DOM, o clique esta ligado do lado de la.
+  // A global do upsell.js e window._wf (NAO _greennUp: esse nome so existe no loader
+  // do snippet do painel, e a gente carrega o script por conta propria).
+  // Tres estados possiveis quando o clique acontece:
+  //   'oneclick'  → tokenIsValid && skipConfirmation: eles COBRAM na hora, sem tela
+  //   'modal'     → tokenIsValid sem skipConfirmation: eles abrem a confirmacao deles
+  //   'checkout'  → resto: e o nosso fluxo de sempre
+  // Nos dois primeiros quem atende o clique e o script deles, entao a gente NAO navega.
+  // ⚠️ skipConfirmation vem do meta `skip_confirmation` do SERVIDOR (/api/upsell/<id>/metas),
+  // ou seja, do painel da Greenn. O atributo data-greenn-one-click do HTML e lido mas
+  // nunca decide nada (upsell.js: addEventUpsell recebe o parametro e ignora).
+  function greennEstado(){
     try {
-      return !!(window._greennUp && document.getElementById('greenn-upsell-div'));
-    } catch(e){ return false; }
+      var w = window._wf;
+      if (!w || w.tokenIsValid !== true) return 'checkout';
+      if (!document.getElementById('greenn-upsell-div')) return 'checkout';
+      return w.skipConfirmation === true ? 'oneclick' : 'modal';
+    } catch(e){ return 'checkout'; }
   }
   // exposto pro hxTrack (outro IIFE) carimbar o modo no evento: e o que torna o
   // antes x depois queryavel, mesmo padrao versionado do vslgen2 e do aula0.
-  window.LCY_MODO = function(){ return (temToken() && oneClickDePe()) ? 'oneclick' : 'checkout'; };
+  window.LCY_MODO = function(){ return temToken() ? greennEstado() : 'checkout'; };
 
   function travaBotao(btn){
     try {
       var alvos = document.querySelectorAll('[data-open-checkout]');
       for (var i = 0; i < alvos.length; i++) alvos[i].setAttribute('data-processando','1');
-      var small = btn.querySelector('small');
-      btn.firstChild.nodeValue = ' PROCESSANDO SUA COMPRA… ';
-      if (small) small.textContent = 'Cobrando no cartão da sua compra, não feche a página';
+      var rotulo = btn.querySelector('.rotulo'), small = btn.querySelector('small');
+      if (rotulo) rotulo.textContent = 'PROCESSANDO SUA COMPRA…';
+      // sem afirmar cartao: 49% dos compradores do front vieram de Pix, e a cobranca
+      // repete o metodo da compra anterior, seja ele qual for.
+      if (small) small.textContent = 'Concluindo sua compra, não feche a página';
+
+      // Watchdog: ha caminhos em que a Greenn nao cobra E nao navega (config que nao
+      // carrega, erro de rede, modal fechado no X). Sem isto o CTA fica morto pra sempre
+      // escrevendo "processando", e a pessoa acha que pagou. Nao re-arma o clique de
+      // proposito: se a cobranca passou em silencio, re-armar convida cobranca dupla.
+      var wd = setTimeout(function(){
+        try {
+          if (rotulo) rotulo.textContent = 'SEM CONFIRMAÇÃO ATÉ AGORA';
+          if (small) small.textContent = 'Confira seu e-mail antes de tentar de novo; se em 5 minutos não chegar nada, chame o suporte no WhatsApp.';
+        } catch(e){}
+      }, 15000);
+      window.addEventListener('pagehide', function(){ clearTimeout(wd); });
     } catch(e){}
   }
+
+  // Segundo clique NUNCA pode chegar no listener da Greenn (que fica no proprio
+  // elemento e roda ANTES do nosso, delegado no document). O CSS pointer-events:none
+  // barra o ponteiro mas NAO barra Enter no botao focado — e ali seria cobranca dupla,
+  // sem tela. Captura no document intercepta antes de qualquer listener do alvo.
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var alvo = e.target.closest('[data-greenn-upsell]');
+    if (alvo && alvo.getAttribute('data-processando')) {
+      e.preventDefault();
+      // Immediate: o hxTrack tambem escuta em captura no document e foi registrado
+      // depois deste, entao um clique barrado gravaria checkout_click fantasma.
+      e.stopImmediatePropagation();
+    }
+  }, true);
 
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
@@ -656,12 +698,40 @@ footer p{max-width:none;margin:0 0 9px}
     e.preventDefault();
     if (btn.getAttribute('data-processando')) return;   // one-click cobra de verdade: um clique so
 
-    if (temToken() && oneClickDePe()) {
-      disparaIC('oneclick');
-      travaBotao(btn);
+    var estado = window.LCY_MODO();
+    if (estado !== 'checkout') {
+      disparaIC(estado);
+      // 'oneclick' cobra na hora → trava o botao pra nao existir clique duplo.
+      // 'modal' abre a confirmacao DELES → nao trava (a pessoa pode cancelar e voltar),
+      // mas a gente tambem NAO navega, senao a navegacao passa por cima do modal.
+      if (estado === 'oneclick') travaBotao(btn);
+
+      if (estado === 'modal') {
+        // Rede de seguranca: `addEventUpsell` tem retorno mudo — se as DUAS chamadas
+        // que ele faz no clique quente (metas do upsell + produto) falharem, nao abre
+        // modal, nao cobra, nao redireciona. Como a gente ja matou a navegacao, o
+        // clique morreria em silencio (a pagina de hoje NUNCA teve clique morto).
+        // So navega se NENHUMA cobranca comecou: em 'modal' quem cobra e o botao do
+        // modal deles, que se desabilita ao entrar.
+        var g = document.getElementById('greenn-upsell-div'), viu = false, mo = null;
+        try {
+          mo = new MutationObserver(function(){ if (g && g.classList.contains('ativo')) viu = true; });
+          mo.observe(g, {attributes:true, attributeFilter:['class']});
+        } catch(err){}
+        setTimeout(function(){
+          try { if (mo) mo.disconnect(); } catch(err){}
+          try {
+            var cmp = document.querySelector('.greenn-btn-comprar');
+            // `viu` e latch de proposito: quem abriu e cancelou no "x" nao pode ser
+            // jogado no checkout contra a vontade.
+            if (!viu && !(cmp && cmp.disabled)) window.location.href = montaUrl(btn.getAttribute('href'));
+          } catch(err){}
+        }, 6000);
+      }
+
       return;   // a compra e do upsell.js: ele cobra e leva pro obrigado da Greenn.
                 // Se a API deles recusar ou o token tiver expirado, ELES redirecionam
-                // pro checkout completo sozinhos — o pior caso continua sendo o de hoje.
+                // pro checkout sozinhos — o pior caso continua sendo o de hoje.
     }
 
     disparaIC('checkout');
@@ -683,7 +753,7 @@ footer p{max-width:none;margin:0 0 9px}
       if (document.querySelector('script[src*="/assets/upsell.js"]')) return;
       var s = document.createElement('script');
       s.async = true;
-      s.src = GREENN_UPSELL_JS + '?v=' + Date.now();
+      s.src = GREENN_UPSELL_JS;
       document.head.appendChild(s);
     } catch(e){}
   }
