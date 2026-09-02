@@ -657,10 +657,25 @@ footer p{max-width:none;margin:0 0 9px}
       var alvos = document.querySelectorAll('[data-open-checkout]');
       for (var i = 0; i < alvos.length; i++) alvos[i].setAttribute('data-processando','1');
       var rotulo = btn.querySelector('.rotulo'), small = btn.querySelector('small');
-      if (rotulo) rotulo.textContent = 'PROCESSANDO SUA COMPRA…';
-      // sem afirmar cartao: 49% dos compradores do front vieram de Pix, e a cobranca
-      // repete o metodo da compra anterior, seja ele qual for.
-      if (small) small.textContent = 'Concluindo sua compra, não feche a página';
+      // A Greenn repete o metodo da compra do front, sem opcao de trocar. Entao a tela
+      // tem que falar a verdade de CADA caso: no cartao a compra conclui aqui; no Pix
+      // ela nao conclui, o que sai e um Pix novo pra pagar (metodo em _wf.methodLast,
+      // preenchido no init pelo loadDataLast). Sem saber o metodo, texto neutro.
+      var metodo = '';
+      try { metodo = (window._wf && window._wf.methodLast) || ''; } catch(e){}
+      var titulo = 'PROCESSANDO…', aviso = 'Não feche a página';
+      if (metodo === 'CREDIT_CARD' || metodo === 'TWO_CREDIT_CARDS') {
+        titulo = 'PROCESSANDO SUA COMPRA…';
+        aviso  = 'Concluindo no mesmo cartão, não feche a página';
+      } else if (metodo === 'PIX') {
+        titulo = 'GERANDO O SEU PIX…';
+        aviso  = 'Você vai pagar um Pix de R$397 na próxima tela';
+      } else if (metodo === 'BOLETO') {
+        titulo = 'GERANDO O SEU BOLETO…';
+        aviso  = 'O boleto abre na próxima tela';
+      }
+      if (rotulo) rotulo.textContent = titulo;
+      if (small) small.textContent = aviso;
 
       // Watchdog: ha caminhos em que a Greenn nao cobra E nao navega (config que nao
       // carrega, erro de rede, modal fechado no X). Sem isto o CTA fica morto pra sempre
