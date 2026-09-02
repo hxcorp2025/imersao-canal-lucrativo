@@ -88,6 +88,13 @@ fbq('init','1452797958735774');fbq('track','PageView');
   /* verde e o UNICO ponto fora do preto/vermelho/branco: sinal de pagamento aprovado,
      nao decoracao. Vive so na barra de confirmacao e na etapa 1 do stepper. */
   --verde:#22C55E; --verde-txt:#D6F5E3;
+  /* verde dos BOTOES DE COMPRA (pedido do Matheus, 02/09). Escolhido por contraste
+     medido, nao por achismo: no fundo #0A0A0A o topo do gradiente da 6,01:1 (o
+     vermelho antigo dava 4,95:1) e a base da 5,02:1 contra o texto branco, que e
+     onde vive o <small> de 13px e onde o vermelho antigo reprovava com 4,00:1.
+     Tom deliberadamente mais fechado que o --verde de "pagamento aprovado" (#22C55E),
+     pra nao embaralhar os dois significados na mesma tela. */
+  --verde-cta:#16A34A; --verde-cta-esc:#15803D;
   --fd:'Bricolage Grotesque',system-ui,sans-serif;
   --fb:'Geist',system-ui,-apple-system,sans-serif;
   --fm:'JetBrains Mono',ui-monospace,monospace;
@@ -295,19 +302,19 @@ p{margin:0 0 18px;max-width:66ch}
 /* CTA */
 .cta{
   display:block;width:100%;max-width:440px;margin:22px auto 10px;
-  background:linear-gradient(180deg,var(--vermelho),var(--vermelho-esc));
+  background:linear-gradient(180deg,var(--verde-cta),var(--verde-cta-esc));
   color:var(--branco);text-decoration:none;text-align:center;
   font-family:var(--fd);font-weight:800;font-size:clamp(17px,4.2vw,21px);
   letter-spacing:-.01em;padding:20px 24px;border-radius:14px;border:0;cursor:pointer;
-  box-shadow:0 10px 30px rgba(255,0,0,.24);
+  box-shadow:0 10px 30px rgba(22,163,74,.28);
   transition:transform .16s ease,box-shadow .16s ease;
 }
-.cta:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(255,0,0,.32)}
+.cta:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(22,163,74,.38)}
 .cta:active{transform:translateY(0)}
 /* one-click cobra de verdade no primeiro clique: o botao trava na hora pra nao
    existir cobranca dupla. O script da Greenn so sabe desabilitar <button>, e o
    nosso CTA e <a> — entao o guard e nosso. Altura preservada (mesmo padding). */
-.cta[data-processando]{pointer-events:none;opacity:.72;transform:none;box-shadow:0 10px 30px rgba(255,0,0,.12)}
+.cta[data-processando]{pointer-events:none;opacity:.72;transform:none;box-shadow:0 10px 30px rgba(22,163,74,.14)}
 .cta small{display:block;font-family:var(--fb);font-weight:500;font-size:13px;opacity:.9;margin-top:5px;letter-spacing:0}
 .sob-cta{text-align:center;color:var(--g3);font-size:13.5px;margin:0 auto;max-width:44ch}
 
