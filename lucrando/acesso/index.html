@@ -103,6 +103,16 @@ body{
 .wrap{width:var(--col);margin:0 auto;padding:0 20px}
 img{max-width:100%;height:auto}
 
+/* ── blindagem contra o CSS do upsell.js da Greenn ─────────
+   O script deles injeta um <style> em runtime, ou seja, DEPOIS do nosso no head.
+   Dentro dele vem `body{font-family:Montserrat}` e `p{font-family:Montserrat}`:
+   mesma especificidade que a nossa, ganha na ordem, e a tipografia da pagina
+   inteira vira Montserrat. Duas tags (0,0,2) passam na frente das deles (0,0,1)
+   e nao competem com nenhuma regra nossa de classe (0,1,0), entao isto e cirurgico:
+   devolve o body pra fonte da casa e faz cada <p> herdar do proprio pai. */
+html body{font-family:var(--fb)}
+html body p{font-family:inherit}
+
 /* ── barra: pagamento confirmado ─────────
    Full-bleed e primeiro no DOM porque responde a pergunta com que a pessoa
    chega ("meu pagamento passou?"). Ansiedade resolvida antes do primeiro scroll. */
@@ -294,6 +304,10 @@ p{margin:0 0 18px;max-width:66ch}
 }
 .cta:hover{transform:translateY(-2px);box-shadow:0 14px 38px rgba(255,0,0,.32)}
 .cta:active{transform:translateY(0)}
+/* one-click cobra de verdade no primeiro clique: o botao trava na hora pra nao
+   existir cobranca dupla. O script da Greenn so sabe desabilitar <button>, e o
+   nosso CTA e <a> — entao o guard e nosso. Altura preservada (mesmo padding). */
+.cta[data-processando]{pointer-events:none;opacity:.72;transform:none;box-shadow:0 10px 30px rgba(255,0,0,.12)}
 .cta small{display:block;font-family:var(--fb);font-weight:500;font-size:13px;opacity:.9;margin-top:5px;letter-spacing:0}
 .sob-cta{text-align:center;color:var(--g3);font-size:13.5px;margin:0 auto;max-width:44ch}
 
@@ -445,11 +459,15 @@ footer p{max-width:none;margin:0 0 9px}
       <p class="parc">ou <b>12x de R$40,82</b> no cartão</p>
       <span class="cupom-nota">Postando 2 vídeos por semana, sai menos de R$8 por vídeo</span>
 
-      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1">
-        QUERO A GÊNESIS COMIGO
+      <!-- data-greenn-*: o upsell.js da Greenn escuta o clique NESTE elemento (nao precisa
+           ser <button>) e cobra no cartao que ja pagou o front, sem checkout. O href continua
+           valendo como fallback: sem token valido, o clique vai pro checkout completo. -->
+      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
+         data-greenn-upsell="6491" data-greenn-one-click="true">
+        <span class="rotulo">QUERO A GÊNESIS COMIGO</span>
         <small>Acesso liberado junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Pagamento processado pela Greenn. Cartão em até 12x, Pix ou PayPal.</p>
+      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
     </div>
 
     <div class="gar">
@@ -464,10 +482,12 @@ footer p{max-width:none;margin:0 0 9px}
       <p class="olho" style="margin-bottom:14px">Saindo desta página, essa condição se encerra</p>
       <div class="por"><span class="cif">R$</span>397</div>
       <p class="parc">ou <b>12x de R$40,82</b>, com 7 dias de garantia</p>
-      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1">
-        ATIVAR MEUS 6 MESES DA GÊNESIS
+      <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
+         data-greenn-upsell="6491" data-greenn-one-click="true">
+        <span class="rotulo">ATIVAR MEUS 6 MESES DA GÊNESIS</span>
         <small>Um clique e o acesso chega junto com o do curso</small>
       </a>
+      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
     </div>
 
     <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
@@ -502,6 +522,14 @@ footer p{max-width:none;margin:0 0 9px}
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
   var HEADLINE = window.LCY_HEADLINE || 'aula0';   // fallback alinhado a global (licao do vsl_id)
+
+  // ── ONE-CLICK DA GREENN ────────────────────
+  // A pessoa chega aqui pelo redirect da thank-you do front, e a Greenn ja carimba
+  // ?token=...&s_id=... na URL. Com o token valido, o upsell.js deles cobra no cartao
+  // que acabou de pagar o front: nada de checkout, nada de digitar cartao de novo.
+  // Sem token (ou se o script deles falhar), tudo cai no CHECKOUT_URL como sempre foi.
+  var GREENN_UPSELL_JS = 'https://payfast.greenn.com.br/assets/upsell.js';
+  var MODO_PADRAO = 'checkout';   // rastreio versionado: 'oneclick' | 'checkout'
 
   // ══════════════════════════════════════════
   // UTM / fbclid  →  checkout + CAPI
@@ -554,7 +582,7 @@ footer p{max-width:none;margin:0 0 9px}
   }
 
   var icDisparado = false;
-  function disparaIC(){
+  function disparaIC(modo){
     if (icDisparado) return;
     icDisparado = true;
     var t = rastreio();
@@ -577,8 +605,9 @@ footer p{max-width:none;margin:0 0 9px}
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
-          origem:window.location.href, pagina_origem:window.location.pathname,
-          vsl_id:VSL_ID, page_id:PAGE_ID,
+          origem:window.location.href.replace(/([?&]token=)[^&]*/i,'$1[redigido]'),
+          pagina_origem:window.location.pathname,
+          vsl_id:VSL_ID, page_id:PAGE_ID, modo:(modo || MODO_PADRAO),
           data:new Date().toISOString()
         }),
         keepalive:true
@@ -586,17 +615,150 @@ footer p{max-width:none;margin:0 0 9px}
     } catch(e){}
   }
 
+  // ══════════════════════════════════════════
+  // ONE-CLICK  vs  CHECKOUT — quem atende o clique
+  //
+  // O upsell.js da Greenn escuta o clique no PROPRIO elemento; o nosso listener e
+  // delegado no document. Como bubbling sobe do alvo, o listener deles ja rodou
+  // quando este aqui executa — e preventDefault() nao cancela outro listener, so a
+  // navegacao do <a>. Entao a regra e simples: se o one-click esta de pe, a gente
+  // segura a navegacao e sai da frente; se nao esta, faz exatamente o que sempre fez.
+  // ══════════════════════════════════════════
+  function temToken(){
+    try {
+      var t = new URLSearchParams(window.location.search).get('token');
+      return !!(t && t.length > 8);
+    } catch(e){ return false; }
+  }
+  // A global do upsell.js e window._wf (NAO _greennUp: esse nome so existe no loader
+  // do snippet do painel, e a gente carrega o script por conta propria).
+  // Tres estados possiveis quando o clique acontece:
+  //   'oneclick'  → tokenIsValid && skipConfirmation: eles COBRAM na hora, sem tela
+  //   'modal'     → tokenIsValid sem skipConfirmation: eles abrem a confirmacao deles
+  //   'checkout'  → resto: e o nosso fluxo de sempre
+  // Nos dois primeiros quem atende o clique e o script deles, entao a gente NAO navega.
+  // ⚠️ skipConfirmation vem do meta `skip_confirmation` do SERVIDOR (/api/upsell/<id>/metas),
+  // ou seja, do painel da Greenn. O atributo data-greenn-one-click do HTML e lido mas
+  // nunca decide nada (upsell.js: addEventUpsell recebe o parametro e ignora).
+  function greennEstado(){
+    try {
+      var w = window._wf;
+      if (!w || w.tokenIsValid !== true) return 'checkout';
+      if (!document.getElementById('greenn-upsell-div')) return 'checkout';
+      return w.skipConfirmation === true ? 'oneclick' : 'modal';
+    } catch(e){ return 'checkout'; }
+  }
+  // exposto pro hxTrack (outro IIFE) carimbar o modo no evento: e o que torna o
+  // antes x depois queryavel, mesmo padrao versionado do vslgen2 e do aula0.
+  window.LCY_MODO = function(){ return temToken() ? greennEstado() : 'checkout'; };
+
+  function travaBotao(btn){
+    try {
+      var alvos = document.querySelectorAll('[data-open-checkout]');
+      for (var i = 0; i < alvos.length; i++) alvos[i].setAttribute('data-processando','1');
+      var rotulo = btn.querySelector('.rotulo'), small = btn.querySelector('small');
+      if (rotulo) rotulo.textContent = 'PROCESSANDO SUA COMPRA…';
+      // sem afirmar cartao: 49% dos compradores do front vieram de Pix, e a cobranca
+      // repete o metodo da compra anterior, seja ele qual for.
+      if (small) small.textContent = 'Concluindo sua compra, não feche a página';
+
+      // Watchdog: ha caminhos em que a Greenn nao cobra E nao navega (config que nao
+      // carrega, erro de rede, modal fechado no X). Sem isto o CTA fica morto pra sempre
+      // escrevendo "processando", e a pessoa acha que pagou. Nao re-arma o clique de
+      // proposito: se a cobranca passou em silencio, re-armar convida cobranca dupla.
+      var wd = setTimeout(function(){
+        try {
+          if (rotulo) rotulo.textContent = 'SEM CONFIRMAÇÃO ATÉ AGORA';
+          if (small) small.textContent = 'Confira seu e-mail antes de tentar de novo; se em 5 minutos não chegar nada, chame o suporte no WhatsApp.';
+        } catch(e){}
+      }, 15000);
+      window.addEventListener('pagehide', function(){ clearTimeout(wd); });
+    } catch(e){}
+  }
+
+  // Segundo clique NUNCA pode chegar no listener da Greenn (que fica no proprio
+  // elemento e roda ANTES do nosso, delegado no document). O CSS pointer-events:none
+  // barra o ponteiro mas NAO barra Enter no botao focado — e ali seria cobranca dupla,
+  // sem tela. Captura no document intercepta antes de qualquer listener do alvo.
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var alvo = e.target.closest('[data-greenn-upsell]');
+    if (alvo && alvo.getAttribute('data-processando')) {
+      e.preventDefault();
+      // Immediate: o hxTrack tambem escuta em captura no document e foi registrado
+      // depois deste, entao um clique barrado gravaria checkout_click fantasma.
+      e.stopImmediatePropagation();
+    }
+  }, true);
+
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
     var btn = e.target.closest('[data-open-checkout]');
     if (!btn) return;
     e.preventDefault();
-    disparaIC();
+    if (btn.getAttribute('data-processando')) return;   // one-click cobra de verdade: um clique so
+
+    var estado = window.LCY_MODO();
+    if (estado !== 'checkout') {
+      disparaIC(estado);
+      // 'oneclick' cobra na hora → trava o botao pra nao existir clique duplo.
+      // 'modal' abre a confirmacao DELES → nao trava (a pessoa pode cancelar e voltar),
+      // mas a gente tambem NAO navega, senao a navegacao passa por cima do modal.
+      if (estado === 'oneclick') travaBotao(btn);
+
+      if (estado === 'modal') {
+        // Rede de seguranca: `addEventUpsell` tem retorno mudo — se as DUAS chamadas
+        // que ele faz no clique quente (metas do upsell + produto) falharem, nao abre
+        // modal, nao cobra, nao redireciona. Como a gente ja matou a navegacao, o
+        // clique morreria em silencio (a pagina de hoje NUNCA teve clique morto).
+        // So navega se NENHUMA cobranca comecou: em 'modal' quem cobra e o botao do
+        // modal deles, que se desabilita ao entrar.
+        var g = document.getElementById('greenn-upsell-div'), viu = false, mo = null;
+        try {
+          mo = new MutationObserver(function(){ if (g && g.classList.contains('ativo')) viu = true; });
+          mo.observe(g, {attributes:true, attributeFilter:['class']});
+        } catch(err){}
+        setTimeout(function(){
+          try { if (mo) mo.disconnect(); } catch(err){}
+          try {
+            var cmp = document.querySelector('.greenn-btn-comprar');
+            // `viu` e latch de proposito: quem abriu e cancelou no "x" nao pode ser
+            // jogado no checkout contra a vontade.
+            if (!viu && !(cmp && cmp.disabled)) window.location.href = montaUrl(btn.getAttribute('href'));
+          } catch(err){}
+        }, 6000);
+      }
+
+      return;   // a compra e do upsell.js: ele cobra e leva pro obrigado da Greenn.
+                // Se a API deles recusar ou o token tiver expirado, ELES redirecionam
+                // pro checkout sozinhos — o pior caso continua sendo o de hoje.
+    }
+
+    disparaIC('checkout');
     // passa o href atual: se algum script (VTurb) ja injetou a conversion key
     // v3_ no botao, ela sobrevive a reescrita (gap corrigido vs pagina mae)
     var url = montaUrl(btn.getAttribute('href'));
     setTimeout(function(){ window.location.href = url; }, 250);
   }, false);
+
+  // ══════════════════════════════════════════
+  // Carrega o upsell.js da Greenn. No 'load' porque a oferta so aparece no pitch
+  // (08:35 de video), entao ha minutos de folga: nada disso disputa a primeira tela.
+  // O init deles procura o botao por ate 10s — os nossos dois CTAs ja estao no DOM
+  // desde o inicio (a oferta e revelada por classe, nao injetada), entao ele acha.
+  // ══════════════════════════════════════════
+  function carregaGreenn(){
+    if (!temToken()) return;   // sem token nao existe one-click: nao carrega nada
+    try {
+      if (document.querySelector('script[src*="/assets/upsell.js"]')) return;
+      var s = document.createElement('script');
+      s.async = true;
+      s.src = GREENN_UPSELL_JS;
+      document.head.appendChild(s);
+    } catch(e){}
+  }
+  if (document.readyState === 'complete') carregaGreenn();
+  else window.addEventListener('load', carregaGreenn);
 
   // ══════════════════════════════════════════
   // BOTAO NATIVO DO VTURB → mesma atribuicao dos nossos CTAs
@@ -761,7 +923,11 @@ footer p{max-width:none;margin:0 0 9px}
     var fbclid=q('fbclid');
     return Object.assign({
       session_id:sid(),
-      page_host:location.hostname, page_path:location.pathname, page_url:location.href,
+      // token da Greenn REDIGIDO: com o one-click ligado ele deixa de ser um id inocente
+      // e vira credencial de cobranca no cartao do comprador. Nao tem por que morar no
+      // nosso banco. (RLS ja bloqueia leitura publica; isto e o cinto alem do suspensorio.)
+      page_host:location.hostname, page_path:location.pathname,
+      page_url:location.href.replace(/([?&]token=)[^&]*/i,'$1[redigido]'),
       referrer:document.referrer||'',
       utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
       fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
@@ -782,7 +948,7 @@ footer p{max-width:none;margin:0 0 9px}
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
-    if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||''});return;}
+    if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||'',modo:(window.LCY_MODO?window.LCY_MODO():'checkout')});return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
