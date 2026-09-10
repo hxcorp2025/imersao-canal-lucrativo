@@ -474,7 +474,7 @@ footer p{max-width:none;margin:0 0 9px}
         <span class="rotulo">QUERO A GÊNESIS COMIGO</span>
         <small>Acesso liberado junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
+      <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
     </div>
 
     <div class="gar">
@@ -492,9 +492,9 @@ footer p{max-width:none;margin:0 0 9px}
       <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
          data-greenn-upsell="6491" data-greenn-one-click="true">
         <span class="rotulo">ATIVAR MEUS 6 MESES DA GÊNESIS</span>
-        <small>Um clique e o acesso chega junto com o do curso</small>
+        <small>O acesso chega junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Ao clicar, a compra é feita na hora com os mesmos dados de pagamento que você acabou de usar. Sem novo checkout.</p>
+      <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
     </div>
 
     <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
@@ -564,7 +564,10 @@ footer p{max-width:none;margin:0 0 9px}
     return v ? (v + '__' + s) : s;
   }
 
-  function montaUrl(hrefAtual){
+  // comPrefill: SO no ponto de navegacao (location.href). Nunca no setAttribute('href')
+  // dos botoes do VTurb — o hxTrack grava esse atributo e o GTM/GA4 leem Click URL:
+  // PII (nome, e-mail, telefone, CPF) nao pode morar no DOM nem no nosso banco.
+  function montaUrl(hrefAtual, comPrefill){
     var t = rastreio(), params = [];
     // Preserva parametros que OUTROS scripts ja injetaram no botao antes da gente,
     // em especial a conversion key do VTurb (comeca com v3_, viaja em src/sid/xcod/subN
@@ -584,6 +587,7 @@ footer p{max-width:none;margin:0 0 9px}
       if (t[k]) params.push(k + '=' + encodeURIComponent(t[k]));
     });
     params.push('utm_content=' + encodeURIComponent(enriquece(t.utm_content)));
+    if (comPrefill) prefill().forEach(function(par){ params.push(par); });
     var sep = CHECKOUT_URL.indexOf('?') > -1 ? '&' : '?';
     return CHECKOUT_URL + sep + params.join('&');
   }
@@ -647,13 +651,45 @@ footer p{max-width:none;margin:0 0 9px}
   // ⚠️ skipConfirmation vem do meta `skip_confirmation` do SERVIDOR (/api/upsell/<id>/metas),
   // ou seja, do painel da Greenn. O atributo data-greenn-one-click do HTML e lido mas
   // nunca decide nada (upsell.js: addEventUpsell recebe o parametro e ignora).
+  // ⚠️ 10/09: one-click SO pra cartao. A Greenn repete o metodo do front sem opcao de
+  // trocar; no Pix o clique gerava um pedido novo e largava a pessoa na pagina "obrigado"
+  // deles com um QR (6 pedidos gerados, 0 pagos, 02→10/09; antes, no checkout, 11 de 11
+  // Pix eram pagos e 2 de 13 trocavam pro cartao). Pix/boleto/PayPal voltam pro checkout,
+  // com os dados ja preenchidos (`prefill`) — a pessoa nao digita nada, so escaneia.
+  //   'checkout_prefill' → token valido, metodo nao-cartao (ou ja cobrou nesta sessao)
+  function ehCartao(m){ return m === 'CREDIT_CARD' || m === 'TWO_CREDIT_CARDS'; }
+  var OC_FEITO = 'lcy_oc_feito';
+  function jaCobrou(){ try { return sessionStorage.getItem(OC_FEITO) === '1'; } catch(e){ return false; } }
+  function marcaCobrou(){ try { sessionStorage.setItem(OC_FEITO, '1'); } catch(e){} }
   function greennEstado(){
     try {
       var w = window._wf;
       if (!w || w.tokenIsValid !== true) return 'checkout';
       if (!document.getElementById('greenn-upsell-div')) return 'checkout';
+      if (!ehCartao(w.methodLast)) return 'checkout_prefill';
+      // Cobrou uma vez nesta aba (cartao) e a pessoa voltou pela seta: a 2ª tentativa vai
+      // pelo checkout, nunca por outra cobranca silenciosa. Cartao recusado tambem cai
+      // aqui — e no checkout ela pode tentar outro cartao ou Pix.
+      if (jaCobrou()) return 'checkout_prefill';
       return w.skipConfirmation === true ? 'oneclick' : 'modal';
     } catch(e){ return 'checkout'; }
+  }
+  function ehCheckout(estado){ return estado === 'checkout' || estado === 'checkout_prefill'; }
+
+  // Dados do comprador que o upsell.js ja validou (loadDataLast) → query do checkout.
+  // Sao os mesmos parametros que o proprio upsell.js usa quando cai no checkout
+  // (`buyerQuery`: fn/em/ph/document/up_id). So entram com token valido.
+  function prefill(){
+    var p = [];
+    try {
+      var w = window._wf;
+      if (!w || w.tokenIsValid !== true || !w.userLast) return p;
+      var u = w.userLast;
+      function add(k, v){ if (v) p.push(k + '=' + encodeURIComponent(String(v))); }
+      add('fn', u.name); add('em', u.email); add('ph', u.cellphone); add('document', u.document);
+      add('up_id', '6491');
+    } catch(e){}
+    return p;
   }
   // exposto pro hxTrack (outro IIFE) carimbar o modo no evento: e o que torna o
   // antes x depois queryavel, mesmo padrao versionado do vslgen2 e do aula0.
@@ -702,6 +738,14 @@ footer p{max-width:none;margin:0 0 9px}
   // elemento e roda ANTES do nosso, delegado no document). O CSS pointer-events:none
   // barra o ponteiro mas NAO barra Enter no botao focado — e ali seria cobranca dupla,
   // sem tela. Captura no document intercepta antes de qualquer listener do alvo.
+  function vaiProCheckout(btn, estado){
+    disparaIC(estado);
+    // passa o href atual: se algum script (VTurb) ja injetou a conversion key
+    // v3_ no botao, ela sobrevive a reescrita (gap corrigido vs pagina mae)
+    var url = montaUrl(btn.getAttribute('href'), true);
+    setTimeout(function(){ window.location.href = url; }, 250);
+  }
+
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
     var alvo = e.target.closest('[data-greenn-upsell]');
@@ -710,6 +754,17 @@ footer p{max-width:none;margin:0 0 9px}
       // Immediate: o hxTrack tambem escuta em captura no document e foi registrado
       // depois deste, entao um clique barrado gravaria checkout_click fantasma.
       e.stopImmediatePropagation();
+      return;
+    }
+    // Checkout com token valido (Pix etc.): o listener da Greenn mora NO elemento e
+    // rodaria antes do nosso bubble — e com token valido ele COBRA/gera Pix, mesmo a
+    // gente querendo o checkout. stopPropagation aqui (captura no document) impede o
+    // clique de chegar no elemento; os irmaos em captura no document (hxTrack) seguem.
+    var btn = e.target.closest('[data-open-checkout]');
+    if (btn && window.LCY_MODO() === 'checkout_prefill') {
+      e.preventDefault();
+      e.stopPropagation();
+      vaiProCheckout(btn, 'checkout_prefill');
     }
   }, true);
 
@@ -721,12 +776,12 @@ footer p{max-width:none;margin:0 0 9px}
     if (btn.getAttribute('data-processando')) return;   // one-click cobra de verdade: um clique so
 
     var estado = window.LCY_MODO();
-    if (estado !== 'checkout') {
+    if (!ehCheckout(estado)) {
       disparaIC(estado);
       // 'oneclick' cobra na hora → trava o botao pra nao existir clique duplo.
       // 'modal' abre a confirmacao DELES → nao trava (a pessoa pode cancelar e voltar),
       // mas a gente tambem NAO navega, senao a navegacao passa por cima do modal.
-      if (estado === 'oneclick') travaBotao(btn);
+      if (estado === 'oneclick') { travaBotao(btn); marcaCobrou(); }
 
       if (estado === 'modal') {
         // Rede de seguranca: `addEventUpsell` tem retorno mudo — se as DUAS chamadas
@@ -746,7 +801,7 @@ footer p{max-width:none;margin:0 0 9px}
             var cmp = document.querySelector('.greenn-btn-comprar');
             // `viu` e latch de proposito: quem abriu e cancelou no "x" nao pode ser
             // jogado no checkout contra a vontade.
-            if (!viu && !(cmp && cmp.disabled)) window.location.href = montaUrl(btn.getAttribute('href'));
+            if (!viu && !(cmp && cmp.disabled)) window.location.href = montaUrl(btn.getAttribute('href'), true);
           } catch(err){}
         }, 6000);
       }
@@ -756,12 +811,43 @@ footer p{max-width:none;margin:0 0 9px}
                 // pro checkout sozinhos — o pior caso continua sendo o de hoje.
     }
 
-    disparaIC('checkout');
-    // passa o href atual: se algum script (VTurb) ja injetou a conversion key
-    // v3_ no botao, ela sobrevive a reescrita (gap corrigido vs pagina mae)
-    var url = montaUrl(btn.getAttribute('href'));
-    setTimeout(function(){ window.location.href = url; }, 250);
+    vaiProCheckout(btn, estado);
   }, false);
+
+  // ══════════════════════════════════════════
+  // TEXTO SOB O BOTAO fala a verdade de cada caso. O HTML nasce neutro; quando o
+  // upsell.js valida o token (async, sem evento), a gente descobre o metodo e ajusta.
+  // ══════════════════════════════════════════
+  var TXT = {
+    oneclick:        'Ao clicar, a compra é feita na hora no mesmo cartão que você acabou de usar. Sem novo checkout.',
+    checkout_prefill:'Você vai pro checkout com nome, e-mail e CPF já preenchidos. É só escanear o Pix ou, se preferir, pagar no cartão.',
+    voltou:          'Já clicou antes? Confira seu e-mail antes de comprar de novo. Aqui você vai pro checkout com seus dados preenchidos.'
+  };
+  function ajustaTexto(){
+    try {
+      var estado = window.LCY_MODO(), t = null;
+      if (estado === 'oneclick') t = TXT.oneclick;
+      else if (estado === 'checkout_prefill') t = jaCobrou() && ehCartao(window._wf && window._wf.methodLast) ? TXT.voltou : TXT.checkout_prefill;
+      if (!t) return false;
+      var els = document.querySelectorAll('.sob-cta');
+      for (var i = 0; i < els.length; i++) els[i].textContent = t;
+      return true;
+    } catch(e){ return false; }
+  }
+  var esperaLigada = false;
+  function esperaGreenn(){
+    if (!temToken() || esperaLigada) return;       // sem token o texto neutro ja e a verdade
+    esperaLigada = true;
+    // "Pronto" = token invalido (texto neutro fica) OU token valido E o div deles ja
+    // injetado (injectBaseHtml roda DEPOIS de loadDataLast: sem o div, greennEstado
+    // ainda devolve 'checkout' e o texto sairia errado). Teto de 30s.
+    var tent = 0, iv = setInterval(function(){
+      tent++;
+      var w = window._wf;
+      var pronto = w && (w.tokenIsValid === false || (w.tokenIsValid === true && document.getElementById('greenn-upsell-div')));
+      if (pronto || tent > 60) { clearInterval(iv); ajustaTexto(); }
+    }, 500);
+  }
 
   // ══════════════════════════════════════════
   // Carrega o upsell.js da Greenn. No 'load' porque a oferta so aparece no pitch
@@ -777,8 +863,12 @@ footer p{max-width:none;margin:0 0 9px}
       s.async = true;
       s.src = GREENN_UPSELL_JS;
       document.head.appendChild(s);
+      esperaGreenn();   // o poll do texto conta a partir DAQUI (o 'load' em 3G pode passar de 30s)
     } catch(e){}
   }
+  // Voltou pela seta com a pagina restaurada do bfcache (sem reload): o CTA ficaria
+  // travado em "PROCESSANDO…" pra sempre. Recarregar faz a rota do flag acontecer.
+  window.addEventListener('pageshow', function(e){ if (e.persisted) location.reload(); });
   if (document.readyState === 'complete') carregaGreenn();
   else window.addEventListener('load', carregaGreenn);
 
@@ -970,7 +1060,7 @@ footer p{max-width:none;margin:0 0 9px}
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
-    if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||'',modo:(window.LCY_MODO?window.LCY_MODO():'checkout')});return;}
+    if(pay){var met='';try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document)=)[^&]*/gi,'$1[redigido]'),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met});return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
