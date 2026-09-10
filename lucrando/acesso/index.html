@@ -327,6 +327,11 @@ p{margin:0 0 18px;max-width:66ch}
 .cta[data-processando]{pointer-events:none;opacity:.72;transform:none;box-shadow:0 10px 30px rgba(22,163,74,.14)}
 .cta small{display:block;font-family:var(--fb);font-weight:500;font-size:13px;opacity:.9;margin-top:5px;letter-spacing:0}
 .sob-cta{text-align:center;color:var(--g3);font-size:13.5px;margin:0 auto;max-width:44ch}
+/* CTA sob o video: escondido ate o pitch (abre() poe .aberto), como a oferta */
+.cta-video{display:none;width:100%;max-width:400px;margin:0 auto}
+.cta-video.aberto{display:block}
+.cta-video.aberto + .dica{display:none}   /* a dica "assista ate o final" nao faz sentido no pitch */
+.cta-video .cta{margin:14px auto 8px}
 
 /* garantia */
 .gar{
@@ -444,6 +449,19 @@ footer p{max-width:none;margin:0 0 9px}
       </script>
       <p class="assinatura"><b>Aula 0</b> · João Adolfo</p>
     </div>
+  </div>
+
+  <!-- CTA SOB O VÍDEO (10/09): no lugar onde ficava o botão nativo do VTurb (72% dos cliques
+       vinham dali). Revelado no pitch pela abre(), junto com a oferta; o empurrão de scroll
+       do VTurb centraliza o pé do vídeo, então ele nasce no centro da tela. Mesmos atributos
+       dos CTAs da oferta: herda one-click/prefill da Greenn, métrica do VTurb, trava e hxTrack. -->
+  <div id="ctaVideo" class="cta-video">
+    <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
+       data-greenn-upsell="6491" data-greenn-one-click="true">
+      <span class="rotulo">GARANTIR 6 MESES DA GÊNESIS</span>
+      <small>R$397 ou 12x de R$40,82 · acesso junto com o do curso</small>
+    </a>
+    <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
   </div>
 
   <p class="dica"><span class="pulso"></span>Assista com o som ligado, até o final</p>
@@ -1005,6 +1023,7 @@ footer p{max-width:none;margin:0 0 9px}
     if (jaAberto || !oferta) return;
     jaAberto = true;
     oferta.classList.add('aberto');
+    try { var cv = document.getElementById('ctaVideo'); if (cv) cv.classList.add('aberto'); } catch(e){}
     // Oferta na tela = o proximo clique vai pro checkout. Abrir DNS+TCP+TLS agora
     // faz o handshake acontecer enquanto ela le, e nao no clique quente.
     try {
