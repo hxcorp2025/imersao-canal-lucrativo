@@ -194,7 +194,8 @@ html body p{font-family:inherit}
 .palco{width:100%;display:flex;justify-content:center}
 /* Sem padding lateral de proposito: cada pixel de largura conta porque o
    arquivo no VTurb tem só 404px de largura nativa. A moldura vermelha vira
-   uma linha em volta do vídeo. NÃO colocar overflow:hidden aqui - o botao
+   uma linha em volta do vídeo. (Desde 10/09 o botao nativo do VTurb fica escondido
+   com height:0 — ver "BOTAO UNICO" abaixo.) NÃO colocar overflow:hidden aqui - o botao
    nativo do VTurb nasce dentro do player e seria cortado. */
 .player-card{
   width:100%;max-width:400px;padding:0;border-radius:20px;
@@ -209,12 +210,21 @@ html body p{font-family:inherit}
    Com altura travada ele nasce pra fora da caixa; com overflow:hidden, sumiria. */
 vturb-smartplayer{display:block;width:100%}
 vturb-smartplayer:empty{aspect-ratio:9/16}
+/* 10/09 — BOTAO UNICO: o botao nativo do VTurb some da tela, mas fica no DOM. E nele
+   que o VTurb mede view/clique do CTA (evento por tempo, nao por visibilidade) e e o
+   player que da a chave de conversao (src=v3_...). Quem aparece e so o nosso CTA, que
+   no clique dispara a metrica deles e carrega a chave (ver "BOTAO UNICO" no script).
+   72% dos cliques iam pelo botao deles, direto pro checkout completo, sem one-click. */
+/* visibility+height:0, NUNCA display:none: o CTA deles tem scroll automatico no pitch e
+   o VTurb fica em loop de polling (setInterval 0) esperando offsetParent que nunca vem.
+   Assim ele acha o elemento, faz o empurrao de scroll de sempre e nao fica focavel. */
+vturb-smartplayer .vturb-light-dom-inject{visibility:hidden!important;height:0!important;overflow:hidden!important;margin:0!important;padding:0!important;pointer-events:none!important}
 /* o arredondamento vai no filho certo (a thumbnail); no host cortaria o botao */
 /* so os cantos de cima: o video encosta no topo do card (19px = 20 do card - 1 da borda) */
 vturb-smartplayer .thumbnail{border-radius:19px 19px 0 0;overflow:hidden}
 /* Cores do player pela PAGINA: o VTurb escreve essas variaveis inline no proprio
    elemento, entao !important daqui vence sem precisar do painel. Mata a fakebar e
-   o resume roxos (#674EA7) e o big play azul (#1890FF). O botao nativo segue VERDE
+   o resume roxos (#674EA7) e o big play azul (#1890FF). O botao nativo (escondido desde 10/09) segue VERDE
    por decisao do Matheus (25/08) - nao tem override de cor nele de proposito. */
 vturb-smartplayer{
   --fakebar-background-color:#FF0000!important;
@@ -588,6 +598,9 @@ footer p{max-width:none;margin:0 0 9px}
     });
     params.push('utm_content=' + encodeURIComponent(enriquece(t.utm_content)));
     if (comPrefill) prefill().forEach(function(par){ params.push(par); });
+    // chave de conversao do VTurb (so se o href de origem ainda nao trouxe uma)
+    var temSrc = params.some(function(p){ return p.indexOf('src=') === 0; });
+    if (!temSrc) { var kv = chaveVturb(); if (kv) params.push('src=' + encodeURIComponent(kv)); }
     var sep = CHECKOUT_URL.indexOf('?') > -1 ? '&' : '?';
     return CHECKOUT_URL + sep + params.join('&');
   }
@@ -616,9 +629,10 @@ footer p{max-width:none;margin:0 0 9px}
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
-          origem:window.location.href.replace(/([?&]token=)[^&]*/i,'$1[redigido]'),
+          origem:window.location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
           pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID, modo:(modo || MODO_PADRAO),
+          vturb_key:(chaveVturb() || null),   // reconcilia venda one-click (sem URL) com a sessao do VTurb
           data:new Date().toISOString()
         }),
         keepalive:true
@@ -738,16 +752,54 @@ footer p{max-width:none;margin:0 0 9px}
   // elemento e roda ANTES do nosso, delegado no document). O CSS pointer-events:none
   // barra o ponteiro mas NAO barra Enter no botao focado — e ali seria cobranca dupla,
   // sem tela. Captura no document intercepta antes de qualquer listener do alvo.
+  // ══════════════════════════════════════════
+  // BOTAO UNICO (10/09): nosso CTA e o unico visivel; o do VTurb fica escondido no DOM.
+  // No clique do nosso: (1) clique sintetico no <a> do anchor deles, com a navegacao
+  // cancelada em captura — o handler deles ainda roda (urlUpdater + evento "clicked"
+  // no analytics), sem abrir aba; (2) a chave v3_ do player vai no `src` de toda
+  // navegacao nossa pro checkout, que e como a Greenn devolve a venda pro VTurb.
+  // One-click no cartao nao passa por URL: essa venda nao vira conversao no VTurb
+  // (ja era assim desde 02/09). Lido no fonte do smartplayer v4 em 10/09.
+  // ══════════════════════════════════════════
+  function chaveVturb(){
+    try {
+      var p = document.querySelector('vturb-smartplayer');
+      var k = p && p.conversionKey;
+      if (k && /^v3_/.test(String(k))) return String(k);
+    } catch(e){}
+    try {
+      var a = document.querySelector('vturb-anchor-button a[href]');
+      var m = a && String(a.getAttribute('href')).match(/[?&]src=(v3_[^&]+)/);
+      if (m) return decodeURIComponent(m[1]);
+    } catch(e){}
+    return '';
+  }
+  function cliqueVturb(){
+    try {
+      var a = document.querySelector('vturb-anchor-button a');
+      if (!a) return false;
+      var ev = new MouseEvent('click', {bubbles:true, cancelable:true, view:window});
+      ev.lcySintetico = true;
+      a.dispatchEvent(ev);   // a captura no document cancela a navegacao; o handler deles roda
+      return true;
+    } catch(e){ return false; }
+  }
+
   function vaiProCheckout(btn, estado){
     disparaIC(estado);
     // passa o href atual: se algum script (VTurb) ja injetou a conversion key
     // v3_ no botao, ela sobrevive a reescrita (gap corrigido vs pagina mae)
     var url = montaUrl(btn.getAttribute('href'), true);
-    setTimeout(function(){ window.location.href = url; }, 250);
+    // 400ms (era 250): o analytics do VTurb despacha em lotes de 75ms; a folga garante
+    // que o "clicked" do CTA saia antes da navegacao matar a pagina. Imperceptivel.
+    setTimeout(function(){ window.location.href = url; }, 400);
   }
 
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
+    // Anchor do VTurb (escondido; so recebe o clique sintetico): NUNCA navega por ele.
+    // preventDefault aqui nao impede o handler deles no alvo, que e o que queremos.
+    if (e.target.closest('vturb-anchor-button')) { e.preventDefault(); return; }
     var alvo = e.target.closest('[data-greenn-upsell]');
     if (alvo && alvo.getAttribute('data-processando')) {
       e.preventDefault();
@@ -756,6 +808,8 @@ footer p{max-width:none;margin:0 0 9px}
       e.stopImmediatePropagation();
       return;
     }
+    // Clique vivo no nosso CTA (qualquer estado): a metrica do VTurb sai daqui, 1x.
+    if (e.target.closest('[data-open-checkout]')) cliqueVturb();
     // Checkout com token valido (Pix etc.): o listener da Greenn mora NO elemento e
     // rodaria antes do nosso bubble — e com token valido ele COBRA/gera Pix, mesmo a
     // gente querendo o checkout. stopPropagation aqui (captura no document) impede o
@@ -903,7 +957,9 @@ footer p{max-width:none;margin:0 0 9px}
   document.addEventListener('click', function(e){
     if (!e.target.closest) return;
     var a = e.target.closest(SEL_CHECKOUT);
-    if (!a || a.hasAttribute('data-open-checkout')) return;
+    // anchor escondido do VTurb: so recebe o clique sintetico do nosso CTA; o IC dele
+    // sairia ANTES do IC do fluxo real (dispatch aninhado) e carimbaria modo=checkout.
+    if (!a || a.hasAttribute('data-open-checkout') || a.closest('vturb-anchor-button')) return;
     try { a.setAttribute('href', montaUrl(a.getAttribute('href'))); } catch(err){}
     disparaIC();
   }, true);
@@ -1039,7 +1095,7 @@ footer p{max-width:none;margin:0 0 9px}
       // e vira credencial de cobranca no cartao do comprador. Nao tem por que morar no
       // nosso banco. (RLS ja bloqueia leitura publica; isto e o cinto alem do suspensorio.)
       page_host:location.hostname, page_path:location.pathname,
-      page_url:location.href.replace(/([?&]token=)[^&]*/i,'$1[redigido]'),
+      page_url:location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
       referrer:document.referrer||'',
       utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
       fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
@@ -1059,8 +1115,10 @@ footer p{max-width:none;margin:0 0 9px}
   evento('pageview');
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
+    if(e.target.closest('vturb-anchor-button'))return; // anchor escondido do VTurb: so recebe clique sintetico do nosso CTA (ja contado)
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
-    if(pay){var met='';try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document)=)[^&]*/gi,'$1[redigido]'),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met});return;}
+    // href redigido: fn/em/ph/document (prefill) e token/s_id (credencial de cobranca da Greenn, que o VTurb copiava da URL da pagina)
+    if(pay){var met='',vk=null;try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}try{var sp=document.querySelector('vturb-smartplayer');vk=(sp&&/^v3_/.test(String(sp.conversionKey||'')))?String(sp.conversionKey):null;}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document|token|s_id)=)[^&]*/gi,'$1[redigido]'),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met,vturb_key:vk});return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
