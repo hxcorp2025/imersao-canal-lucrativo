@@ -845,6 +845,8 @@ footer p{max-width:none;margin:0 0 9px}
     var fbclid=q('fbclid');
     return Object.assign({
       session_id:sid(),
+      // 29/09/2026: event_id unico por evento: o coletor e a reserva podem gravar o mesmo evento em rede ruim; o banco descarta a repeticao
+      event_id:sid()+'_'+((extra&&extra.event_type)||'ev')+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
       page_host:location.hostname, page_path:location.pathname, page_url:location.href,
       referrer:document.referrer||'',
       utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
@@ -853,7 +855,22 @@ footer p{max-width:none;margin:0 0 9px}
       device:(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'mobile':'desktop')
     },extra||{});
   }
-  function send(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
+  // 29/09/2026: o evento vai pro COLETOR de primeira parte (/t/e, mesmo endereco da pagina): ele valida,
+  // grava IP/UA/geo e devolve cookies de SERVIDOR (hx_pid, espelhos de _fbp/_fbc). Se o coletor falhar,
+  // o evento vai pelo caminho antigo (direto no banco), pra nao perder nada durante a transicao.
+  var COLETOR='/t/e';
+  // dominio registravel da pagina (joaoadolfooficial.com, empresa.com.br) e Secure so em https: funciona em qualquer host, inclusive teste local
+  var DOM=(function(){try{var p=location.hostname.split('.');if(p.length<2)return '';if(p.length>=3&&p[p.length-1].length===2&&/^(com|net|org|gov|edu)$/.test(p[p.length-2]))return '.'+p.slice(-3).join('.');return '.'+p.slice(-2).join('.');}catch(e){return '';}})();
+  function setck(n,v){try{document.cookie=n+'='+encodeURIComponent(v)+'; max-age=7776000; path=/'+(DOM?'; domain='+DOM:'')+'; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch(e){}}
+  function sendAntigo(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
+  function send(d){
+    try{
+      fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
+        .then(function(r){ if(!r.ok) throw new Error('coletor '+r.status); return r.json(); })
+        .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); }catch(e){} })
+        .catch(function(){ sendAntigo(d); });
+    }catch(e){ sendAntigo(d); }
+  }
 
   // headline vai em TODO evento: e a dimensao que corta o funil inteiro
   var HL=window.LCY_HEADLINE||null, FUNIL='LCY';
