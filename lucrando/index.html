@@ -69,7 +69,11 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','1452797958735774');fbq('track','PageView');
+window.HX_SID=(function(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}})();
+try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(window.HX_SID)).then(function(b){window.HX_SID_HASH=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');}).catch(function(){});}catch(e){}
+// 29/09/2026: external_id = hx_sid em todo evento do pixel. E a mesma chave de pessoa que o IC (servidor) e o
+// Purchase (banco) mandam hasheada, entao a Meta costura PageView -> pitch -> checkout -> compra da mesma pessoa.
+fbq('init','1452797958735774',{external_id:window.HX_SID});fbq('track','PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
 
@@ -592,7 +596,8 @@ footer p{max-width:none;margin:0 0 9px}
   // A variante precisa viajar ate o checkout, senao da pra medir clique por headline
   // mas nao RECEITA por headline, que e o que decide o teste.
   function enriquece(v){
-    var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE;
+    // 29/09/2026: sufixo __sid_<hx_sid> viaja ate a Greenn (ela persiste utm_content) e casa a venda com a sessao no banco
+    var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE + '__sid_' + (window.HX_SID || '');
     return v ? (v + '__' + s) : s;
   }
 
@@ -636,9 +641,10 @@ footer p{max-width:none;margin:0 0 9px}
     if (icDisparado) return;
     icDisparado = true;
     var t = rastreio();
+    var eid = 'ic_' + (window.HX_SID || 's') + '_' + Date.now().toString(36); // 29/09/2026: mesmo event_id no pixel e no servidor = a Meta deduplica
     try {
       if (typeof fbq === 'function') {
-        fbq('track','InitiateCheckout',{value:VALOR,currency:'BRL',content_name:'Lucrando com YouTube'});
+        fbq('track','InitiateCheckout',{value:VALOR,currency:'BRL',content_name:'Lucrando com YouTube'},{eventID:eid});
       }
     } catch(e){}
     try {
@@ -653,6 +659,7 @@ footer p{max-width:none;margin:0 0 9px}
           utm_source:t.utm_source, utm_medium:t.utm_medium, utm_campaign:t.utm_campaign,
           utm_term:t.utm_term, utm_content:enriquece(t.utm_content),
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
+          event_id:eid, sid:window.HX_SID||null, external_id_hash:window.HX_SID_HASH||null,
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
           origem:window.location.href, pagina_origem:window.location.pathname,
@@ -832,7 +839,7 @@ footer p{max-width:none;margin:0 0 9px}
   var SUPA='https://ntavetjmfotlwmcgwsju.supabase.co/rest/v1/hx_track_events';
   var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50YXZldGptZm90bHdtY2d3c2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTAzNDksImV4cCI6MjA1OTYyNjM0OX0.jWCJr4qPHjiun2BCdx8U4Oi7cQ2gQmU-D0vrk10FGao';
   function ck(n){var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?m.pop():'';}
-  function sid(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now();}}
+  function sid(){if(window.HX_SID)return window.HX_SID;try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}}
   function q(n){return new URLSearchParams(location.search).get(n)||'';}
   function base(extra){
     var fbclid=q('fbclid');
@@ -857,7 +864,11 @@ footer p{max-width:none;margin:0 0 9px}
   // exposto pro script da pagina marcar video_play e video_pitch
   window.hxTrack=evento;
 
+  // 29/09/2026: pageview sai NA HORA (metrica comparavel com o historico). Se o _fbp ainda nao existe,
+  // um 2o evento 'fbp_pronto' sai quando o pixel criar o cookie (ate 3 s): o banco pega o fbp de
+  // QUALQUER evento da sessao (lcy_sessao_para_venda), entao nada se perde e o pageview nao atrasa.
   evento('pageview');
+  if(!ck('_fbp')){ (function pv(n){ if(ck('_fbp')){evento('fbp_pronto');} else if(n<12){setTimeout(function(){pv(n+1);},250);} })(0); }
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
