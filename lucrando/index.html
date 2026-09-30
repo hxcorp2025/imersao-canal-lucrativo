@@ -70,10 +70,26 @@ n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
 window.HX_SID=(function(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}})();
-try{crypto.subtle.digest('SHA-256',new TextEncoder().encode(window.HX_SID)).then(function(b){window.HX_SID_HASH=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');}).catch(function(){});}catch(e){}
-// 29/09/2026: external_id = hx_sid em todo evento do pixel. E a mesma chave de pessoa que o IC (servidor) e o
-// Purchase (banco) mandam hasheada, entao a Meta costura PageView -> pitch -> checkout -> compra da mesma pessoa.
-fbq('init','1452797958735774',{external_id:window.HX_SID});fbq('track','PageView');
+// 30/09/2026 (Pessoas 360): HX_PID = id deste navegador. Vem do cookie _hxpid, gravado pelo SERVIDOR (400 dias,
+// sobrevive ao corte de 7 dias do Safari). Na 1a visita a pagina gera o id (UUIDv7) e o coletor adota o mesmo valor.
+window.HX_PID=(function(){var RE=/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,p='';
+try{var m=document.cookie.match(/(?:^|;\s*)_hxpid=([^;]+)/);if(m)p=decodeURIComponent(m[1]);}catch(e){}
+if(RE.test(p)){try{localStorage.setItem('hx_pid_local',p);}catch(e){}return p;}
+try{p=localStorage.getItem('hx_pid_local')||'';}catch(e){p='';}
+if(RE.test(p))return p;
+try{var b=new Uint8Array(16),t=Date.now(),i,h='';crypto.getRandomValues(b);for(i=0;i<6;i++)b[i]=Math.floor(t/Math.pow(2,8*(5-i)))&255;
+b[6]=(b[6]&15)|112;b[8]=(b[8]&63)|128;for(i=0;i<16;i++)h+=('0'+b[i].toString(16)).slice(-2);
+p=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);}catch(e){return '';}
+try{localStorage.setItem('hx_pid_local',p);}catch(e){}
+return p;})();
+window.HX_HASH=function(v,k){try{if(!v)return;crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){window[k]=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');}).catch(function(){});}catch(e){}};
+HX_HASH(window.HX_SID,'HX_SID_HASH');HX_HASH(window.HX_PID,'HX_PID_HASH');
+// o coletor responde com o id que vale (o cookie de servidor ganha): os proximos eventos da pagina passam a usar ele
+window.HX_SET_PID=function(p){try{if(!/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(p)||p===window.HX_PID)return;window.HX_PID=p;window.HX_PID_HASH=null;try{localStorage.setItem('hx_pid_local',p);}catch(e){}HX_HASH(p,'HX_PID_HASH');}catch(e){}};
+// external_id do pixel = HX_PID (o pixel faz sha256 do valor em minusculas; o servidor manda o mesmo sha256).
+// Navegador sem crypto: cai no HX_SID, como era ate 30/09.
+window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX_PID_PIXEL_HASH');
+fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
 
@@ -659,7 +675,9 @@ footer p{max-width:none;margin:0 0 9px}
           utm_source:t.utm_source, utm_medium:t.utm_medium, utm_campaign:t.utm_campaign,
           utm_term:t.utm_term, utm_content:enriquece(t.utm_content),
           fbclid:t.fbclid, fbp:t.fbp, fbc:t.fbc,
-          event_id:eid, sid:window.HX_SID||null, external_id_hash:window.HX_SID_HASH||null,
+          event_id:eid, sid:window.HX_SID||null, pid:window.HX_PID||null, external_id_hash:window.HX_SID_HASH||null,
+          // 30/09: pid + id que o pixel usou no init (so difere na 1a visita depois da troca) + sid (transicao de 30 dias)
+          external_ids:[window.HX_PID_HASH,window.HX_PID_PIXEL_HASH,window.HX_SID_HASH].filter(function(h,i,a){return h&&a.indexOf(h)===i;}),
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
           origem:window.location.href, pagina_origem:window.location.pathname,
@@ -845,10 +863,12 @@ footer p{max-width:none;margin:0 0 9px}
     var fbclid=q('fbclid');
     return Object.assign({
       session_id:sid(),
+      pid:window.HX_PID||null, // 30/09/2026: id do navegador; o coletor adota na 1a visita
       // 29/09/2026: event_id unico por evento: o coletor e a reserva podem gravar o mesmo evento em rede ruim; o banco descarta a repeticao
       event_id:sid()+'_'+((extra&&extra.event_type)||'ev')+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
       page_host:location.hostname, page_path:location.pathname, page_url:location.href,
-      referrer:document.referrer||'',
+      // 30/09/2026: recarga da /acesso/?token=... deixava o token da Greenn (credencial de cobranca) no referrer
+      referrer:(document.referrer||'').replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
       utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
       fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
       user_agent:navigator.userAgent,
@@ -867,7 +887,7 @@ footer p{max-width:none;margin:0 0 9px}
     try{
       fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
         .then(function(r){ if(!r.ok) throw new Error('coletor '+r.status); return r.json(); })
-        .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); }catch(e){} })
+        .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); if(j&&j.pid&&window.HX_SET_PID)window.HX_SET_PID(j.pid); }catch(e){} })
         .catch(function(){ sendAntigo(d); });
     }catch(e){ sendAntigo(d); }
   }
