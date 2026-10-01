@@ -1,0 +1,39 @@
+# Publica aula.joaoadolfooficial.com (Cloudflare Pages, projeto ja-aula) a cada push no main.
+# O projeto foi criado por upload direto e a Cloudflare não deixa ligar Git nele depois, então quem publica é o GitHub,
+# com as mesmas conferências do deploy seguro (.github/publicar/publicar-seguro.mjs). Sem a chave, não publica nada.
+name: Publicar no Cloudflare Pages (ja-aula)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: publicar-ja-aula
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # histórico inteiro: dá nome aos arquivos que sumiriam do ar
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Publicar com as conferências do deploy seguro
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: a0da2d0cfaab3086312e22d07617ffda # id da conta (não é segredo: aparece em todo link do painel)
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::warning::Falta o secret CLOUDFLARE_API_TOKEN: nada publicado."
+            exit 0
+          fi
+          node .github/publicar/publicar-seguro.mjs --projeto ja-aula --dominio aula.joaoadolfooficial.com
