@@ -479,8 +479,8 @@ footer p{max-width:none;margin:0 0 9px}
       <div class="por"><span class="cif">R$</span>197</div>
       <!-- TODO(dono): conferir no checkout da Hubla se a parcela de 12x continua R$19,97 (juros da Hubla podem ser outros) -->
       <p class="parc">ou <b>12x de R$19,97</b></p>
-      <!-- TODO(dono): na Hubla nao ha cupom (o desconto e o preco promocional da oferta). Decidir se este texto fica. -->
-      <span class="cupom-nota">Cupom de R$100 já aplicado no botão</span>
+      <!-- Na Hubla nao ha cupom (o desconto e o preco promocional da oferta): o texto acompanha a chave CHECKOUT. -->
+      <span class="cupom-nota" data-txt-desconto>Desconto de R$100 já aplicado no botão</span>
 
       <a class="cta" href="https://pay.hub.la/Yyhsug9bkT9YqfPptItP" data-open-checkout="1">
         QUERO COMEÇAR AGORA
@@ -598,6 +598,11 @@ footer p{max-width:none;margin:0 0 9px}
     hubla:  'Pagamento processado pela Hubla. Cartão ou Pix.',   // TODO(dono): se a oferta tiver boleto ligado, voltar "Cartão, Pix ou boleto"
     greenn: 'Pagamento processado pela Greenn. Cartão, Pix ou boleto.'
   };
+  // nota sob o preco: na Greenn o desconto e um cupom na URL; na Hubla e o preco promocional da oferta
+  var TXT_DESCONTO = {
+    hubla:  'Desconto de R$100 já aplicado no botão',
+    greenn: 'Cupom de R$100 já aplicado no botão'
+  };
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
 
   var VSL_ID  = 'vsllcy';   // VSL LUCRANDO-001 (vertical, 28:23)
@@ -671,6 +676,8 @@ footer p{max-width:none;margin:0 0 9px}
     for (var _i = 0; _i < _ctas.length; _i++) _ctas[_i].setAttribute('href', CHECKOUT_URL);
     var _txt = document.querySelector('[data-txt-plataforma]');
     if (_txt && TXT_PLATAFORMA[CHECKOUT]) _txt.textContent = TXT_PLATAFORMA[CHECKOUT];
+    var _desc = document.querySelector('[data-txt-desconto]');
+    if (_desc && TXT_DESCONTO[CHECKOUT]) _desc.textContent = TXT_DESCONTO[CHECKOUT];
   } catch(e){}
 
   // Stash de atribuicao pra pagina de acesso (upsell): o redirect pos-compra da
@@ -700,7 +707,7 @@ footer p{max-width:none;margin:0 0 9px}
     // script do coletor nao carregou (nunca os dois: o evento nao dobra).
     if (typeof window.hxTrack === 'function') {
       try {
-        window.hxTrack('initiate_checkout', {valor:VALOR, vsl_id:VSL_ID, page_id:PAGE_ID}, {pixel:'1452797958735774', nome:'InitiateCheckout', id:eid,
+        window.hxTrack('initiate_checkout', {valor:VALOR, vsl_id:VSL_ID, page_id:PAGE_ID, plataforma:CHECKOUT}, {pixel:'1452797958735774', nome:'InitiateCheckout', id:eid,
           dados:{value:VALOR, currency:'BRL', content_name:'Lucrando com YouTube', content_ids:['133854'], content_type:'product', content_category:'digital_product', num_items:1}});
         return;
       } catch(e){} // erro no coletor: cai no n8n abaixo, o evento do servidor nao se perde
