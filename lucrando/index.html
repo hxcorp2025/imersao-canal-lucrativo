@@ -916,8 +916,20 @@ footer p{max-width:none;margin:0 0 9px}
   // 29/09/2026: pageview sai NA HORA (metrica comparavel com o historico). Se o _fbp ainda nao existe,
   // um 2o evento 'fbp_pronto' sai quando o pixel criar o cookie (ate 3 s): o banco pega o fbp de
   // QUALQUER evento da sessao (lcy_sessao_para_venda), entao nada se perde e o pageview nao atrasa.
-  evento('pageview',null,window.HX_PV_EID?{pixel:'1452797958735774',nome:'PageView',id:window.HX_PV_EID}:null);
-  if(!ck('_fbp')){ (function pv(n){ if(ck('_fbp')){evento('fbp_pronto');} else if(n<12){setTimeout(function(){pv(n+1);},250);} })(0); }
+  // 02/10/2026: na 1a visita o PageView do servidor saia ANTES do pixel criar o _fbp (so 29% levavam o cookie, medido
+  // na Meta). Agora, sem _fbp, o bloco meta do PageView vai junto do 'fbp_pronto'; se o cookie nao vier em 3 s, ou a
+  // pessoa sair antes, vai do mesmo jeito (sem fbp) e o extra conta por que: nenhuma visita deixa de ir pra Meta.
+  var PV_META=window.HX_PV_EID?{pixel:'1452797958735774',nome:'PageView',id:window.HX_PV_EID}:null;
+  if(ck('_fbp')){ evento('pageview',null,PV_META); }
+  else {
+    evento('pageview');
+    var pvMetaFeito=false;
+    var pvMeta=function(motivo){ if(pvMetaFeito)return; pvMetaFeito=true; evento('fbp_pronto',(motivo&&!ck('_fbp'))?{pv_meta_sem_fbp:motivo}:null,PV_META); };
+    (function pv(n){ if(pvMetaFeito)return; if(ck('_fbp')){pvMeta();} else if(n<12){setTimeout(function(){pv(n+1);},250);} else {pvMeta('tempo');} })(0);
+    window.addEventListener('pagehide',function(){ pvMeta('saida'); });
+    // no celular (navegador do Instagram/Facebook, troca de app) o pagehide pode nao vir; o ultimo aviso confiavel e a pagina escondida
+    document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') pvMeta('saida'); });
+  }
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
