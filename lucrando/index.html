@@ -477,10 +477,12 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box">
       <p class="de">De <s>R$297</s></p>
       <div class="por"><span class="cif">R$</span>197</div>
+      <!-- TODO(dono): conferir no checkout da Hubla se a parcela de 12x continua R$19,97 (juros da Hubla podem ser outros) -->
       <p class="parc">ou <b>12x de R$19,97</b></p>
+      <!-- TODO(dono): na Hubla nao ha cupom (o desconto e o preco promocional da oferta). Decidir se este texto fica. -->
       <span class="cupom-nota">Cupom de R$100 já aplicado no botão</span>
 
-      <a class="cta" href="https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&amp;ch_id=141796&amp;b_id_1=136392&amp;b_offer_1=LvX0zx&amp;b_id_2=136395&amp;b_offer_2=0p8CX2&amp;b_id_3=136399&amp;b_offer_3=DiC8Rq&amp;b_id_4=133939&amp;b_offer_4=Fl1B9f" data-open-checkout="1">
+      <a class="cta" href="https://pay.hub.la/Yyhsug9bkT9YqfPptItP" data-open-checkout="1">
         QUERO COMEÇAR AGORA
         <small>Acesso liberado no seu e-mail em minutos</small>
       </a>
@@ -554,11 +556,11 @@ footer p{max-width:none;margin:0 0 9px}
       <p class="olho" style="margin-bottom:14px">Um pensamento não muda nada. Uma decisão muda tudo.</p>
       <div class="por"><span class="cif">R$</span>197</div>
       <p class="parc">ou <b>12x de R$19,97</b>, com 7 dias de garantia</p>
-      <a class="cta" href="https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&amp;ch_id=141796&amp;b_id_1=136392&amp;b_offer_1=LvX0zx&amp;b_id_2=136395&amp;b_offer_2=0p8CX2&amp;b_id_3=136399&amp;b_offer_3=DiC8Rq&amp;b_id_4=133939&amp;b_offer_4=Fl1B9f" data-open-checkout="1">
+      <a class="cta" href="https://pay.hub.la/Yyhsug9bkT9YqfPptItP" data-open-checkout="1">
         GARANTIR MINHA VAGA
         <small>Acesso liberado no seu e-mail em minutos</small>
       </a>
-      <p class="sob-cta">Pagamento processado pela Greenn. Cartão, Pix ou boleto.</p>
+      <p class="sob-cta" data-txt-plataforma>Pagamento processado pela Hubla. Cartão ou Pix.</p>
     </div>
 
   </section>
@@ -579,7 +581,23 @@ footer p{max-width:none;margin:0 0 9px}
   // ══════════════════════════════════════════
   // CONFIG
   // ══════════════════════════════════════════
-  var CHECKOUT_URL = 'https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&ch_id=141796&b_id_1=136392&b_offer_1=LvX0zx&b_id_2=136395&b_offer_2=0p8CX2&b_id_3=136399&b_offer_3=DiC8Rq&b_id_4=133939&b_offer_4=Fl1B9f';
+  // 02/10/2026: LCY sai da Greenn pra Hubla. ROLLBACK = trocar CHECKOUT pra 'greenn' (uma linha).
+  // Hubla: oferta LCY Yyhsug9bkT9YqfPptItP, preco R$297 com promocional R$197 (cobra 197 sem cupom),
+  // os 4 order bumps sao ligados no painel da oferta (conferido no conector em 02/10), nao por URL.
+  // A Hubla le utm_source/medium/campaign/content/term e src/sck da URL (paymentSession.utm/.params).
+  var CHECKOUT = 'hubla';   // 'hubla' | 'greenn'
+  var CHECKOUTS = {
+    hubla:  'https://pay.hub.la/Yyhsug9bkT9YqfPptItP',
+    greenn: 'https://payfast.greenn.com.br/133854/offer/MfvnuK?cupom=100OFF&ch_id=141796&b_id_1=136392&b_offer_1=LvX0zx&b_id_2=136395&b_offer_2=0p8CX2&b_id_3=136399&b_offer_3=DiC8Rq&b_id_4=133939&b_offer_4=Fl1B9f'
+  };
+  var CHECKOUT_URL = CHECKOUTS[CHECKOUT] || CHECKOUTS.hubla;
+  // parametros que so existem na URL da Greenn (cupom, canal, bumps): nunca podem vazar pra Hubla
+  var SO_GREENN = /^(cupom|ch_id|b_id_\d+|b_offer_\d+)$/;
+  // texto sob o ultimo CTA: o HTML nasce com o da Hubla; no rollback o script devolve o da Greenn
+  var TXT_PLATAFORMA = {
+    hubla:  'Pagamento processado pela Hubla. Cartão ou Pix.',   // TODO(dono): se a oferta tiver boleto ligado, voltar "Cartão, Pix ou boleto"
+    greenn: 'Pagamento processado pela Greenn. Cartão, Pix ou boleto.'
+  };
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
 
   var VSL_ID  = 'vsllcy';   // VSL LUCRANDO-001 (vertical, 28:23)
@@ -615,6 +633,8 @@ footer p{max-width:none;margin:0 0 9px}
   // mas nao RECEITA por headline, que e o que decide o teste.
   function enriquece(v){
     // 29/09/2026: sufixo __sid_<hx_sid> viaja ate a Greenn (ela persiste utm_content) e casa a venda com a sessao no banco
+    // 02/10/2026: na Hubla ele chega em paymentSession.utm.content (e na paymentSession.url inteira).
+    // TODO(compra teste): conferir no webhook da Hubla que o utm_content chega inteiro, com o __sid_.
     var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE + '__sid_' + (window.HX_SID || '');
     return v ? (v + '__' + s) : s;
   }
@@ -632,6 +652,7 @@ footer p{max-width:none;margin:0 0 9px}
         if (!k) return;
         if (/^(utm_|fbclid$|gclid$|wbraid$|gbraid$)/.test(k)) return;      // nossos: serao reescritos abaixo
         if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base (cupom, bumps)
+        if (CHECKOUT !== 'greenn' && SO_GREENN.test(k)) return;  // sobra de href antigo da Greenn
         params.push(par);
       });
     } catch(e){}
@@ -643,8 +664,17 @@ footer p{max-width:none;margin:0 0 9px}
     return CHECKOUT_URL + sep + params.join('&');
   }
 
+  // Os CTAs nascem no HTML apontando pra Hubla (vale sem JS). Aqui o href acompanha a
+  // chave CHECKOUT, pra o rollback ser so a linha la de cima.
+  try {
+    var _ctas = document.querySelectorAll('[data-open-checkout]');
+    for (var _i = 0; _i < _ctas.length; _i++) _ctas[_i].setAttribute('href', CHECKOUT_URL);
+    var _txt = document.querySelector('[data-txt-plataforma]');
+    if (_txt && TXT_PLATAFORMA[CHECKOUT]) _txt.textContent = TXT_PLATAFORMA[CHECKOUT];
+  } catch(e){}
+
   // Stash de atribuicao pra pagina de acesso (upsell): o redirect pos-compra da
-  // Greenn volta SEM UTM, entao a /lucrando/acesso/ le este stash (7 dias) e
+  // Greenn volta SEM UTM (na Hubla, ainda nao conferido), entao a /lucrando/acesso/ le este stash (7 dias) e
   // re-injeta a origem no checkout do upsell. So grava quando ha origem de
   // verdade, pra uma visita organica nao apagar um stash rico de anuncio.
   try {
@@ -684,6 +714,7 @@ footer p{max-width:none;margin:0 0 9px}
           user_agent:navigator.userAgent || null,
           origem:window.location.href, pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID,
+          plataforma:CHECKOUT,   // 02/10/2026: separa o periodo Greenn x Hubla nos dados
           data:new Date().toISOString()
         }),
         keepalive:true
@@ -712,7 +743,10 @@ footer p{max-width:none;margin:0 0 9px}
   // "abrir em nova aba" que o painel oferece.
   // Exige o botao no DOM da pagina: tipo "Abaixo do video".
   // ══════════════════════════════════════════
-  var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"]';
+  // 02/10/2026: as duas plataformas, pra cobrir o botao do painel do VTurb antes e depois
+  // de alguem trocar o link dele. TODO(dono): se o botao nativo do VTurb tiver link
+  // configurado no painel, trocar pro https://pay.hub.la/Yyhsug9bkT9YqfPptItP.
+  var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"], a[href*="pay.hub.la"]';
 
   function enriqueceBotaoVturb(a){
     if (!a || a.hasAttribute('data-open-checkout')) return; // CTA nosso, ja tratado
@@ -932,7 +966,7 @@ footer p{max-width:none;margin:0 0 9px}
   }
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
-    var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
+    var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="hub.la"],a[href*="checkout"]');
     if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:(pay.getAttribute&&pay.getAttribute('href'))||''});return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}

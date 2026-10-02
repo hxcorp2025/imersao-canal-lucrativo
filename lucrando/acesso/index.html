@@ -22,6 +22,7 @@
 <link rel="dns-prefetch" href="https://license.vturb.com">
 <!-- checkout: so e clicado depois do pitch, mas o DNS nao custa nada agora.
      O preconnect de verdade acontece no abre(), quando a oferta aparece. -->
+<link rel="dns-prefetch" href="https://pay.hub.la">
 <link rel="dns-prefetch" href="https://payfast.greenn.com.br">
 <link rel="preconnect" href="https://scripts.converteai.net" crossorigin>
 <link rel="preconnect" href="https://cdn.converteai.net" crossorigin>
@@ -448,6 +449,17 @@ footer p{max-width:none;margin:0 0 9px}
     // Versao da VSL do upsell: v2 otimizada no ar em 21/08/2026 (v1 'vslgen' ate 20/08).
     // Le-se aqui nos dois blocos de script pra separar antes/depois nos dados.
     window.LCY_VSL_ID = 'vslgen2';
+    // 02/10/2026 (Hubla): ainda nao se sabe se o pos-compra da Hubla chega com nome/e-mail/
+    // telefone na URL. Se chegar, nada disso pode ir pro banco nem pro n8n: tudo que grava a
+    // URL desta pagina (page_url, referrer, origem do IC, href do clique) passa por aqui.
+    // Redige por nome de parametro comum de dado pessoal e qualquer valor com @.
+    window.LCY_REDIGE = function(u){
+      try {
+        return String(u || '')
+          .replace(/([?&](token|s_id|fn|ln|em|ph|document|documento|doc|cpf|cnpj|email|e-mail|mail|name|nome|full_?name|first_?name|last_?name|phone|telefone|cellphone|celular|whatsapp)=)[^&#]*/gi, '$1[redigido]')
+          .replace(/([?&][^=&#]+=)[^&#]*(@|%40)[^&#]*/gi, '$1[redigido]');
+      } catch(e){ return ''; }
+    };
     // Rastreio guardado pela pagina /lucrando/ (stash de 7 dias): e o que liga a
     // venda do upsell de volta ao anuncio, ja que o redirect da Greenn chega sem UTM.
     window.__LCY_STASH = null;
@@ -481,7 +493,7 @@ footer p{max-width:none;margin:0 0 9px}
       <span class="rotulo">GARANTIR 6 MESES DA GÊNESIS</span>
       <small>R$397 ou 12x de R$40,82 · acesso junto com o do curso</small>
     </a>
-    <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
+    <p class="sob-cta">Pagamento seguro pela Hubla, a mesma plataforma da compra que você acabou de fazer.</p>
   </div>
 
   <p class="dica"><span class="pulso"></span>Assista com o som ligado, até o final</p>
@@ -511,6 +523,7 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box destaque">
       <p class="parc">yTube Gênesis · 6 meses de acesso</p>
       <div class="por"><span class="cif">R$</span>397</div>
+      <!-- TODO(dono): conferir no 1-clique da Hubla se a parcela de 12x continua R$40,82 (aparece em 3 lugares) -->
       <p class="parc">ou <b>12x de R$40,82</b> no cartão</p>
       <span class="cupom-nota">Postando 2 vídeos por semana, sai menos de R$8 por vídeo</span>
 
@@ -522,7 +535,7 @@ footer p{max-width:none;margin:0 0 9px}
         <span class="rotulo">QUERO A GÊNESIS COMIGO</span>
         <small>Acesso liberado junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
+      <p class="sob-cta">Pagamento seguro pela Hubla, a mesma plataforma da compra que você acabou de fazer.</p>
     </div>
 
     <div class="gar">
@@ -542,7 +555,7 @@ footer p{max-width:none;margin:0 0 9px}
         <span class="rotulo">ATIVAR MEUS 6 MESES DA GÊNESIS</span>
         <small>O acesso chega junto com o do curso, no mesmo e-mail</small>
       </a>
-      <p class="sob-cta">Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.</p>
+      <p class="sob-cta">Pagamento seguro pela Hubla, a mesma plataforma da compra que você acabou de fazer.</p>
     </div>
 
     <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
@@ -565,7 +578,28 @@ footer p{max-width:none;margin:0 0 9px}
   // ══════════════════════════════════════════
   // CONFIG
   // ══════════════════════════════════════════
-  var CHECKOUT_URL = 'https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY';
+  // 02/10/2026: LCY sai da Greenn pra Hubla. ROLLBACK = trocar CHECKOUT pra 'greenn' (uma linha):
+  // volta tudo da Greenn (upsell.js, one-click no cartao, prefill do Pix), que fica aqui desligado.
+  // Na Hubla: a oferta do front redireciona pra esta pagina (pos-compra "pagina personalizada") e o
+  // botao leva pro link "Checkout 1-clique" do produto Genesis (rbChUgAcL1mcz1JA9k6p, R$397 em 12x),
+  // criado no painel, aba Links. O dono confirmou que o 1-clique aceita Pix.
+  var CHECKOUT = 'hubla';   // 'hubla' | 'greenn'
+  // TODO(dono): colar aqui o link "Checkout 1-clique" do Genesis (painel da Hubla > produto > aba Links).
+  var HUBLA_UPSELL_1CLIQUE_URL = 'TODO_COLAR_LINK_1_CLIQUE';
+  var GREENN_UPSELL_URL = 'https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY';
+  // Trava: enquanto o link 1-clique nao for colado (ou vier sem https), a pagina NAO manda
+  // ninguem pra um endereco quebrado: cai no checkout da Greenn de sempre e avisa no console.
+  var HUBLA_PRONTA = /^https:\/\/([a-z0-9-]+\.)*hub\.la\//i.test(HUBLA_UPSELL_1CLIQUE_URL);
+  var PLATAFORMA = (CHECKOUT === 'hubla' && HUBLA_PRONTA) ? 'hubla' : 'greenn';
+  if (CHECKOUT === 'hubla' && !HUBLA_PRONTA) {
+    try { console.warn('[lcy] CHECKOUT=hubla sem link 1-clique valido: usando o checkout da Greenn'); } catch(e){}
+  }
+  var CHECKOUT_URL = PLATAFORMA === 'hubla' ? HUBLA_UPSELL_1CLIQUE_URL : GREENN_UPSELL_URL;
+  window.LCY_PLATAFORMA = PLATAFORMA;   // o hxTrack (outro bloco) carimba no checkout_click
+  // TODO(compra teste): ver se a Hubla manda nome/e-mail/telefone na URL do pos-compra. Se mandar o
+  // e-mail, colocar aqui o NOME do parametro (ex.: o que aparecer na barra de endereco) pra ligar o
+  // comprador a este navegador (evento identify, so o sha256). Vazio = nada acontece, nada quebra.
+  window.LCY_HUBLA_PARAM_EMAIL = '';
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // mesmo IC generico das paginas (payload leva funil proprio)
 
   var VSL_ID  = window.LCY_VSL_ID || 'vslgen2';   // VSL do upsell Genesis v2 (vertical, 10:00, pitch 08:35)
@@ -672,9 +706,10 @@ footer p{max-width:none;margin:0 0 9px}
           external_ids:[window.HX_PID_HASH,window.HX_PID_PIXEL_HASH,window.HX_SID_HASH].filter(function(h,i,a){return h&&a.indexOf(h)===i;}),
           gclid:t.gclid, wbraid:t.wbraid, gbraid:t.gbraid,
           user_agent:navigator.userAgent || null,
-          origem:window.location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
+          origem:window.LCY_REDIGE(window.location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]')),
           pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID, modo:(modo || MODO_PADRAO),
+          plataforma:PLATAFORMA,   // 02/10/2026: separa o periodo Greenn x Hubla nos dados
           vturb_key:(chaveVturb() || null),   // reconcilia venda one-click (sem URL) com a sessao do VTurb
           data:new Date().toISOString()
         }),
@@ -693,6 +728,10 @@ footer p{max-width:none;margin:0 0 9px}
   // segura a navegacao e sai da frente; se nao esta, faz exatamente o que sempre fez.
   // ══════════════════════════════════════════
   function temToken(){
+    // 02/10/2026: o token e da Greenn. Na Hubla nada disso existe: sem token, LCY_MODO vira
+    // 'checkout', o upsell.js nao carrega, prefill e textos da Greenn nao rodam. Este e o
+    // unico ponto que desliga a Greenn; o codigo dela fica intacto pro rollback.
+    if (PLATAFORMA !== 'greenn') return false;
     try {
       var t = new URLSearchParams(window.location.search).get('token');
       return !!(t && t.length > 8);
@@ -738,6 +777,7 @@ footer p{max-width:none;margin:0 0 9px}
   // (`buyerQuery`: fn/em/ph/document/up_id). So entram com token valido.
   function prefill(){
     var p = [];
+    if (PLATAFORMA !== 'greenn') return p;   // 02/10/2026: fn/em/ph/document/up_id sao parametros da Greenn
     try {
       var w = window._wf;
       if (!w || w.tokenIsValid !== true || !w.userLast) return p;
@@ -973,7 +1013,24 @@ footer p{max-width:none;margin:0 0 9px}
   // BOTAO NATIVO DO VTURB → mesma atribuicao dos nossos CTAs
   // Exige o botao no DOM da pagina: tipo "Abaixo do video".
   // ══════════════════════════════════════════
-  var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"]';
+  // 02/10/2026: as duas plataformas, pra cobrir o botao do painel do VTurb antes e depois
+  // de alguem trocar o link dele. TODO(dono): se o botao nativo do VTurb desta pagina tiver
+  // link configurado no painel, trocar pelo link 1-clique da Hubla.
+  var SEL_CHECKOUT = 'a[href*="payfast.greenn.com.br"], a[href*="hub.la"]';
+
+  // Os CTAs nascem no HTML com o link da Greenn (o 1-clique da Hubla ainda nao existe). Aqui o
+  // href e o texto sob o botao acompanham a plataforma em uso, pra o rollback ser uma linha.
+  try {
+    var ctas = document.querySelectorAll('[data-open-checkout]');
+    for (var ci = 0; ci < ctas.length; ci++) ctas[ci].setAttribute('href', CHECKOUT_URL);
+    if (PLATAFORMA === 'greenn') {
+      var txtG = CHECKOUT === 'greenn'
+        ? 'Pagamento seguro pela Greenn, a mesma plataforma da compra que você acabou de fazer.'
+        : 'Pagamento seguro pela Greenn.';   // trava ativa: a compra do front foi na Hubla
+      var sobs = document.querySelectorAll('.sob-cta');
+      for (var si = 0; si < sobs.length; si++) sobs[si].textContent = txtG;
+    }
+  } catch(e){}
 
   function enriqueceBotaoVturb(a){
     if (!a || a.hasAttribute('data-open-checkout')) return; // CTA nosso, ja tratado
@@ -1054,7 +1111,8 @@ footer p{max-width:none;margin:0 0 9px}
     try {
       if (!document.getElementById('pc-greenn')) {
         var pc = document.createElement('link');
-        pc.id = 'pc-greenn'; pc.rel = 'preconnect'; pc.href = 'https://payfast.greenn.com.br';
+        pc.id = 'pc-greenn'; pc.rel = 'preconnect';
+        pc.href = PLATAFORMA === 'hubla' ? (function(){ try { return new URL(CHECKOUT_URL).origin; } catch(e){ return 'https://pay.hub.la'; } })() : 'https://payfast.greenn.com.br';
         document.head.appendChild(pc);
       }
     } catch(e){}
@@ -1142,9 +1200,9 @@ footer p{max-width:none;margin:0 0 9px}
       // e vira credencial de cobranca no cartao do comprador. Nao tem por que morar no
       // nosso banco. (RLS ja bloqueia leitura publica; isto e o cinto alem do suspensorio.)
       page_host:location.hostname, page_path:location.pathname,
-      page_url:location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
+      page_url:window.LCY_REDIGE(location.href.replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]')),
       // 30/09/2026: recarga da /acesso/?token=... deixava o token da Greenn (credencial de cobranca) no referrer
-      referrer:(document.referrer||'').replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
+      referrer:window.LCY_REDIGE((document.referrer||'').replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]')),
       utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
       fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
       user_agent:navigator.userAgent,
@@ -1183,9 +1241,9 @@ footer p{max-width:none;margin:0 0 9px}
   document.addEventListener('click',function(e){
     if(!e.target.closest)return;
     if(e.target.closest('vturb-anchor-button'))return; // anchor escondido do VTurb: so recebe clique sintetico do nosso CTA (ja contado)
-    var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="checkout"]');
+    var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="hub.la"],a[href*="checkout"]');
     // href redigido: fn/em/ph/document (prefill) e token/s_id (credencial de cobranca da Greenn, que o VTurb copiava da URL da pagina)
-    if(pay){var met='',vk=null;try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}try{var sp=document.querySelector('vturb-smartplayer');vk=(sp&&/^v3_/.test(String(sp.conversionKey||'')))?String(sp.conversionKey):null;}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document|token|s_id)=)[^&]*/gi,'$1[redigido]'),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met,vturb_key:vk});return;}
+    if(pay){var met='',vk=null;try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}try{var sp=document.querySelector('vturb-smartplayer');vk=(sp&&/^v3_/.test(String(sp.conversionKey||'')))?String(sp.conversionKey):null;}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:window.LCY_REDIGE(((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document|token|s_id)=)[^&]*/gi,'$1[redigido]')),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met,vturb_key:vk,plataforma:(window.LCY_PLATAFORMA||null)});return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
@@ -1199,6 +1257,9 @@ footer p{max-width:none;margin:0 0 9px}
     if(feito)return;
     try{
       var w=window._wf, u=(w&&w.tokenIsValid===true)?w.userLast:null, em=(u&&u.email)?String(u.email).trim().toLowerCase():'';
+      // 02/10/2026 (Hubla): sem _wf. Se a compra teste mostrar o e-mail na URL do pos-compra, o nome do
+      // parametro vai em LCY_HUBLA_PARAM_EMAIL (bloco de config). Vazio ou ausente = segue sem identify.
+      if(!em&&window.LCY_HUBLA_PARAM_EMAIL){try{em=String(new URLSearchParams(location.search).get(window.LCY_HUBLA_PARAM_EMAIL)||'').trim().toLowerCase();}catch(x){em='';}}
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ if(n<120)setTimeout(function(){idt(n+1);},500); return; }
       crypto.subtle.digest('SHA-256',new TextEncoder().encode(em)).then(function(b){
         var h=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
