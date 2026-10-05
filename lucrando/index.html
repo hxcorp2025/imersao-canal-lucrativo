@@ -476,8 +476,8 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box">
       <p class="de">De <s>R$297</s></p>
       <div class="por"><span class="cif">R$</span>197</div>
-      <!-- TODO(dono): conferir no checkout da Hubla se a parcela de 12x continua R$19,97 (juros da Hubla podem ser outros) -->
-      <p class="parc">ou <b>12x de R$19,97</b></p>
+      <!-- 05/10/2026: parcela conferida pelo dono no checkout da Hubla = 12x R$20,02 (na Greenn era R$19,97; TXT_PARCELA troca no rollback) -->
+      <p class="parc">ou <b data-txt-parcela>12x de R$20,02</b></p>
       <!-- Na Hubla nao ha cupom (o desconto e o preco promocional da oferta): o texto acompanha a chave CHECKOUT. -->
       <span class="cupom-nota" data-txt-desconto>Desconto de R$100 já aplicado no botão</span>
 
@@ -554,7 +554,7 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box" style="margin-top:44px">
       <p class="olho" style="margin-bottom:14px">Um pensamento não muda nada. Uma decisão muda tudo.</p>
       <div class="por"><span class="cif">R$</span>197</div>
-      <p class="parc">ou <b>12x de R$19,97</b>, com 7 dias de garantia</p>
+      <p class="parc">ou <b data-txt-parcela>12x de R$20,02</b>, com 7 dias de garantia</p>
       <a class="cta" href="https://pay.hub.la/Yyhsug9bkT9YqfPptItP" data-open-checkout="1">
         GARANTIR MINHA VAGA
         <small>Acesso liberado no seu e-mail em minutos</small>
@@ -601,6 +601,11 @@ footer p{max-width:none;margin:0 0 9px}
   var TXT_DESCONTO = {
     hubla:  'Desconto de R$100 já aplicado no botão',
     greenn: 'Cupom de R$100 já aplicado no botão'
+  };
+  // parcela de 12x mostrada na pagina: juros de cada plataforma (Hubla conferida no checkout em 05/10/2026)
+  var TXT_PARCELA = {
+    hubla:  '12x de R$20,02',
+    greenn: '12x de R$19,97'
   };
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
 
@@ -677,6 +682,8 @@ footer p{max-width:none;margin:0 0 9px}
     if (_txt && TXT_PLATAFORMA[CHECKOUT]) _txt.textContent = TXT_PLATAFORMA[CHECKOUT];
     var _desc = document.querySelector('[data-txt-desconto]');
     if (_desc && TXT_DESCONTO[CHECKOUT]) _desc.textContent = TXT_DESCONTO[CHECKOUT];
+    var _parc = document.querySelectorAll('[data-txt-parcela]');
+    for (var _j = 0; _j < _parc.length; _j++) if (TXT_PARCELA[CHECKOUT]) _parc[_j].textContent = TXT_PARCELA[CHECKOUT];
   } catch(e){}
 
   // Stash de atribuicao pra pagina de acesso (upsell): o redirect pos-compra da
