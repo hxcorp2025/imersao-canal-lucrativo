@@ -517,7 +517,7 @@ footer p{max-width:none;margin:0 0 9px}
     <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
        data-greenn-upsell="6491" data-greenn-one-click="true">
       <span class="rotulo">GARANTIR 6 MESES DA GÊNESIS</span>
-      <small>R$397 ou 12x de R$40,82 · acesso junto com o do curso</small>
+      <small>R$397 ou <span data-txt-parcela>12x de R$40,34</span> · acesso junto com o do curso</small>
     </a>
     <p class="sob-cta">Pagamento seguro pela Hubla, a mesma plataforma da compra que você acabou de fazer.</p>
   </div>
@@ -549,8 +549,8 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box destaque">
       <p class="parc">yTube Gênesis · 6 meses de acesso</p>
       <div class="por"><span class="cif">R$</span>397</div>
-      <!-- TODO(dono): conferir no 1-clique da Hubla se a parcela de 12x continua R$40,82 (aparece em 3 lugares) -->
-      <p class="parc">ou <b>12x de R$40,82</b> no cartão</p>
+      <!-- 05/10/2026: parcela conferida pelo dono no checkout da Hubla = 12x R$40,34 (na Greenn era R$40,82; TXT_PARCELA troca no rollback) -->
+      <p class="parc">ou <b data-txt-parcela>12x de R$40,34</b> no cartão</p>
       <span class="cupom-nota">Postando 2 vídeos por semana, sai menos de R$8 por vídeo</span>
 
       <!-- data-greenn-*: o upsell.js da Greenn escuta o clique NESTE elemento (nao precisa
@@ -575,7 +575,7 @@ footer p{max-width:none;margin:0 0 9px}
     <div class="preco-box" style="margin-top:44px">
       <p class="olho" style="margin-bottom:14px">Saindo desta página, essa condição se encerra</p>
       <div class="por"><span class="cif">R$</span>397</div>
-      <p class="parc">ou <b>12x de R$40,82</b>, com 7 dias de garantia</p>
+      <p class="parc">ou <b data-txt-parcela>12x de R$40,34</b>, com 7 dias de garantia</p>
       <a class="cta" href="https://payfast.greenn.com.br/kfcr368/offer/ZOHMcY" data-open-checkout="1"
          data-greenn-upsell="6491" data-greenn-one-click="true">
         <span class="rotulo">ATIVAR MEUS 6 MESES DA GÊNESIS</span>
@@ -623,6 +623,12 @@ footer p{max-width:none;margin:0 0 9px}
   }
   var CHECKOUT_URL = PLATAFORMA === 'hubla' ? HUBLA_UPSELL_1CLIQUE_URL : GREENN_UPSELL_URL;
   window.LCY_PLATAFORMA = PLATAFORMA;   // o hxTrack (outro bloco) carimba no checkout_click
+  // parcela de 12x mostrada na pagina: juros de cada plataforma (Hubla conferida no checkout em 05/10/2026)
+  var TXT_PARCELA = { hubla: '12x de R$40,34', greenn: '12x de R$40,82' };
+  try {
+    var _parc = document.querySelectorAll('[data-txt-parcela]');
+    for (var _j = 0; _j < _parc.length; _j++) _parc[_j].textContent = TXT_PARCELA[PLATAFORMA];
+  } catch(e){}
   // TODO(compra teste): ver se a Hubla manda nome/e-mail/telefone na URL do pos-compra. Se mandar o
   // e-mail, colocar aqui o NOME do parametro (ex.: o que aparecer na barra de endereco) pra ligar o
   // comprador a este navegador (evento identify, so o sha256). Vazio = nada acontece, nada quebra.
