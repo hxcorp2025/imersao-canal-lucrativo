@@ -457,8 +457,10 @@ footer p{max-width:none;margin:0 0 9px}
     window.LCY_REDIGE = function(u){
       try {
         return String(u || '')
-          .replace(/([?&](token|s_id|fn|ln|em|ph|document|documento|doc|cpf|cnpj|email|e-mail|mail|name|nome|full_?name|first_?name|last_?name|phone|telefone|cellphone|celular|whatsapp)=)[^&#]*/gi, '$1[redigido]')
-          .replace(/([?&][^=&#]+=)[^&#]*(@|%40)[^&#]*/gi, '$1[redigido]');
+          .replace(/([?&](token|s_id|fn|ln|em|ph|document|documento|doc|cpf|cnpj|email|e-mail|mail|name|nome|full_?name|first_?name|last_?name|phone|phone_?number|user_?email|user_?name|telefone|cellphone|celular|mobile|whatsapp)=)[^&#]*/gi, '$1[redigido]')
+          .replace(/([?&][^=&#]+=)[^&#]*(@|%40)[^&#]*/gi, '$1[redigido]')
+          // 05/10/2026: a Hubla manda fullName, userEmail e phoneNumber no pos-compra; qualquer valor com cara de telefone (+DDI) sai
+          .replace(/([?&][^=&#]+=)(%2B|\+)\d{10,14}(?=[&#]|$)/gi, '$1[redigido]');
       } catch(e){ return ''; }
     };
     // Rastreio guardado pela pagina /lucrando/ (stash de 7 dias): e o que liga a
@@ -600,7 +602,7 @@ footer p{max-width:none;margin:0 0 9px}
   // TODO(compra teste): ver se a Hubla manda nome/e-mail/telefone na URL do pos-compra. Se mandar o
   // e-mail, colocar aqui o NOME do parametro (ex.: o que aparecer na barra de endereco) pra ligar o
   // comprador a este navegador (evento identify, so o sha256). Vazio = nada acontece, nada quebra.
-  window.LCY_HUBLA_PARAM_EMAIL = '';
+  window.LCY_HUBLA_PARAM_EMAIL = 'userEmail';   // conferido na compra teste de 05/10: a Hubla manda fullName, userEmail e phoneNumber
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // mesmo IC generico das paginas (payload leva funil proprio)
 
   var VSL_ID  = window.LCY_VSL_ID || 'vslgen2';   // VSL do upsell Genesis v2 (vertical, 10:00, pitch 08:35)
