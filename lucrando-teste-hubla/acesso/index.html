@@ -45,20 +45,19 @@
 <link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a8851d8f72a1f0b1a5dec06/thumbnail.jpg">
 <link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5N6MTPZB');</script>
+<!-- Sem Google Tag Manager desde 05/10/2026 (ok do Matheus): o conteiner GTM-5N6MTPZB mandava um 2o PageView do pixel
+     da Meta sem eventID (duplicava a visita), carregava a PixelX (dominio morto) e disparava a conversao "Compra LCY" do
+     Google Ads em toda abertura de qualquer pagina. Pixel da Meta e Google tag ficam so no codigo desta pagina. O resto do
+     site segue com o GTM. -->
 
-<!-- Google tag (Ads AW-17669903431; GA4 G-HKMPTX15RK ja dispara via GTM, config inline removido pra nao duplicar pageview) -->
+<!-- Google tag (Ads AW-17669903431: remarketing). GA4 G-HKMPTX15RK nao envia nada aqui (sem config; medido 05/10/2026).
+     "Compra LCY" (acao 7394743382, rotulo TdxS...): nas paginas do LCY, so nesta pos-compra, igual ao que o GTM mandava aqui. -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKMPTX15RK"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17669903431');</script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17669903431');gtag('event','conversion',{send_to:'AW-17669903431/TdxSCNaoi8YbEMeo1elB'});</script>
 
 <!-- Microsoft Clarity: e ferramenta de CRO, nao de dinheiro. A fila (window.clarity)
      nasce na hora, mas o script so entra depois do load pra nao disputar banda com a
-     VSL, que e o LCP. GTM, Meta Pixel e gtag do Ads seguem exatamente como estavam. -->
+     VSL, que e o LCP. Meta Pixel e gtag do Ads nao dependem dele. -->
 <script type="text/javascript">
 (function(c,l,a,r,i){
     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -98,6 +97,8 @@ window.HX_SET_PID=function(p){try{if(!/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89
 // Navegador sem crypto: cai no HX_SID, como era ate 30/09.
 window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX_PID_PIXEL_HASH');
 fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView');
+// 05/10/2026: Contact no clique do WhatsApp de suporte (wa.me). Antes vinha do GTM, que saiu desta pagina.
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"]');if(a&&typeof fbq==='function')fbq('track','Contact');},true);
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
 
@@ -644,11 +645,14 @@ footer p{max-width:none;margin:0 0 9px}
   function enriquece(v){
     // 29/09/2026: sufixo __sid_<hx_sid> viaja ate a Greenn (ela persiste utm_content) e casa a venda com a sessao no banco
     var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE + '__sid_' + (window.HX_SID || '');
+    // 05/10/2026: a Hubla devolve pra esta pagina o utm_content JA marcado pelo front (..__vsllcy__lcy__<headline>__sid_<sid>).
+    // Tira a marca anterior antes de por a nossa, senao o upsell sai com as duas (na Greenn a URL volta sem UTM e o stash e cru).
+    if (v) v = String(v).replace(/(^|__)[A-Za-z0-9]+__[A-Za-z0-9]+__[A-Za-z0-9]*__sid_[A-Za-z0-9_-]*$/, '');
     return v ? (v + '__' + s) : s;
   }
 
   // comPrefill: SO no ponto de navegacao (location.href). Nunca no setAttribute('href')
-  // dos botoes do VTurb — o hxTrack grava esse atributo e o GTM/GA4 leem Click URL:
+  // dos botoes do VTurb — o hxTrack grava esse atributo e outros scripts da pagina leem o DOM:
   // PII (nome, e-mail, telefone, CPF) nao pode morar no DOM nem no nosso banco.
   function montaUrl(hrefAtual, comPrefill){
     var t = rastreio(), params = [];

@@ -42,14 +42,11 @@
 <link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/thumbnail.jpg">
 <link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
-<!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-5N6MTPZB');</script>
+<!-- Sem Google Tag Manager desde 05/10/2026 (ok do Matheus): o conteiner GTM-5N6MTPZB mandava um 2o PageView do pixel
+     da Meta sem eventID (duplicava a visita), carregava a PixelX (dominio morto) e disparava a conversao "Compra LCY" do
+     Google Ads em toda abertura. Pixel da Meta e Google tag ficam so no codigo desta pagina. O resto do site segue com o GTM. -->
 
-<!-- Google tag (Ads AW-17669903431; GA4 G-HKMPTX15RK ja dispara via GTM, config inline removido pra nao duplicar pageview) -->
+<!-- Google tag (Ads AW-17669903431: remarketing). GA4 G-HKMPTX15RK nao envia nada aqui (sem config; medido 05/10/2026). -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HKMPTX15RK"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17669903431');</script>
 
@@ -92,6 +89,8 @@ window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX
 // 01/10/2026: PageView com eventID; o coletor manda o mesmo evento pelo servidor (API de Conversoes) e a Meta junta os dois
 window.HX_PV_EID='pv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
 fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView',{},{eventID:window.HX_PV_EID});
+// 05/10/2026: Contact no clique do WhatsApp de suporte (wa.me). Antes vinha do GTM, que saiu desta pagina.
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"]');if(a&&typeof fbq==='function')fbq('track','Contact');},true);
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
 
