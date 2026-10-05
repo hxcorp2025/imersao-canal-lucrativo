@@ -3,6 +3,29 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>
+/* 05/10/2026 (Hubla): o pos-compra da Hubla chega com fullName, userEmail e phoneNumber na URL (compra teste).
+   PRIMEIRO script da pagina: guarda o e-mail so na memoria (window.LCY_HUBLA_EMAIL; o identify manda so o sha256)
+   e tira os dados pessoais da barra de endereco ANTES do pixel da Meta, da tag do Google, do Clarity e do VTurb
+   lerem a URL. Trabalha na string crua: os outros parametros (utm_*, fbclid, src, token, s_id) ficam byte a byte. */
+(function(){
+  try {
+    var q = location.search.replace(/^\?/, '');
+    if (!q) return;
+    var PII = /^(fn|ln|em|ph|document|documento|doc|cpf|cnpj|email|e-mail|mail|name|nome|full_?name|first_?name|last_?name|phone|phone_?number|user_?email|user_?name|telefone|cellphone|celular|mobile|whatsapp)$/i;
+    var fica = [], tirou = false;
+    q.split('&').forEach(function(par){
+      if (!par) return;
+      var i = par.indexOf('='), k = i < 0 ? par : par.slice(0, i), v = i < 0 ? '' : par.slice(i + 1);
+      try { k = decodeURIComponent(k.replace(/\+/g, ' ')); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch(e){}
+      if (/^(user_?email|email)$/i.test(k) && v) window.LCY_HUBLA_EMAIL = String(v).trim().toLowerCase();
+      if (PII.test(k) || /@/.test(v) || /^\+\d{10,14}$/.test(v)) { tirou = true; return; }
+      fica.push(par);
+    });
+    if (tirou) history.replaceState(history.state, '', location.pathname + (fica.length ? '?' + fica.join('&') : '') + location.hash);
+  } catch(e){}
+})();
+</script>
 <meta name="theme-color" content="#0A0A0A">
 <title>Bem-vindo · Lucrando com YouTube</title>
 <meta name="description" content="Área de boas-vindas de novos alunos do Lucrando com YouTube. Assista à sua aula zero com João Adolfo.">
@@ -1265,6 +1288,8 @@ footer p{max-width:none;margin:0 0 9px}
       var w=window._wf, u=(w&&w.tokenIsValid===true)?w.userLast:null, em=(u&&u.email)?String(u.email).trim().toLowerCase():'';
       // 02/10/2026 (Hubla): sem _wf. Se a compra teste mostrar o e-mail na URL do pos-compra, o nome do
       // parametro vai em LCY_HUBLA_PARAM_EMAIL (bloco de config). Vazio ou ausente = segue sem identify.
+      // 05/10/2026: o primeiro script da pagina ja tirou o e-mail da URL e guardou em window.LCY_HUBLA_EMAIL.
+      if(!em&&window.LCY_HUBLA_EMAIL){em=String(window.LCY_HUBLA_EMAIL).trim().toLowerCase();}
       if(!em&&window.LCY_HUBLA_PARAM_EMAIL){try{em=String(new URLSearchParams(location.search).get(window.LCY_HUBLA_PARAM_EMAIL)||'').trim().toLowerCase();}catch(x){em='';}}
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ if(n<120)setTimeout(function(){idt(n+1);},500); return; }
       crypto.subtle.digest('SHA-256',new TextEncoder().encode(em)).then(function(b){
