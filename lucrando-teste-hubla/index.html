@@ -673,7 +673,7 @@ footer p{max-width:none;margin:0 0 9px}
   } catch(e){}
 
   // Stash de atribuicao pra pagina de acesso (upsell): o redirect pos-compra da
-  // Greenn volta SEM UTM (na Hubla, ainda nao conferido), entao a /lucrando/acesso/ le este stash (7 dias) e
+  // Greenn volta SEM UTM (a Hubla volta COM a UTM do checkout, ja marcada: conferido na compra teste de 05/10), entao a /lucrando/acesso/ le este stash (7 dias) e
   // re-injeta a origem no checkout do upsell. So grava quando ha origem de
   // verdade, pra uma visita organica nao apagar um stash rico de anuncio.
   try {
@@ -694,6 +694,16 @@ footer p{max-width:none;margin:0 0 9px}
         fbq('track','InitiateCheckout',{value:VALOR,currency:'BRL',content_name:'Lucrando com YouTube'},{eventID:eid});
       }
     } catch(e){}
+    // 02/10/2026: o InitiateCheckout do servidor sai pelo COLETOR (mesmo caminho das visitas: IP real da Cloudflare, cookies de
+    // servidor, dados da pessoa quando o navegador e de 1 pessoa do cadastro), com o mesmo eventID do pixel. O n8n so recebe se o
+    // script do coletor nao carregou (nunca os dois: o evento nao dobra). Igual ao /lucrando/ (4de9520), com a plataforma.
+    if (typeof window.hxTrack === 'function') {
+      try {
+        window.hxTrack('initiate_checkout', {valor:VALOR, vsl_id:VSL_ID, page_id:PAGE_ID, plataforma:CHECKOUT}, {pixel:'1452797958735774', nome:'InitiateCheckout', id:eid,
+          dados:{value:VALOR, currency:'BRL', content_name:'Lucrando com YouTube', content_ids:['133854'], content_type:'product', content_category:'digital_product', num_items:1}});
+        return;
+      } catch(e){} // erro no coletor: cai no n8n abaixo, o evento do servidor nao se perde
+    }
     try {
       fetch(CAPI_WEBHOOK_URL, {
         method:'POST',
