@@ -646,6 +646,9 @@ footer p{max-width:none;margin:0 0 9px}
   function enriquece(v){
     // 29/09/2026: sufixo __sid_<hx_sid> viaja ate a Greenn (ela persiste utm_content) e casa a venda com a sessao no banco
     var s = VSL_ID + '__' + PAGE_ID + '__' + HEADLINE + '__sid_' + (window.HX_SID || '');
+    // 05/10/2026: a Hubla devolve pra esta pagina o utm_content JA marcado pelo front (..__vsllcy__lcy__<headline>__sid_<sid>).
+    // Tira a marca anterior antes de por a nossa, senao o upsell sai com as duas (na Greenn a URL volta sem UTM e o stash e cru).
+    if (v) v = String(v).replace(/(^|__)[A-Za-z0-9]+__[A-Za-z0-9]+__[A-Za-z0-9]*__sid_[A-Za-z0-9_-]*$/, '');
     return v ? (v + '__' + s) : s;
   }
 
