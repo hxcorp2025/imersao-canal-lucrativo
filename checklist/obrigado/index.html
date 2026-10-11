@@ -12,10 +12,37 @@
       try { k = decodeURIComponent(k.replace(/\+/g, ' ')); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch(e){}
       if (/^(user_?email|email)$/i.test(k) && v) window.CKL_EMAIL = String(v).trim().toLowerCase();
       if (/^(phone_?number|phone|telefone|celular|cellphone|whatsapp)$/i.test(k) && v) window.CKL_FONE = String(v).replace(/\D/g, '');
+      if (/^(full_?name|name|nome)$/i.test(k) && v) window.CKL_NOME = String(v).trim();
       if (PII.test(k) || /@/.test(v) || /^\+\d{10,14}$/.test(v)) { tirou = true; return; }
       fica.push(par);
     });
     if (tirou) history.replaceState(history.state, '', location.pathname + (fica.length ? '?' + fica.join('&') : '') + location.hash);
+  } catch(e){}
+})();
+// 10/10/2026 (pedido do Matheus): dados da pessoa pro pixel (correspondencia avancada: o pixel faz o sha256) e, ja em
+// sha256, pro coletor mandar junto dos eventos do pos-compra. Mesma regra do envio da compra pelo servidor: e-mail em
+// minusculas; telefone so digitos com 55; nome = 1a palavra e sobrenome = ultima, so letras, minusculas, com acento.
+(function(){
+  try {
+    var am = {}, em = String(window.CKL_EMAIL || ''), ph = String(window.CKL_FONE || ''), nome = String(window.CKL_NOME || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) am.em = em;
+    if (/^\d{10,11}$/.test(ph)) ph = '55' + ph;
+    if (/^\d{12,15}$/.test(ph)) am.ph = ph;
+    if (nome) {
+      // so letras (regra da Meta e do cadastro cdp_ud): "Ana-Maria" vira anamaria; sobrenome igual ao nome nao vai.
+      // RegExp em runtime e try: navegador antigo sem a classe de letras Unicode so fica com o nome cru, sem quebrar este script.
+      var so = function(x){ try { return x.replace(new RegExp('[^\\p{L}]', 'gu'), ''); } catch(e){ return x; } };
+      var p = nome.split(' ').map(so).filter(Boolean);
+      if (p.length) { am.fn = p[0]; if (p.length > 1 && p[p.length - 1] !== p[0]) am.ln = p[p.length - 1]; }
+    }
+    window.CKL_AM = am;
+    var ks = Object.keys(am);
+    if (!ks.length || !window.crypto || !crypto.subtle) return;
+    window.CKL_UD = Promise.all(ks.map(function(k){
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(am[k])).then(function(b){
+        return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+      });
+    })).then(function(hs){ var ud = {}; ks.forEach(function(k, i){ ud[k] = [hs[i]]; }); window.CKL_UD_VAL = ud; return ud; }).catch(function(){ return null; });
   } catch(e){}
 })();
 </script>
@@ -56,7 +83,7 @@ window.HX_SET_PID=function(p){try{if(!/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89
 window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX_PID_PIXEL_HASH');
 // PageView com eventID; o coletor manda o mesmo evento pelo servidor (API de Conversoes) e a Meta junta os dois
 window.HX_PV_EID='pv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView',{},{eventID:window.HX_PV_EID});
+fbq('init','1452797958735774',Object.assign({external_id:window.HX_PID_PIXEL},window.CKL_AM||{}));fbq('track','PageView',{},{eventID:window.HX_PV_EID});
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"]');if(a&&typeof fbq==='function')fbq('track','Contact');},true);
 </script>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
@@ -130,7 +157,7 @@ footer small{display:block;margin-top:12px;color:#8a8a8a}
   function sendAntigo(d){try{var c=Object.assign({},d);delete c.meta;fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(c),keepalive:true}).catch(function(){});}catch(e){}}
   function send(d){
     try{
-      fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
+      return fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
         .then(function(r){ if(!r.ok) throw new Error('coletor '+r.status); return r.json(); })
         .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); if(j&&j.pid&&window.HX_SET_PID)window.HX_SET_PID(j.pid); }catch(e){} })
         .catch(function(){ sendAntigo(d); });
@@ -141,7 +168,7 @@ footer small{display:block;margin-top:12px;color:#8a8a8a}
   function evento(tipo,extra,meta){
     var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
     var d=base({event_type:tipo,extra:e}); if(meta&&meta.id)d.meta=meta;
-    send(d);
+    return send(d);
   }
   window.hxTrack=evento;
   // pageview NA HORA; sem _fbp ainda, o bloco meta do PageView vai no 'fbp_pronto' (ate 3 s), igual ao LCY
@@ -160,25 +187,57 @@ footer small{display:block;margin-top:12px;color:#8a8a8a}
     var pay=e.target.closest('[data-open-checkout],a[href*="hub.la"],a[href*="checkout"]');
     if(pay){evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),cta:(pay.getAttribute&&pay.getAttribute('data-open-checkout'))||null,href:(pay.getAttribute&&pay.getAttribute('href'))||''});return;}
     var cta=e.target.closest('.cta,.btn,a[href*="sndflw"]');
-    if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
+    if(cta){var hrefC=(cta.getAttribute&&cta.getAttribute('href'))||'',mG=null;if(/sndflw\.com|chat\.whatsapp\.com/i.test(hrefC)&&window.CKL_META_GRUPO){try{mG=window.CKL_META_GRUPO();}catch(x){}}evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:hrefC},mG);}
   },true);
 })();
 </script>
 <script>
 (function(){
   function sha(v){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});}
+  var PIXEL='1452797958735774';
+  // 10/10/2026 (pedido do Matheus): eventos personalizados do pos-compra, pixel + servidor com o MESMO eventID (a Meta
+  // conta 1). Dados da pessoa: o pixel leva pela correspondencia avancada do init (CKL_AM); o servidor pelo bloco ud
+  // (sha256, CKL_UD). ChecklistObrigado = chegou na pagina (1 vez por aba). ChecklistGrupo = clicou no grupo (1 vez).
+  function comDados(f){ if(window.CKL_UD&&typeof window.CKL_UD.then==='function'){window.CKL_UD.then(function(ud){f(ud);},function(){f(null);});} else f(window.CKL_UD_VAL||null); }
+  var ENVIOU=false;
+  function obrigado(){
+    if(ENVIOU||typeof window.hxTrack!=='function')return; ENVIOU=true;
+    var feito=false;try{feito=sessionStorage.getItem('hx_ckl_obg')==='1';}catch(e){}
+    if(feito)return;
+    try{sessionStorage.setItem('hx_ckl_obg','1');}catch(e){}
+    comDados(function(ud){
+      var id='ckl_obg_'+(window.HX_SID||'s')+'_'+Date.now().toString(36);
+      var dados={content_name:'Checklist Posta Certo no YouTube',content_category:'pos_compra'};
+      try{ if(typeof fbq==='function') fbq('trackCustom','ChecklistObrigado',dados,{eventID:id}); }catch(e){}
+      var meta={pixel:PIXEL,nome:'ChecklistObrigado',id:id,dados:dados}; if(ud) meta.ud=ud;
+      window.hxTrack('evento_meta',{nome:'ChecklistObrigado'},meta);
+    });
+  }
+  var GRUPO=false;
+  window.CKL_META_GRUPO=function(){
+    if(GRUPO)return null; GRUPO=true;
+    var id='ckl_grp_'+(window.HX_SID||'s')+'_'+Date.now().toString(36);
+    var dados={content_name:'Grupo do WhatsApp (Checklist)',content_category:'pos_compra'};
+    try{ if(typeof fbq==='function') fbq('trackCustom','ChecklistGrupo',dados,{eventID:id}); }catch(e){}
+    var meta={pixel:PIXEL,nome:'ChecklistGrupo',id:id,dados:dados}; if(window.CKL_UD_VAL) meta.ud=window.CKL_UD_VAL;
+    return meta;
+  };
+  // identify: o navegador manda SO o sha256 do e-mail (e do telefone, so digitos) e o banco liga este navegador (hx_pid)
+  // a pessoa do cadastro na rodada da madrugada. Uma vez por aba. O ChecklistObrigado sai logo depois (ou sem ele).
   function idt(){
     var feito=false;try{feito=sessionStorage.getItem('hx_idt_ckl')==='1';}catch(e){}
-    if(feito||typeof window.hxTrack!=='function')return;
+    if(feito||typeof window.hxTrack!=='function'){ obrigado(); return; }
     var em=String(window.CKL_EMAIL||'').trim().toLowerCase();
-    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))return;
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ obrigado(); return; }
     var fone=String(window.CKL_FONE||'');
     try{
       Promise.all([sha(em), /^\d{10,15}$/.test(fone)?sha(fone):Promise.resolve(null)]).then(function(h){
-        window.hxTrack('identify',{em_sha256:h[0],ph_sha256:h[1],fonte:'checklist_obrigado'});
+        var r=window.hxTrack('identify',{em_sha256:h[0],ph_sha256:h[1],fonte:'checklist_obrigado'});
         try{sessionStorage.setItem('hx_idt_ckl','1');}catch(e){}
-      }).catch(function(){});
-    }catch(e){}
+        var t=setTimeout(obrigado,2000);
+        if(r&&typeof r.then==='function') r.then(function(){clearTimeout(t);obrigado();},function(){clearTimeout(t);obrigado();});
+      }).catch(function(){ obrigado(); });
+    }catch(e){ obrigado(); }
   }
   if(document.readyState==='complete')idt(); else window.addEventListener('load',idt);
 })();

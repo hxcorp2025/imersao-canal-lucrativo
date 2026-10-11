@@ -19,10 +19,38 @@
       var i = par.indexOf('='), k = i < 0 ? par : par.slice(0, i), v = i < 0 ? '' : par.slice(i + 1);
       try { k = decodeURIComponent(k.replace(/\+/g, ' ')); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch(e){}
       if (/^(user_?email|email)$/i.test(k) && v) window.LCY_HUBLA_EMAIL = String(v).trim().toLowerCase();
+      if (/^(phone_?number|phone|telefone|celular|cellphone|whatsapp)$/i.test(k) && v) window.LCY_HUBLA_FONE = String(v).replace(/\D/g, '');
+      if (/^(full_?name|name|nome)$/i.test(k) && v) window.LCY_HUBLA_NOME = String(v).trim();
       if (PII.test(k) || /@/.test(v) || /^\+\d{10,14}$/.test(v)) { tirou = true; return; }
       fica.push(par);
     });
     if (tirou) history.replaceState(history.state, '', location.pathname + (fica.length ? '?' + fica.join('&') : '') + location.hash);
+  } catch(e){}
+})();
+/* 10/10/2026 (pedido do Matheus): dados da pessoa pro pixel (correspondencia avancada: o pixel faz o sha256) e, ja em
+   sha256, pro coletor mandar junto dos eventos LCYUpsell*. Mesma regra do envio da compra pelo servidor: e-mail em
+   minusculas; telefone so digitos com 55; nome = 1a palavra e sobrenome = ultima, so letras, minusculas, com acento. */
+(function(){
+  try {
+    var am = {}, em = String(window.LCY_HUBLA_EMAIL || ''), ph = String(window.LCY_HUBLA_FONE || ''), nome = String(window.LCY_HUBLA_NOME || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) am.em = em;
+    if (/^\d{10,11}$/.test(ph)) ph = '55' + ph;
+    if (/^\d{12,15}$/.test(ph)) am.ph = ph;
+    if (nome) {
+      // so letras (regra da Meta e do cadastro cdp_ud): "Ana-Maria" vira anamaria; sobrenome igual ao nome nao vai.
+      // RegExp em runtime e try: navegador antigo sem a classe de letras Unicode so fica com o nome cru, sem quebrar este script.
+      var so = function(x){ try { return x.replace(new RegExp('[^\\p{L}]', 'gu'), ''); } catch(e){ return x; } };
+      var p = nome.split(' ').map(so).filter(Boolean);
+      if (p.length) { am.fn = p[0]; if (p.length > 1 && p[p.length - 1] !== p[0]) am.ln = p[p.length - 1]; }
+    }
+    window.LCY_AM = am;
+    var ks = Object.keys(am);
+    if (!ks.length || !window.crypto || !crypto.subtle) return;
+    window.LCY_UD = Promise.all(ks.map(function(k){
+      return crypto.subtle.digest('SHA-256', new TextEncoder().encode(am[k])).then(function(b){
+        return Array.prototype.map.call(new Uint8Array(b), function(x){ return ('0' + x.toString(16)).slice(-2); }).join('');
+      });
+    })).then(function(hs){ var ud = {}; ks.forEach(function(k, i){ ud[k] = [hs[i]]; }); window.LCY_UD_VAL = ud; return ud; }).catch(function(){ return null; });
   } catch(e){}
 })();
 </script>
@@ -119,7 +147,7 @@ window.HX_SET_PID=function(p){try{if(!/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89
 // external_id do pixel = HX_PID (o pixel faz sha256 do valor em minusculas; o servidor manda o mesmo sha256).
 // Navegador sem crypto: cai no HX_SID, como era ate 30/09.
 window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX_PID_PIXEL_HASH');
-fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView');
+fbq('init','1452797958735774',Object.assign({external_id:window.HX_PID_PIXEL},window.LCY_AM||{}));fbq('track','PageView');
 // 05/10/2026: Contact no clique do WhatsApp de suporte (wa.me). Antes vinha do GTM, que saiu desta pagina.
 document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"]');if(a&&typeof fbq==='function')fbq('track','Contact');},true);
 </script>
@@ -638,6 +666,7 @@ footer p{max-width:none;margin:0 0 9px}
   var VSL_ID  = window.LCY_VSL_ID || 'vslgen2';   // VSL do upsell Genesis v2 (vertical, 10:00, pitch 08:35)
   var PAGE_ID = 'lcyup';    // pagina de acesso / upsell do Lucrando
   var VALOR   = 397;        // valor do Genesis 6 meses
+  window.LCY_VALOR = VALOR; // 10/10/2026: o bloco do hxTrack monta os eventos LCYUpsell* com o mesmo valor
 
   var PITCH_SEGUNDOS = 515;         // 08:35 = momento do pitch na VSL do upsell
   var BACKSTOP_MS = 560 * 1000;     // 09:20 de relogio. Rede de seguranca: so age
@@ -1108,8 +1137,9 @@ footer p{max-width:none;margin:0 0 9px}
   var oferta = document.getElementById('oferta');
   var jaAberto = false;
 
-  function marca(evento, extra){
-    try { window.hxTrack && window.hxTrack(evento, extra || {}); } catch(e){}
+  // 10/10/2026: 3o argumento = bloco meta do evento personalizado (LCYUpsellPlay/Pitch), montado por LCY_META_UP no bloco do hxTrack
+  function marca(evento, extra, meta){
+    try { window.hxTrack && window.hxTrack(evento, extra || {}, meta || null); } catch(e){}
     try { window.dataLayer && window.dataLayer.push({event:'lcyup_' + evento, headline:HEADLINE, vsl_id:VSL_ID}); } catch(e){}
   }
 
@@ -1117,7 +1147,8 @@ footer p{max-width:none;margin:0 0 9px}
   function marcaPlay(){
     if (playMarcado) return;
     playMarcado = true;
-    marca('video_play', {});
+    var mPlay = null; try { mPlay = window.LCY_META_UP ? window.LCY_META_UP('LCYUpsellPlay', 'play') : null; } catch(e){}
+    marca('video_play', {}, mPlay);
     try {
       if (typeof fbq === 'function') {
         fbq('track','ViewContent',{content_name:'VSL yTube Gênesis',content_category:'upsell',value:VALOR,currency:'BRL'});
@@ -1129,7 +1160,8 @@ footer p{max-width:none;margin:0 0 9px}
   function marcaPitch(origem){
     if (pitchMarcado) return;
     pitchMarcado = true;
-    marca('video_pitch', {origem: origem});
+    var mPitch = null; try { mPitch = window.LCY_META_UP ? window.LCY_META_UP('LCYUpsellPitch', 'pitch') : null; } catch(e){}
+    marca('video_pitch', {origem: origem}, mPitch);
     try {
       if (typeof fbq === 'function') {
         fbq('trackCustom','PitchReached',{content_name:'VSL yTube Gênesis',value:VALOR,currency:'BRL'});
@@ -1252,10 +1284,11 @@ footer p{max-width:none;margin:0 0 9px}
   // dominio registravel da pagina (joaoadolfooficial.com, empresa.com.br) e Secure so em https: funciona em qualquer host, inclusive teste local
   var DOM=(function(){try{var p=location.hostname.split('.');if(p.length<2)return '';if(p.length>=3&&p[p.length-1].length===2&&/^(com|net|org|gov|edu)$/.test(p[p.length-2]))return '.'+p.slice(-3).join('.');return '.'+p.slice(-2).join('.');}catch(e){return '';}})();
   function setck(n,v){try{document.cookie=n+'='+encodeURIComponent(v)+'; max-age=7776000; path=/'+(DOM?'; domain='+DOM:'')+'; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch(e){}}
-  function sendAntigo(d){try{fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(d),keepalive:true}).catch(function(){});}catch(e){}}
+  // 10/10/2026: a reserva grava direto na tabela, que nao tem coluna 'meta' (o bloco da Meta so serve pro coletor)
+  function sendAntigo(d){try{var c=Object.assign({},d);delete c.meta;fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(c),keepalive:true}).catch(function(){});}catch(e){}}
   function send(d){
     try{
-      fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
+      return fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
         .then(function(r){ if(!r.ok) throw new Error('coletor '+r.status); return r.json(); })
         .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); if(j&&j.pid&&window.HX_SET_PID)window.HX_SET_PID(j.pid); }catch(e){} })
         .catch(function(){ sendAntigo(d); });
@@ -1263,11 +1296,36 @@ footer p{max-width:none;margin:0 0 9px}
   }
 
   var HL=window.LCY_HEADLINE||'aula0', FUNIL='LCY_UP', VSL=window.LCY_VSL_ID||'vslgen2';
-  function evento(tipo,extra){
+  function evento(tipo,extra,meta){
     var e=Object.assign({headline:HL,funil:FUNIL,vsl_id:VSL,gclid:q('gclid')||null},extra||{});
-    send(base({event_type:tipo,extra:e}));
+    var d=base({event_type:tipo,extra:e}); if(meta&&meta.id)d.meta=meta;
+    return send(d);
   }
   window.hxTrack=evento;
+
+  // 10/10/2026 (pedido do Matheus): eventos personalizados do upsell, um pra cada etapa, pixel + servidor com o MESMO
+  // eventID (a Meta conta 1): LCYUpsellVisita (chegou), LCYUpsellPlay (deu play), LCYUpsellPitch (chegou no pitch),
+  // LCYUpsellClique (clicou no botao de compra). Dados da pessoa: o pixel leva pela correspondencia avancada do init
+  // (LCY_AM); o servidor pelo bloco ud (sha256, LCY_UD_VAL). Monta o bloco meta e dispara o pixel; quem chama manda pro coletor.
+  window.LCY_META_UP=function(nome,cod){
+    var id='lcyup_'+cod+'_'+sid()+'_'+Date.now().toString(36);
+    var dados={content_name:'VSL yTube Gênesis',content_category:'upsell',value:(window.LCY_VALOR||397),currency:'BRL'};
+    try{ if(typeof fbq==='function') fbq('trackCustom',nome,dados,{eventID:id}); }catch(e){}
+    var m={pixel:'1452797958735774',nome:nome,id:id,dados:dados}; if(window.LCY_UD_VAL) m.ud=window.LCY_UD_VAL;
+    return m;
+  };
+  var visitaFeita=false;
+  function visita(){
+    if(visitaFeita)return; visitaFeita=true;
+    var feito=false;try{feito=sessionStorage.getItem('hx_lcyup_vis')==='1';}catch(e){}
+    if(feito)return;
+    try{sessionStorage.setItem('hx_lcyup_vis','1');}catch(e){}
+    var vai=function(){ try{ evento('evento_meta',{nome:'LCYUpsellVisita'},window.LCY_META_UP('LCYUpsellVisita','vis')); }catch(e){} };
+    if(window.LCY_UD&&typeof window.LCY_UD.then==='function') window.LCY_UD.then(vai,vai); else vai();
+  }
+  // a visita sai logo depois do identify (ver idt) ou, sem e-mail na URL, 6 s depois do load
+  window.addEventListener('load',function(){ setTimeout(visita,6000); });
+  var cliqueFeito=false;
 
   // 29/09/2026: pageview sai NA HORA (metrica comparavel com o historico). Se o _fbp ainda nao existe,
   // um 2o evento 'fbp_pronto' sai quando o pixel criar o cookie (ate 3 s): o banco pega o fbp de
@@ -1279,7 +1337,7 @@ footer p{max-width:none;margin:0 0 9px}
     if(e.target.closest('vturb-anchor-button'))return; // anchor escondido do VTurb: so recebe clique sintetico do nosso CTA (ja contado)
     var pay=e.target.closest('[data-open-checkout],a[href*="greenn"],a[href*="payfast"],a[href*="hub.la"],a[href*="checkout"]');
     // href redigido: fn/em/ph/document (prefill) e token/s_id (credencial de cobranca da Greenn, que o VTurb copiava da URL da pagina)
-    if(pay){var met='',vk=null;try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}try{var sp=document.querySelector('vturb-smartplayer');vk=(sp&&/^v3_/.test(String(sp.conversionKey||'')))?String(sp.conversionKey):null;}catch(x){}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:window.LCY_REDIGE(((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document|token|s_id)=)[^&]*/gi,'$1[redigido]')),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met,vturb_key:vk,plataforma:(window.LCY_PLATAFORMA||null)});return;}
+    if(pay){var met='',vk=null,mClk=null;try{met=(window._wf&&window._wf.methodLast)||'';}catch(x){}try{var sp=document.querySelector('vturb-smartplayer');vk=(sp&&/^v3_/.test(String(sp.conversionKey||'')))?String(sp.conversionKey):null;}catch(x){}if(!cliqueFeito){cliqueFeito=true;try{mClk=window.LCY_META_UP('LCYUpsellClique','clk');}catch(x){}}evento('checkout_click',{label:(pay.textContent||'').trim().slice(0,80),href:window.LCY_REDIGE(((pay.getAttribute&&pay.getAttribute('href'))||'').replace(/([?&](fn|em|ph|document|token|s_id)=)[^&]*/gi,'$1[redigido]')),modo:(window.LCY_MODO?window.LCY_MODO():'checkout'),metodo:met,vturb_key:vk,plataforma:(window.LCY_PLATAFORMA||null)},mClk);return;}
     var cta=e.target.closest('.cta,.btn');
     if(cta){evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:(cta.getAttribute&&cta.getAttribute('href'))||''});}
   },true);
@@ -1301,8 +1359,11 @@ footer p{max-width:none;margin:0 0 9px}
       if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){ if(n<120)setTimeout(function(){idt(n+1);},500); return; }
       crypto.subtle.digest('SHA-256',new TextEncoder().encode(em)).then(function(b){
         var h=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');
-        evento('identify',{em_sha256:h,fonte:'acesso_upsell'});
+        var r=evento('identify',{em_sha256:h,fonte:'acesso_upsell'});
         try{sessionStorage.setItem('hx_idt','1');}catch(e){}
+        // 10/10/2026: LCYUpsellVisita logo depois do identify chegar no coletor (no maximo 2 s)
+        var t=setTimeout(visita,2000);
+        if(r&&typeof r.then==='function') r.then(function(){clearTimeout(t);visita();},function(){clearTimeout(t);visita();});
       }).catch(function(){});
     }catch(e){}
   }
