@@ -434,6 +434,12 @@ p{margin:0 0 18px;max-width:66ch}
 }
 .saida b{color:var(--g2);font-weight:600}
 
+/* recusa do upsell (15/10): texto clicavel sem enfase, aparece 60 s depois do botao */
+.recusa{display:block;width:max-content;max-width:100%;margin:14px auto 0;padding:6px 4px;text-align:center;color:var(--g3);font-size:13.5px;line-height:1.4;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--borda2)}
+.recusa:hover{color:var(--g2)}
+.recusa:focus-visible{outline:2px solid var(--g2);outline-offset:2px;border-radius:4px}
+.recusa[hidden]{display:none}
+
 /* rodape */
 footer{
   margin-top:64px;padding:30px 0 44px;border-top:1px solid var(--borda);
@@ -548,6 +554,9 @@ footer p{max-width:none;margin:0 0 9px}
       <small>R$397 ou <span data-txt-parcela>12x de R$40,34</span> · acesso junto com o do curso</small>
     </a>
     <p class="sob-cta">Pagamento seguro pela Hubla, a mesma plataforma da compra que você acabou de fazer.</p>
+    <!-- 15/10/2026 (pedido do Matheus): recusa discreta, aparece 60 s depois do botao (armaRecusa no abre()) e leva pro
+         /lucrando/obrigado/, onde esta o botao do grupo. Clique conta como cta_click acao=recusa_upsell. -->
+    <a class="recusa" href="/lucrando/obrigado/" data-recusa="1" hidden>Não, obrigado. Prefiro seguir sem a Gênesis.</a>
   </div>
 
   <p class="dica"><span class="pulso"></span>Assista com o som ligado, até o final</p>
@@ -613,6 +622,7 @@ footer p{max-width:none;margin:0 0 9px}
     </div>
 
     <p class="saida">Prefere atravessar no manual? Tudo certo: <b>o método já é seu.</b> Seu acesso ao Lucrando com YouTube chega no e-mail da compra em alguns minutos, com ou sem a Gênesis.</p>
+    <a class="recusa" href="/lucrando/obrigado/" data-recusa="2" hidden>Seguir sem a Gênesis</a>
 
   </section>
 
@@ -1186,7 +1196,37 @@ footer p{max-width:none;margin:0 0 9px}
     } catch(e){}
     // so conta como pitch de verdade quando veio do tempo do VIDEO
     if (origem === 'vturb') marcaPitch('vturb');
+    armaRecusa();
   }
+
+  // 15/10/2026 (pedido do Matheus): 60 s depois do botao aparecer, a recusa discreta. Ela leva pro /lucrando/obrigado/
+  // (botao do grupo) levando so os parametros de origem: nunca token/s_id (credencial de cobranca) nem dado pessoal.
+  var RECUSA_MS = 60 * 1000, recusaArmada = false;
+  function armaRecusa(){
+    if (recusaArmada) return;
+    recusaArmada = true;
+    setTimeout(function(){
+      try { var r = document.querySelectorAll('[data-recusa]'); for (var i = 0; i < r.length; i++) r[i].hidden = false; } catch(e){}
+    }, RECUSA_MS);
+  }
+  function urlRecusa(){
+    var fica = [];
+    try {
+      new URLSearchParams(location.search).forEach(function(v, k){
+        if (/^(utm_(source|medium|campaign|content|term)|fbclid|gclid|wbraid|gbraid)$/.test(k)) fica.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+      });
+    } catch(e){}
+    return '/lucrando/obrigado/' + (fica.length ? '?' + fica.join('&') : '');
+  }
+  document.addEventListener('click', function(e){
+    if (!e.target.closest) return;
+    var a = e.target.closest('[data-recusa]');
+    if (!a) return;
+    e.preventDefault();
+    var url = urlRecusa();
+    try { if (typeof window.hxTrack === 'function') window.hxTrack('cta_click', {label: 'recusou_genesis', acao: 'recusa_upsell', posicao: a.getAttribute('data-recusa'), href: url}); } catch(err){}
+    setTimeout(function(){ window.location.href = url; }, 250);
+  }, false);
 
   // debug: ?reveal=1 abre na hora
   if (new URLSearchParams(window.location.search).get('reveal') === '1') abre('debug');

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="pt-BR" data-pagina="obrigado">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>
+/* 15/10/2026 (pedido do Matheus): obrigado de quem comprou SO o Lucrando e recusou a Genesis no /lucrando/acesso/.
+   PRIMEIRO script (mesmo padrao do /lucrando/acesso/): se a URL trouxer dado pessoal (pos-compra da Hubla manda
+   fullName, userEmail, phoneNumber), guarda o e-mail so na memoria e tira da barra ANTES de qualquer tag ler a URL. */
+(function(){
+  try {
+    var q = location.search.replace(/^\?/, '');
+    if (!q) return;
+    var PII = /^(fn|ln|em|ph|document|documento|doc|cpf|cnpj|email|e-mail|mail|name|nome|full_?name|first_?name|last_?name|phone|phone_?number|user_?email|user_?name|telefone|cellphone|celular|mobile|whatsapp)$/i;
+    var fica = [], tirou = false;
+    q.split('&').forEach(function(par){
+      if (!par) return;
+      var i = par.indexOf('='), k = i < 0 ? par : par.slice(0, i), v = i < 0 ? '' : par.slice(i + 1);
+      try { k = decodeURIComponent(k.replace(/\+/g, ' ')); v = decodeURIComponent(v.replace(/\+/g, ' ')); } catch(e){}
+      if (/^(user_?email|email)$/i.test(k) && v) window.LCY_POS_EMAIL = String(v).trim().toLowerCase();
+      if (/^(phone_?number|phone|telefone|celular|cellphone|whatsapp)$/i.test(k) && v) window.LCY_POS_FONE = String(v).replace(/\D/g, '');
+      if (PII.test(k) || /@/.test(v) || /^\+\d{10,14}$/.test(v)) { tirou = true; return; }
+      fica.push(par);
+    });
+    if (tirou) history.replaceState(history.state, '', location.pathname + (fica.length ? '?' + fica.join('&') : '') + location.hash);
+  } catch(e){}
+})();
+</script>
+<title>Compra confirmada · Lucrando com YouTube</title>
+<meta name="theme-color" content="#0A0A0A">
+<meta name="robots" content="noindex,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap"></noscript>
+<!-- Google Ads so remarketing (sem evento de conversao: a compra do Lucrando ja conta no /lucrando/acesso/) e Clarity,
+     carregados depois da pagina (1,5 s apos o load ou no 1o toque), igual ao obrigado do Checklist. -->
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','AW-17669903431');
+(function(c,l,a,r,i){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};})(window,document,"clarity","script","ox4mx9nv30");clarity('set','pagina','lcy-obrigado');
+(function(){var feito=false;function carrega(){if(feito)return;feito=true;['https://www.googletagmanager.com/gtag/js?id=AW-17669903431','https://www.clarity.ms/tag/ox4mx9nv30'].forEach(function(u){var s=document.createElement('script');s.async=true;s.src=u;document.head.appendChild(s);});}
+['scroll','pointerdown','keydown','touchstart'].forEach(function(e){window.addEventListener(e,carrega,{once:true,passive:true});});
+window.addEventListener('load',function(){setTimeout(carrega,1500);});})();</script>
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+window.HX_SID=(function(){try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}})();
+// HX_PID = id deste navegador (cookie _hxpid do servidor, 400 dias, vale no .joaoadolfooficial.com inteiro: e a mesma
+// pessoa que comprou no /lucrando/). Na 1a visita a pagina gera o id (UUIDv7) e o coletor adota.
+window.HX_PID=(function(){var RE=/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/,p='';
+try{var m=document.cookie.match(/(?:^|;\s*)_hxpid=([^;]+)/);if(m)p=decodeURIComponent(m[1]);}catch(e){}
+if(RE.test(p)){try{localStorage.setItem('hx_pid_local',p);}catch(e){}return p;}
+try{p=localStorage.getItem('hx_pid_local')||'';}catch(e){p='';}
+if(RE.test(p))return p;
+try{var b=new Uint8Array(16),t=Date.now(),i,h='';crypto.getRandomValues(b);for(i=0;i<6;i++)b[i]=Math.floor(t/Math.pow(2,8*(5-i)))&255;
+b[6]=(b[6]&15)|112;b[8]=(b[8]&63)|128;for(i=0;i<16;i++)h+=('0'+b[i].toString(16)).slice(-2);
+p=h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20);}catch(e){return '';}
+try{localStorage.setItem('hx_pid_local',p);}catch(e){}
+return p;})();
+window.HX_HASH=function(v,k){try{if(!v)return;crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){window[k]=Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');}).catch(function(){});}catch(e){}};
+HX_HASH(window.HX_SID,'HX_SID_HASH');HX_HASH(window.HX_PID,'HX_PID_HASH');
+window.HX_SET_PID=function(p){try{if(!/^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(p)||p===window.HX_PID)return;window.HX_PID=p;window.HX_PID_HASH=null;try{localStorage.setItem('hx_pid_local',p);}catch(e){}HX_HASH(p,'HX_PID_HASH');}catch(e){}};
+window.HX_PID_PIXEL=window.HX_PID||window.HX_SID;HX_HASH(window.HX_PID_PIXEL,'HX_PID_PIXEL_HASH');
+// PageView com eventID; o coletor manda o mesmo evento pelo servidor (API de Conversoes) e a Meta junta os dois
+window.HX_PV_EID='pv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+fbq('init','1452797958735774',{external_id:window.HX_PID_PIXEL});fbq('track','PageView',{},{eventID:window.HX_PV_EID});
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href*="wa.me"]');if(a&&typeof fbq==='function')fbq('track','Contact');},true);
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1452797958735774&ev=PageView&noscript=1"></noscript>
+<style>
+:root{
+  --preto:#0A0A0A; --preto2:#111113; --vermelho:#FF0000;
+  --branco:#FFFFFF; --g1:#EDEDEF; --g2:#A8A8B0; --g3:#6E6E78;
+  --glass:rgba(255,255,255,.035); --borda:rgba(255,255,255,.09); --borda2:rgba(255,255,255,.14);
+  --verde:#22C55E; --verde-txt:#D6F5E3; --verde-cta:#16A34A; --verde-cta-esc:#15803D;
+  --fd:'Bricolage Grotesque',system-ui,sans-serif;
+  --fb:'Geist',system-ui,-apple-system,sans-serif;
+  --fm:'JetBrains Mono',ui-monospace,monospace;
+  --col:min(620px,100%);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--preto);color:var(--g1);font-family:var(--fb);font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{width:var(--col);margin:0 auto;padding:0 20px}
+.pago{background:linear-gradient(180deg,rgba(22,163,74,.20),rgba(22,163,74,.07));border-bottom:1px solid rgba(34,197,94,.30);padding:12px 18px}
+.pago-in{width:var(--col);margin:0 auto;display:flex;align-items:center;gap:10px;justify-content:center;font-size:14px;line-height:1.4;color:var(--verde-txt)}
+.pago b{color:var(--branco);font-weight:600}
+.pago .ck{width:19px;height:19px;flex:none;border-radius:50%;background:var(--verde);display:grid;place-items:center}
+.pago .ck svg{width:11px;height:11px;display:block}
+.hl{font-family:var(--fd);font-weight:800;text-transform:uppercase;font-size:clamp(30px,8vw,46px);line-height:1.04;letter-spacing:-.03em;color:var(--branco);text-align:center;margin:30px 0 12px;text-wrap:balance}
+.hl .r{color:var(--vermelho)}
+.hl-sub{text-align:center;color:var(--g2);font-size:clamp(15.5px,3.8vw,18px);margin:0 auto;max-width:36ch;text-wrap:balance}
+.hl-sub b{color:var(--branco);font-weight:600}
+.grupo{margin:28px 0 0;background:var(--preto2);border:1px solid var(--borda2);border-radius:16px;padding:22px 20px;display:grid;gap:10px;text-align:center}
+.olho{font-family:var(--fm);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--vermelho);margin:0}
+.grupo h2{font-family:var(--fd);font-weight:800;font-size:clamp(21px,5.4vw,26px);line-height:1.15;color:var(--branco);margin:0;text-wrap:balance}
+.grupo p{margin:0;color:var(--g2);font-size:16px}
+.grupo .olho{color:var(--vermelho);font-size:11px}
+.cta{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:62px;margin-top:8px;padding:16px 20px;background:linear-gradient(180deg,var(--verde-cta),var(--verde-cta-esc));color:var(--branco);border-radius:12px;font-family:var(--fd);font-weight:800;font-size:clamp(16px,4.3vw,19px);text-transform:uppercase;letter-spacing:-.01em;text-decoration:none;box-shadow:0 10px 22px -12px rgba(0,0,0,.7)}
+.cta:hover{filter:brightness(1.06)}
+.cta:focus-visible{outline:3px solid var(--branco);outline-offset:3px}
+.cta svg{flex:none}
+.gratis{font-size:13.5px;color:var(--g3)}
+.sec{font-family:var(--fd);font-weight:700;font-size:20px;color:var(--branco);margin:36px 0 12px;text-align:center}
+.passos{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.passo{background:var(--glass);border:1px solid var(--borda);border-radius:14px;padding:16px 18px;display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:start}
+.num{width:34px;height:34px;border-radius:50%;background:var(--vermelho);color:var(--branco);display:grid;place-items:center;font-family:var(--fd);font-weight:800;font-size:16px}
+.passo h3{margin:0 0 3px;font-family:var(--fd);font-weight:700;font-size:17px;line-height:1.3;color:var(--branco)}
+.passo p{margin:0;color:var(--g2);font-size:15.5px}
+.suporte{margin:28px 0 0;text-align:center;font-size:14.5px;color:var(--g3)}
+.suporte a{color:var(--g1)}
+footer{margin-top:56px;padding:28px 0 40px;border-top:1px solid var(--borda);text-align:center;color:var(--g3);font-size:13px}
+footer a{color:var(--g2);text-decoration:none;border-bottom:1px solid var(--borda)}
+footer p{margin:0 0 9px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="pago">
+  <p class="pago-in">
+    <span class="ck" aria-hidden="true"><svg viewBox="0 0 12 12" fill="none"><path d="M1.6 6.3 4.4 9 10.4 2.9" stroke="#06301A" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span><b>Pagamento confirmado</b> · seu acesso está chegando no seu e-mail.</span>
+  </p>
+</div>
+
+<main class="wrap">
+  <h1 class="hl">Pronto! O <span class="r">Lucrando com YouTube</span> é seu</h1>
+  <p class="hl-sub">O seu acesso chega no e-mail da compra em alguns minutos. Enquanto isso, <b>entra no meu grupo.</b></p>
+
+  <section class="grupo" aria-labelledby="t-grupo">
+    <p class="olho">Próximo passo · gratuito</p>
+    <h2 id="t-grupo">Entra no meu grupo de aulas no WhatsApp</h2>
+    <p>No grupo do WhatsApp eu faço aulas gratuitas sobre YouTube, com o que está funcionando agora.</p>
+    <a class="cta" data-grupo="1" href="https://sndflw.com/i/entradas-01" target="_blank" rel="noopener">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.6-.3Z"/></svg>
+      Entrar no grupo do WhatsApp
+    </a>
+    <p class="gratis">Sem custo. Você sai quando quiser.</p>
+  </section>
+
+  <h2 class="sec">Seu acesso ao curso</h2>
+  <ol class="passos">
+    <li class="passo"><span class="num">1</span><div><h3>Abra o e-mail de acesso</h3><p>Chega no mesmo e-mail que você usou na compra. Se não estiver na caixa de entrada, confere as abas Promoções e Spam.</p></div></li>
+    <li class="passo"><span class="num">2</span><div><h3>Comece pela primeira aula</h3><p>Siga na ordem. São as mesmas quatro fases que eu usei nos meus canais, do zero até o canal monetizado.</p></div></li>
+    <li class="passo"><span class="num">3</span><div><h3>Acompanhe as aulas no grupo</h3><p>O curso te dá o caminho. No grupo eu mostro o que está dando resultado agora.</p></div></li>
+  </ol>
+
+  <p class="suporte">Não recebeu o acesso em 15 minutos? Fala com o suporte: <a href="https://wa.me/5554936183118" target="_blank" rel="noopener">WhatsApp +55 54 9 3618-3118</a> ou <a href="mailto:suportejoaoadolfodesouza@gmail.com">suportejoaoadolfodesouza@gmail.com</a></p>
+</main>
+
+<footer class="wrap">
+  <p>JA Educação · CNPJ 51.382.366/0001-03</p>
+  <p><a href="/termos-de-uso/">Termos de uso</a> · <a href="/politica-de-privacidade/">Política de privacidade</a> · <a href="/reembolso/">Reembolso</a></p>
+</footer>
+
+<!-- HX Track (coletor de primeira parte), igual ao obrigado do Checklist. Metricas desta pagina = headline 'obrigado'
+     no funil 'LCY_POS': visita = pageview; conversao = cta_click com grupo=1 (botao do grupo). Visao lcy_pos_compra_dia. -->
+<script>
+(function(){
+  var SUPA='https://ntavetjmfotlwmcgwsju.supabase.co/rest/v1/hx_track_events';
+  var ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50YXZldGptZm90bHdtY2d3c2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQwNTAzNDksImV4cCI6MjA1OTYyNjM0OX0.jWCJr4qPHjiun2BCdx8U4Oi7cQ2gQmU-D0vrk10FGao';
+  function ck(n){var m=document.cookie.match('(^|;)\\s*'+n+'\\s*=\\s*([^;]+)');return m?m.pop():'';}
+  function sid(){if(window.HX_SID)return window.HX_SID;try{var k='hx_sid',s=localStorage.getItem(k);if(!s){s='s_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);localStorage.setItem(k,s);}return s;}catch(e){return 's_'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}}
+  function q(n){return new URLSearchParams(location.search).get(n)||'';}
+  function base(extra){
+    var fbclid=q('fbclid');
+    return Object.assign({
+      session_id:sid(), pid:window.HX_PID||null,
+      event_id:sid()+'_'+((extra&&extra.event_type)||'ev')+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),
+      page_host:location.hostname, page_path:location.pathname, page_url:location.href,
+      referrer:(document.referrer||'').replace(/([?&](token|s_id)=)[^&]*/gi,'$1[redigido]'),
+      utm_source:q('utm_source'),utm_medium:q('utm_medium'),utm_campaign:q('utm_campaign'),utm_content:q('utm_content'),utm_term:q('utm_term'),
+      fbclid:fbclid, fbp:ck('_fbp'), fbc:ck('_fbc')||(fbclid?('fb.1.'+Date.now()+'.'+fbclid):''),
+      user_agent:navigator.userAgent,
+      device:(/Mobi|Android|iPhone|iPad/i.test(navigator.userAgent)?'mobile':'desktop')
+    },extra||{});
+  }
+  var COLETOR='/t/e';
+  var DOM=(function(){try{var p=location.hostname.split('.');if(p.length<2)return '';if(p.length>=3&&p[p.length-1].length===2&&/^(com|net|org|gov|edu)$/.test(p[p.length-2]))return '.'+p.slice(-3).join('.');return '.'+p.slice(-2).join('.');}catch(e){return '';}})();
+  function setck(n,v){try{document.cookie=n+'='+encodeURIComponent(v)+'; max-age=7776000; path=/'+(DOM?'; domain='+DOM:'')+'; SameSite=Lax'+(location.protocol==='https:'?'; Secure':'');}catch(e){}}
+  function sendAntigo(d){try{var c=Object.assign({},d);delete c.meta;fetch(SUPA,{method:'POST',headers:{apikey:ANON,Authorization:'Bearer '+ANON,'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(c),keepalive:true}).catch(function(){});}catch(e){}}
+  function send(d){
+    try{
+      return fetch(COLETOR,{method:'POST',credentials:'include',headers:{'Content-Type':'application/json'},body:JSON.stringify(d),keepalive:true})
+        .then(function(r){ if(!r.ok) throw new Error('coletor '+r.status); return r.json(); })
+        .then(function(j){ try{ if(j&&j.fbp&&!ck('_fbp'))setck('_fbp',j.fbp); if(j&&j.fbc&&!ck('_fbc'))setck('_fbc',j.fbc); if(j&&j.pid&&window.HX_SET_PID)window.HX_SET_PID(j.pid); }catch(e){} })
+        .catch(function(){ sendAntigo(d); });
+    }catch(e){ sendAntigo(d); }
+  }
+  var HL=document.documentElement.getAttribute('data-pagina')||'obrigado', FUNIL='LCY_POS';
+  function evento(tipo,extra,meta){
+    var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
+    var d=base({event_type:tipo,extra:e}); if(meta&&meta.id)d.meta=meta;
+    return send(d);
+  }
+  window.hxTrack=evento;
+  var PV_META=window.HX_PV_EID?{pixel:'1452797958735774',nome:'PageView',id:window.HX_PV_EID}:null;
+  if(ck('_fbp')){ evento('pageview',null,PV_META); }
+  else {
+    evento('pageview');
+    var pvMetaFeito=false;
+    var pvMeta=function(motivo){ if(pvMetaFeito)return; pvMetaFeito=true; evento('fbp_pronto',(motivo&&!ck('_fbp'))?{pv_meta_sem_fbp:motivo}:null,PV_META); };
+    (function pv(n){ if(pvMetaFeito)return; if(ck('_fbp')){pvMeta();} else if(n<12){setTimeout(function(){pv(n+1);},250);} else {pvMeta('tempo');} })(0);
+    window.addEventListener('pagehide',function(){ pvMeta('saida'); });
+    document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='hidden') pvMeta('saida'); });
+  }
+  document.addEventListener('click',function(e){
+    if(!e.target.closest)return;
+    var cta=e.target.closest('.cta,a[href*="sndflw"],a[href*="chat.whatsapp"]');
+    if(cta){var hrefC=(cta.getAttribute&&cta.getAttribute('href'))||'';evento('cta_click',{label:(cta.textContent||'').trim().slice(0,80),href:hrefC,grupo:/sndflw\.com|chat\.whatsapp\.com/i.test(hrefC)?1:0});}
+  },true);
+  // identify (so quando o pos-compra da Hubla trouxe o e-mail na URL): manda SO o sha256 e o banco liga este navegador
+  // a pessoa do cadastro. Uma vez por aba.
+  function idt(){
+    var em=String(window.LCY_POS_EMAIL||'');
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)||!window.crypto||!crypto.subtle)return;
+    var feito=false;try{feito=sessionStorage.getItem('hx_idt_lcypos')==='1';}catch(e){}
+    if(feito)return;
+    var sha=function(v){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)).then(function(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});};
+    var fone=String(window.LCY_POS_FONE||''); if(/^\d{10,11}$/.test(fone)) fone='55'+fone; // mesma regra do upsell: so digitos com 55
+    try{
+      Promise.all([sha(em),/^\d{10,15}$/.test(fone)?sha(fone):Promise.resolve(null)]).then(function(h){
+        evento('identify',{em_sha256:h[0],ph_sha256:h[1],fonte:'lcy_'+HL});
+        try{sessionStorage.setItem('hx_idt_lcypos','1');}catch(e){}
+      }).catch(function(){});
+    }catch(e){}
+  }
+  if(document.readyState==='complete')idt(); else window.addEventListener('load',idt);
+})();
+</script>
+</body>
+</html>
