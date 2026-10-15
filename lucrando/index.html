@@ -451,7 +451,7 @@ footer p{max-width:none;margin:0 0 9px}
   <!-- sentinela revelado pelo VTurb no tempo do pitch -->
   <div id="vturbReveal" style="display:none" aria-hidden="true"></div>
 
-  <!-- ══════════ OFERTA (revelada no pitch: 22:29 a 22:34 conforme a versao do teste) ══════════ -->
+  <!-- ══════════ OFERTA (revelada no pitch: 22:26 a 22:30 conforme a versao do teste) ══════════ -->
   <section id="oferta">
 
     <div class="sep"></div>
@@ -641,14 +641,17 @@ footer p{max-width:none;margin:0 0 9px}
 
   // 14/10/2026: teste A/B de comecos no VTurb (teste "LUCRANDO"). O corpo das 4 versoes e o MESMO da VSL antiga
   // (audio alinhado em 3 pontos: minuto 10, pitch e final, diferenca constante); so o comeco muda, entao o preco
-  // cai 21 a 26 s antes dos 22:55. O painel do VTurb marcou 1375 nas 4: aqui vale o segundo MEDIDO.
+  // cai 21 a 26 s antes do pitch da antiga.
+  // 15/10/2026: pitch de cada versao = o que o MATHEUS marcou no painel do VTurb (o botao do VTurb abre no mesmo segundo).
+  // A medicao pelo audio de 14/10 (1349/1351/1354/1352) partia dos 22:55 da antiga, que estava ~3,5 s atrasado.
+  // Mudou o pitch no painel? Mude aqui junto, senao a oferta da pagina e o botao do VTurb aparecem em momentos diferentes.
   // Versao nova no teste sem entrar aqui = 1375 (a oferta nunca abre antes do preco) e o evento vsl_versao avisa.
   var VSL_AB = '6ad028f3326ab7d5ea14e7dc';
   var VSL_VERSOES = {
-    '6ad026dc9b7becf84d5c4655': {versao:'lead1', pitch:1349},   // Lead 1 (VSL)-002, 27:56
-    '6ad026b88fff4cd6e812b1c9': {versao:'lead2', pitch:1351},   // Lead 2 (VSL)-004, 27:58
-    '6ad02703f623e60dff2f7955': {versao:'lead3', pitch:1354},   // Lead 3 (VSL)-001, 28:01
-    '6ad02691d6dbec880653263f': {versao:'lead4', pitch:1352}    // Lead 4 (VSL)-003, 27:59
+    '6ad026dc9b7becf84d5c4655': {versao:'lead1', pitch:1346},   // Lead 1 (VSL)-002, 27:56 · 22:26
+    '6ad026b88fff4cd6e812b1c9': {versao:'lead2', pitch:1347},   // Lead 2 (VSL)-004, 27:58 · 22:27
+    '6ad02703f623e60dff2f7955': {versao:'lead3', pitch:1350},   // Lead 3 (VSL)-001, 28:01 · 22:30
+    '6ad02691d6dbec880653263f': {versao:'lead4', pitch:1348}    // Lead 4 (VSL)-003, 27:59 · 22:28
   };
   // versao que o VTurb sorteou pra esta pessoa; null enquanto o teste nao montou o player
   function versaoVsl(){
