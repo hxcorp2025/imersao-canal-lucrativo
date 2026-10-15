@@ -417,6 +417,30 @@ footer p{max-width:none;margin:0 0 9px}
       <!-- teste A/B de comecos: ao montar, o VTurb troca o id deste elemento pra vid-<player da versao sorteada> -->
       <vturb-smartplayer id="ab-6ad028f3326ab7d5ea14e7dc" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
       <script type="text/javascript">
+        // 15/10/2026: esconde o botao "avancar 10s" do player. A opcao "forward" esta ligada no painel
+        // do VTurb nas 4 versoes do teste A/B; o script do teste entrega a config ao elemento por
+        // el.start(config), entao interceptamos ali e desligamos so o forward antes de o player montar.
+        // Pode sair quando o "avancar" for desligado no painel do VTurb. Enquanto existir, o
+        // configurable:true precisa ficar (sem ele o player quebraria se um dia definir "start").
+        (function(){
+          var el = document.getElementById("ab-6ad028f3326ab7d5ea14e7dc");
+          if (!el) return;
+          var original;
+          try {
+            Object.defineProperty(el, "start", {
+              configurable: true,
+              set: function(fn){ original = fn; },
+              get: function(){
+                return function(cfg){
+                  try { if (cfg && cfg.style) cfg.style.forward = false; } catch(e){}
+                  if (typeof original === "function") return original.apply(this, arguments);
+                  if (typeof this.setup === "function") return this.setup(cfg);
+                  this._setup = cfg;
+                };
+              }
+            });
+          } catch(e){}
+        })();
         (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/ab-test/6ad028f3326ab7d5ea14e7dc/player.js";s.async=!0;document.head.appendChild(s);})();
       </script>
     </div>
