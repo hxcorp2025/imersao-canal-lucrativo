@@ -32,14 +32,12 @@
 <script src="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/sdk.js" async></script>
 <script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
 
-<!-- Preload VSL LUCRANDO-001 (vertical 9:16, 28:23) -->
-<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/v4/player.js" as="script">
+<!-- 14/10/2026: VSL virou TESTE A/B de comecos no VTurb (teste "LUCRANDO", 4 leads, 25% cada; codigo de velocidade do painel).
+     O VTurb sorteia a versao no navegador, entao o video e a thumbnail certos so existem depois do sorteio: o proprio
+     script do teste pre-carrega a versao escolhida. Antes (player unico 6a67d6c9...): preload do m3u8 + thumbnail. -->
+<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/ab-test/6ad028f3326ab7d5ea14e7dc/player.js" as="script">
 <link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
-<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6a67d6a1014a30aa4ca6bc8b/main.m3u8" as="fetch">
-<!-- Sem headline, o LCP virou a thumbnail do player. Ela tem 2,6KB, entao o
-     problema nao e peso, e DESCOBERTA: o browser so sabe dela depois do JS do
-     player rodar. Preload com prioridade alta antecipa isso. -->
-<link rel="preload" as="image" fetchpriority="high" href="https://images.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/thumbnail.jpg">
+<link rel="dns-prefetch" href="https://m3u8.vturb.net">
 <link rel="preconnect" href="https://images.converteai.net" crossorigin>
 
 <!-- Sem Google Tag Manager desde 05/10/2026 (ok do Matheus): o conteiner GTM-5N6MTPZB mandava um 2o PageView do pixel
@@ -416,9 +414,10 @@ footer p{max-width:none;margin:0 0 9px}
 
   <div class="palco">
     <div class="player-box">
-      <vturb-smartplayer id="vid-6a67d6c9a9935db927655d1b"></vturb-smartplayer>
+      <!-- teste A/B de comecos: ao montar, o VTurb troca o id deste elemento pra vid-<player da versao sorteada> -->
+      <vturb-smartplayer id="ab-6ad028f3326ab7d5ea14e7dc" style="display:block;margin:0 auto;width:100%;"></vturb-smartplayer>
       <script type="text/javascript">
-        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6a67d6c9a9935db927655d1b/v4/player.js";s.async=!0;document.head.appendChild(s);})();
+        (function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/ab-test/6ad028f3326ab7d5ea14e7dc/player.js";s.async=!0;document.head.appendChild(s);})();
       </script>
     </div>
   </div>
@@ -428,7 +427,7 @@ footer p{max-width:none;margin:0 0 9px}
   <!-- sentinela revelado pelo VTurb no tempo do pitch -->
   <div id="vturbReveal" style="display:none" aria-hidden="true"></div>
 
-  <!-- ══════════ OFERTA (revelada aos 22:55) ══════════ -->
+  <!-- ══════════ OFERTA (revelada no pitch: 22:29 a 22:34 conforme a versao do teste) ══════════ -->
   <section id="oferta">
 
     <div class="sep"></div>
@@ -609,12 +608,34 @@ footer p{max-width:none;margin:0 0 9px}
   };
   var CAPI_WEBHOOK_URL = 'https://n8n.hx-corp.com/webhook/JA-YT-CAPI-IC-DIRECT'; // dominio proprio desde 03/08 (mesmo webhook; regra pos-incidente DNS 01/08)
 
-  var VSL_ID  = 'vsllcy';   // VSL LUCRANDO-001 (vertical, 28:23)
+  var VSL_ID  = 'vsllcy';   // familia da VSL do LCY. As views do funil filtram vendas por este codigo: NAO trocar por versao
   var PAGE_ID = 'lcy';      // Lucrando com YouTube
   var VALOR   = 197;        // valor do front, ja com o cupom de R$100
 
-  var PITCH_SEGUNDOS = 1375;        // 22:55 = momento do pitch na VSL (ajustado 03/08:
-                                    // o Joao fala o preco aos 22:55, botao aparecia so aos 25:48)
+  var PITCH_SEGUNDOS = 1375;        // 22:55 = pitch da VSL antiga LUCRANDO-001 (28:23). Hoje so vale pra versao fora do mapa abaixo
+                                    // (ajustado 03/08: o Joao fala o preco aos 22:55, botao aparecia so aos 25:48)
+
+  // 14/10/2026: teste A/B de comecos no VTurb (teste "LUCRANDO"). O corpo das 4 versoes e o MESMO da VSL antiga
+  // (audio alinhado em 3 pontos: minuto 10, pitch e final, diferenca constante); so o comeco muda, entao o preco
+  // cai 21 a 26 s antes dos 22:55. O painel do VTurb marcou 1375 nas 4: aqui vale o segundo MEDIDO.
+  // Versao nova no teste sem entrar aqui = 1375 (a oferta nunca abre antes do preco) e o evento vsl_versao avisa.
+  var VSL_AB = '6ad028f3326ab7d5ea14e7dc';
+  var VSL_VERSOES = {
+    '6ad026dc9b7becf84d5c4655': {versao:'lead1', pitch:1349},   // Lead 1 (VSL)-002, 27:56
+    '6ad026b88fff4cd6e812b1c9': {versao:'lead2', pitch:1351},   // Lead 2 (VSL)-004, 27:58
+    '6ad02703f623e60dff2f7955': {versao:'lead3', pitch:1354},   // Lead 3 (VSL)-001, 28:01
+    '6ad02691d6dbec880653263f': {versao:'lead4', pitch:1352}    // Lead 4 (VSL)-003, 27:59
+  };
+  // versao que o VTurb sorteou pra esta pessoa; null enquanto o teste nao montou o player
+  function versaoVsl(){
+    try {
+      var el = document.querySelector('vturb-smartplayer');
+      var id = (el && el.id) || '';
+      if (id.indexOf('vid-') !== 0) return null;
+      var pid = id.slice(4), v = VSL_VERSOES[pid];
+      return {player:pid, versao: v ? v.versao : 'fora_do_mapa', pitch: v ? v.pitch : PITCH_SEGUNDOS};
+    } catch(e){ return null; }
+  }
   var BACKSTOP_MS = 1450 * 1000;    // 24:10 de relogio. Rede de seguranca: so age
                                     // se o video-sync falhar. Nao pre-empta o pitch.
 
@@ -737,6 +758,7 @@ footer p{max-width:none;margin:0 0 9px}
           user_agent:navigator.userAgent || null,
           origem:window.location.href, pagina_origem:window.location.pathname,
           vsl_id:VSL_ID, page_id:PAGE_ID,
+          vsl_versao:(window.LCY_VSL && window.LCY_VSL.versao) || null,   // 14/10/2026: teste A/B de comecos
           plataforma:CHECKOUT,   // 02/10/2026: separa o periodo Greenn x Hubla nos dados
           data:new Date().toISOString()
         }),
@@ -775,7 +797,9 @@ footer p{max-width:none;margin:0 0 9px}
     if (!a || a.hasAttribute('data-open-checkout')) return; // CTA nosso, ja tratado
     try {
       var atual = a.getAttribute('href') || '';
-      if (atual.indexOf('utm_content=') > -1) return; // ja enriquecido
+      // 14/10/2026: o VTurb copia o utm_content CRU da pagina pro botao; testar 'utm_content=' pulava o botao e ele
+      // ficava sem vsllcy/__sid_ ate o clique (quem abria em nova aba pelo toque longo comprava sem a sessao)
+      if (atual.indexOf(VSL_ID + '__' + PAGE_ID + '__') > -1) return; // ja enriquecido
       a.setAttribute('href', montaUrl(atual));
       a.setAttribute('data-vturb-cta', '1');
     } catch(e){}
@@ -838,7 +862,7 @@ footer p{max-width:none;margin:0 0 9px}
   function marcaPitch(origem){
     if (pitchMarcado) return;
     pitchMarcado = true;
-    // Meta: chegou no pitch (22:55) = evento custom, otimizavel como custom conversion; 01/10: mesmo eventID no pixel e no servidor
+    // Meta: chegou no pitch (segundo medido por versao, VSL_VERSOES) = evento custom, otimizavel como custom conversion; 01/10: mesmo eventID no pixel e no servidor
     var pr = {content_name:'VSL Lucrando com YouTube',value:VALOR,currency:'BRL'};
     var prId = idMeta('pr');
     marca('video_pitch', {origem: origem}, {pixel:PIXEL_ID, nome:'PitchReached', id:prId, dados:pr});
@@ -858,6 +882,16 @@ footer p{max-width:none;margin:0 0 9px}
     if (origem === 'vturb') marcaPitch('vturb');
   }
 
+  // 14/10/2026: a versao sorteada vira dado na hora (1 evento por carregamento; depois vai em todo evento do hxTrack)
+  var versaoRegistrada = false;
+  function registraVersao(v){
+    if (versaoRegistrada || !v) return;
+    versaoRegistrada = true;
+    window.LCY_VSL = v;
+    marca('vsl_versao', {vsl_ab:VSL_AB, vturb_player:v.player, vsl_versao:v.versao, pitch_s:v.pitch});
+    try { window.clarity && window.clarity('set', 'vsl_versao', v.versao); } catch(e){}
+  }
+
   // debug: ?reveal=1 abre na hora
   if (new URLSearchParams(window.location.search).get('reveal') === '1') abre('debug');
 
@@ -865,15 +899,27 @@ footer p{max-width:none;margin:0 0 9px}
     try {
       var player = document.querySelector('vturb-smartplayer');
       if (!player || typeof player.addEventListener !== 'function') return;
+      // 14/10/2026: so arma depois do sorteio do teste A/B, com o pitch da versao (o elemento e o mesmo, so o id muda)
+      var armou = false;
       function arma(){
         try {
+          var v = versaoVsl();
+          if (!v) return;
+          registraVersao(v);
           if (typeof player.displayHiddenElements === 'function') {
-            player.displayHiddenElements(PITCH_SEGUNDOS, ['#vturbReveal'], {persist:true});
+            player.displayHiddenElements(v.pitch, ['#vturbReveal'], {persist:true});
+            armou = true;
           }
         } catch(e){}
       }
       try { player.addEventListener('player:ready', arma); } catch(e){}
       arma(); // caso o ready ja tenha passado
+      // o script do teste e assincrono: se o ready vier antes deste listener, tenta de novo por ate 60 s
+      var tentativas = 0;
+      var ivArma = setInterval(function(){
+        if (armou || ++tentativas > 60) { clearInterval(ivArma); return; }
+        arma();
+      }, 1000);
 
       // play: o VTurb nao documenta um nome unico de evento, entao escutamos os
       // candidatos plausiveis e deduplicamos. Se nenhum disparar, o funil ainda
@@ -963,7 +1009,9 @@ footer p{max-width:none;margin:0 0 9px}
   var HL=window.LCY_HEADLINE||null, FUNIL='LCY';
   // 01/10/2026: meta (opcional) = {pixel,nome,id,dados} do mesmo evento que o pixel disparou; o coletor manda pela API de Conversoes
   function evento(tipo,extra,meta){
-    var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null},extra||{});
+    // 14/10/2026: versao do teste A/B de comecos da VSL (null ate o VTurb sortear; o pageview sai antes disso)
+    var V=window.LCY_VSL||null;
+    var e=Object.assign({headline:HL,funil:FUNIL,gclid:q('gclid')||null,vsl_versao:V?V.versao:null,vturb_player:V?V.player:null},extra||{});
     var d=base({event_type:tipo,extra:e}); if(meta&&meta.id)d.meta=meta;
     send(d);
   }
