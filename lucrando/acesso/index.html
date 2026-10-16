@@ -54,6 +54,10 @@
   } catch(e){}
 })();
 </script>
+<!-- 16/10/2026: analytics da Hubla (pedido da Hubla). async = nao segura a pagina; nas paginas pos-compra vem DEPOIS da limpeza de dados pessoais da URL.
+     Aqui NAO carrega quando a URL traz token/s_id (comprador que ainda vem da Greenn: credencial do 1-clique): a Hubla
+     mandaria o token pro coletor dela e guardaria 90 dias no cookie _hub_track (achado do revisor, 14 de 88 visitas/semana). -->
+<script>if (!/[?&](token|s_id)=/i.test(location.search)) { (function(s){ s.async = true; s.src = 'https://data.hub.la/hub.min.js?wk=wk_znHvVqveVpb0SB2AZxQeyDphO0u2'; document.head.appendChild(s); })(document.createElement('script')); }</script>
 <meta name="theme-color" content="#0A0A0A">
 <title>Bem-vindo · Lucrando com YouTube</title>
 <meta name="description" content="Área de boas-vindas de novos alunos do Lucrando com YouTube. Assista à sua aula zero com João Adolfo.">
@@ -738,6 +742,10 @@ footer p{max-width:none;margin:0 0 9px}
         if (!k) return;
         if (/^(utm_|fbclid$|gclid$|wbraid$|gbraid$)/.test(k)) return;      // nossos: serao reescritos abaixo
         if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base
+        // 16/10/2026 (Hubla): o analytics da Hubla copia pro botao o src da URL desta pagina (= chave do VTurb do FRONT,
+        // vem no pos-compra em ~3 de 4 visitas). So fica o src que e a chave do video do upsell; qualquer outro sai aqui e
+        // o temSrc la embaixo poe a certa (igual era antes do script da Hubla; sem chave, sai sem src como antes).
+        if (k === 'src') { var kvAqui = chaveVturb(), vSrc = par.slice(4); try { vSrc = decodeURIComponent(vSrc); } catch(e){} if (vSrc !== kvAqui) return; }
         params.push(par);
       });
     } catch(e){}

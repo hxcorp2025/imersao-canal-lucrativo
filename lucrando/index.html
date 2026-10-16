@@ -1,5 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- 16/10/2026: analytics da Hubla (pedido da Hubla). async = nao segura a pagina; nas paginas pos-compra vem DEPOIS da limpeza de dados pessoais da URL -->
+<script async src="https://data.hub.la/hub.min.js?wk=wk_znHvVqveVpb0SB2AZxQeyDphO0u2"></script>
 <meta name="theme-color" content="#0A0A0A">
 <title>Lucrando com YouTube · João Adolfo</title>
 <script type="application/ld+json">
@@ -710,6 +712,10 @@ footer p{max-width:none;margin:0 0 9px}
         if (/^(utm_|fbclid$|gclid$|wbraid$|gbraid$)/.test(k)) return;      // nossos: serao reescritos abaixo
         if (CHECKOUT_URL.indexOf(k + '=') > -1) return;    // ja vive na URL base (cupom, bumps)
         if (CHECKOUT !== 'greenn' && SO_GREENN.test(k)) return;  // sobra de href antigo da Greenn
+        // 16/10/2026 (Hubla): o analytics da Hubla guarda 90 dias os parametros de URL de qualquer pagina do dominio e
+        // completa o botao com eles. token/s_id sao a credencial do upsell 1-clique (so existem no pos-compra): nunca
+        // podem ir pro checkout da oferta principal. mcp_token = token de contato do ManyChat (nao e da Hubla, nunca ia).
+        if (/^(token|s_id|mcp_token)$/i.test(k)) return;
         params.push(par);
       });
     } catch(e){}
