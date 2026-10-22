@@ -103,6 +103,7 @@ body{margin:0;background:var(--preto);color:var(--g1);font-family:var(--fb);font
 .cta:hover{filter:brightness(1.06)}
 .cta:focus-visible{outline:3px solid var(--branco);outline-offset:3px}
 .cta svg{flex:none}
+.aula-video{margin:6px 0 0;border-radius:12px;overflow:hidden;background:#000}
 .gratis{font-size:13.5px;color:var(--g3)}
 .sec{font-family:var(--fd);font-weight:700;font-size:20px;color:var(--branco);margin:36px 0 12px;text-align:center}
 .passos{list-style:none;margin:0;padding:0;display:grid;gap:10px}
@@ -117,6 +118,15 @@ footer a{color:var(--g2);text-decoration:none;border-bottom:1px solid var(--bord
 footer p{margin:0 0 9px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
+<!-- 22/10/2026 (pedido do Lucas via Matheus): video da aula bonus (VTurb 6ada49324e1a50542a655ba1) chamando pro grupo. Preload igual ao /lucrando/acesso/. -->
+<script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6ada49324e1a50542a655ba1/v4/player.js" as="script">
+<link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6ada492bf407b62a9b525945/main.m3u8" as="fetch" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.converteai.net">
+<link rel="dns-prefetch" href="https://scripts.converteai.net">
+<link rel="dns-prefetch" href="https://images.converteai.net">
+<link rel="dns-prefetch" href="https://license.vturb.com">
 </head>
 <body>
 
@@ -135,6 +145,8 @@ footer p{margin:0 0 9px}
     <p class="olho">Próximo passo · gratuito</p>
     <h2 id="t-grupo">Entra no meu grupo de aulas no WhatsApp</h2>
     <p>No grupo do WhatsApp eu faço aulas gratuitas sobre YouTube, com o que está funcionando agora.</p>
+    <div class="aula-video"><vturb-smartplayer id="vid-6ada49324e1a50542a655ba1" style="display:block;margin:0 auto;width:100%"><div class="vturb-player-placeholder" style="position:relative;width:100%;padding:56.25% 0 0;z-index:0;background-color:black"></div></vturb-smartplayer></div>
+    <script>(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6ada49324e1a50542a655ba1/v4/player.js";s.async=!0;document.head.appendChild(s);})();</script>
     <a class="cta" data-grupo="1" href="https://sndflw.com/i/entradas-01" target="_blank" rel="noopener">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.6-.3Z"/></svg>
       Entrar no grupo do WhatsApp

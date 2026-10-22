@@ -111,6 +111,11 @@ h1{margin:0;font-family:'Poppins',sans-serif;font-weight:800;font-size:clamp(26p
 .cta{display:flex;align-items:center;justify-content:center;text-align:center;gap:10px;width:100%;min-height:60px;margin-top:14px;padding:16px 20px;background:#16A34A;color:#fff;border-radius:12px;font-family:'Poppins',sans-serif;font-weight:800;font-size:clamp(15px,4.1vw,17px);text-transform:uppercase;text-decoration:none;box-shadow:0 12px 26px -12px rgba(22,163,74,.7)}
 .cta:hover{background:#15803D}
 .cta:focus-visible{outline:3px solid #141414;outline-offset:3px}
+.aula{background:#fff;border:1px solid #e4e4e4;border-radius:16px;padding:20px 18px;text-align:center;display:flex;flex-direction:column;gap:10px}
+.aula h2{margin:0;font-family:'Poppins',sans-serif;font-weight:800;font-size:clamp(20px,5vw,24px);line-height:1.25;text-wrap:balance}
+.aula p{margin:0;color:#4a4a4a;font-size:16px}
+.aula .cta{margin-top:4px}
+.aula-video{border-radius:12px;overflow:hidden;background:#000}
 .suporte{margin:0;text-align:center;font-size:15px;color:#4a4a4a}
 .suporte a{color:#D62128;font-weight:700}
 footer{border-top:1px solid #ececec;background:#fff;padding:28px 20px 40px;text-align:center;font-size:14px}
@@ -118,12 +123,28 @@ footer nav{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 18px}
 footer a{color:#4a4a4a}
 footer small{display:block;margin-top:12px;color:#8a8a8a}
 </style>
+<!-- 22/10/2026 (pedido do Lucas via Matheus): video da aula bonus (VTurb 6ada49324e1a50542a655ba1) chamando pro grupo. Preload igual ao /lucrando/acesso/. -->
+<script>!function(i,n){i._plt=i._plt||(n&&n.timeOrigin?n.timeOrigin+n.now():Date.now())}(window,performance);</script>
+<link rel="preload" href="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6ada49324e1a50542a655ba1/v4/player.js" as="script">
+<link rel="preload" href="https://scripts.converteai.net/lib/js/smartplayer-wc/v4/smartplayer.js" as="script">
+<link rel="preload" href="https://cdn.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/6ada492bf407b62a9b525945/main.m3u8" as="fetch" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.converteai.net">
+<link rel="dns-prefetch" href="https://scripts.converteai.net">
+<link rel="dns-prefetch" href="https://images.converteai.net">
+<link rel="dns-prefetch" href="https://license.vturb.com">
 </head><body>
 <header class="topo"><img src="../assets/logo-horizontal-cor.webp" alt="Checklist Posta Certo no YouTube" width="1200" height="448" fetchpriority="high"></header>
 <main>
   <span class="selo">&#10003; Pagamento aprovado</span>
   <h1>Pronto! O Checklist Posta Certo já é seu.</h1>
   <p class="intro">Em poucos minutos chega no seu e-mail a mensagem com o acesso à área de membros. Lá ficam a versão Computador, a versão Celular, o Template de Descrição, os Modelos de Título e a Folha de Conferência Final.</p>
+  <section class="aula" aria-labelledby="t-aula">
+    <h2 id="t-aula">Você ganhou uma aula bônus comigo</h2>
+    <p>Dá o play no meu recado. O link da aula sai só no grupo do WhatsApp.</p>
+    <div class="aula-video"><vturb-smartplayer id="vid-6ada49324e1a50542a655ba1" style="display:block;margin:0 auto;width:100%"><div class="vturb-player-placeholder" style="position:relative;width:100%;padding:56.25% 0 0;z-index:0;background-color:black"></div></vturb-smartplayer></div>
+    <script>(function(){var s=document.createElement("script");s.src="https://scripts.converteai.net/cb31a1f0-7a5f-4c61-9b46-e87c5ef9d740/players/6ada49324e1a50542a655ba1/v4/player.js";s.async=!0;document.head.appendChild(s);})();</script>
+    <a class="cta" href="https://sndflw.com/i/entradas-01" target="_blank" rel="noopener">Entrar no grupo e receber a aula</a>
+  </section>
   <ol class="passos">
     <li class="passo"><span class="num">1</span><div><h2>Abra o e-mail de acesso</h2><p>Use o mesmo e-mail que você colocou na compra. Se não estiver na caixa de entrada, confira as abas Promoções e Spam.</p></div></li>
     <li class="passo"><span class="num">2</span><div><h2>Abra a versão que combina com você</h2><p>Computador ou Celular. Na próxima postagem, deixe o checklist aberto ao lado do YouTube Studio e siga tela por tela.</p></div></li>
