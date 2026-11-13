@@ -146,10 +146,17 @@ body.sem-headline .palco{margin-top:26px}
 }
 
 /* ── player vertical ──────────────────────── */
-.palco{width:100%;display:flex;justify-content:center}
+/* 13/11/2026: position+z-index = rede de seguranca do botao de compra do VTurb. Se um dia algo do player voltar a
+   vazar por cima do conteudo de baixo, o player (e o botao dele) fica POR CIMA e continua recebendo o toque. */
+.palco{width:100%;display:flex;justify-content:center;position:relative;z-index:1}
 .player-box{width:100%;max-width:400px}
-/* aspect-ratio reservado = CLS 0 (licao das paginas irmas) */
-vturb-smartplayer{display:block;width:100%;aspect-ratio:9/16}
+/* Altura do video (9:16) reservada com min-height, NUNCA com aspect-ratio (CLS baixo sem travar a caixa).
+   13/11/2026: o VTurb desenha a headline e o botao de compra DENTRO deste elemento. Com aspect-ratio o Safari ate o
+   iOS 26 trava a caixa em 9:16: a headline e o botao vazam por baixo, o bloco da oferta sobe e fica POR CIMA do botao
+   verde, que para de receber o toque (medido: 0% do botao clicavel no iPhone; no banco, o clique nele caiu de 45% para
+   7% em 29/09). min-height reserva o mesmo espaco e deixa a caixa crescer com o que o VTurb puser dentro.
+   400px = largura maxima do player (.player-box) · 40px = as duas margens de 20px do .wrap. */
+vturb-smartplayer{display:block;width:100%;min-height:calc(min(400px,100vw - 40px)*16/9)}
 .dica{
   text-align:center;color:var(--g3);font-size:13.5px;
   margin:14px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
@@ -675,8 +682,13 @@ footer p{max-width:none;margin:0 0 9px}
   // UTM / fbclid  →  checkout + CAPI
   // ══════════════════════════════════════════
   function cookie(n){
-    var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)'));
-    return m ? decodeURIComponent(m[1]) : null;
+    // 13/11/2026: nunca estoura. Cookie com "%" solto fazia o decodeURIComponent dar erro, e esse erro subia ate o
+    // clique do botao de compra (depois do preventDefault): a pessoa clicava e nada acontecia.
+    try {
+      var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)'));
+      if (!m) return null;
+      try { return decodeURIComponent(m[1]); } catch(e){ return m[1]; }
+    } catch(e){ return null; }
   }
   function rastreio(){
     var p = new URLSearchParams(window.location.search), r = {};
@@ -804,11 +816,17 @@ footer p{max-width:none;margin:0 0 9px}
     if (!e.target.closest) return;
     var btn = e.target.closest('[data-open-checkout]');
     if (!btn) return;
+    // 13/11/2026: a ida pro checkout NAO depende do rastreio. O endereco nasce com o checkout puro e so e trocado
+    // se o montaUrl der certo; o InitiateCheckout roda protegido. Antes, qualquer erro aqui (depois do preventDefault)
+    // deixava o botao morto: a pessoa clicava e ficava na pagina.
+    var url = CHECKOUT_URL;
+    try {
+      // passa o href atual: se o VTurb ja injetou a conversion key v3_ no botao,
+      // ela sobrevive a reescrita (antes: montaUrl() sem argumento descartava)
+      url = montaUrl(btn.getAttribute('href')) || CHECKOUT_URL;
+    } catch(err){}
     e.preventDefault();
-    disparaIC();
-    // passa o href atual: se o VTurb ja injetou a conversion key v3_ no botao,
-    // ela sobrevive a reescrita (antes: montaUrl() sem argumento descartava)
-    var url = montaUrl(btn.getAttribute('href'));
+    try { disparaIC(); } catch(err){}
     setTimeout(function(){ window.location.href = url; }, 250);
   }, false);
 
@@ -855,7 +873,7 @@ footer p{max-width:none;margin:0 0 9px}
     var a = e.target.closest(SEL_CHECKOUT);
     if (!a || a.hasAttribute('data-open-checkout')) return;
     try { a.setAttribute('href', montaUrl(a.getAttribute('href'))); } catch(err){}
-    disparaIC();
+    try { disparaIC(); } catch(err){}   // 13/11/2026: erro de rastreio nunca atrapalha o clique
   }, true);
 
   // ══════════════════════════════════════════
